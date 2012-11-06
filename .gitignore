@@ -1,0 +1,11 @@
+*~
+*.swp
+
+.vimrc
+.gdb_history
+
+# Executable
+/kriti
+/build/
+
+
