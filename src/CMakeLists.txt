@@ -3,6 +3,8 @@ add_definitions(-Wall -Wextra -std=c++11)
 aux_source_directory(. dotSources)
 aux_source_directory(math mathSources)
 aux_source_directory(config configSources)
+aux_source_directory(interface interfaceSources)
+aux_source_directory(event eventSources)
 
 include_directories(.)
 
@@ -10,6 +12,8 @@ set(sources
     ${dotSources}
     ${mathSources}
     ${configSources}
+    ${interfaceSources}
+    ${eventSources}
 )
 
 find_package(Boost COMPONENTS filesystem system)

@@ -5,6 +5,8 @@
 namespace Kriti {
 namespace Config {
 
+boost::shared_ptr<Tree> Tree::s_singleton;
+
 Tree::Tree() {
     m_root = boost::shared_ptr<TreeNode>(new TreeNode("root"));
 }
@@ -13,7 +15,7 @@ Tree::~Tree() {
     
 }
 
-boost::weak_ptr<TreeNode> Tree::node(const std::string &path) {
+boost::weak_ptr<TreeNode> Tree::node(const std::string &path, bool create) {
     boost::weak_ptr<TreeNode> cursor = m_root, prev = cursor;
 
     std::vector<std::string> nodeNames;
@@ -29,7 +31,10 @@ boost::weak_ptr<TreeNode> Tree::node(const std::string &path) {
         prev = cursor;
         cursor = cursor.lock()->child(n);
         if(cursor.expired()) {
-            cursor = prev.lock()->addChild(n);
+            if(create) {
+                cursor = prev.lock()->addChild(n);
+            }
+            else return cursor;
         }
     }
 
@@ -55,6 +60,30 @@ boost::weak_ptr<TreeNode> Tree::node(const std::string &path) const {
     }
 
     return cursor;
+}
+
+bool Tree::getBool(std::string path, bool def) {
+    boost::weak_ptr<TreeNode> n = node(path, false);
+    if(n.expired()) return def;
+    return n.lock()->asBool();
+}
+
+int Tree::getInt(std::string path, int def) {
+    boost::weak_ptr<TreeNode> n = node(path, false);
+    if(n.expired()) return def;
+    return n.lock()->asInt();
+}
+
+double Tree::getDouble(std::string path, double def) {
+    boost::weak_ptr<TreeNode> n = node(path, false);
+    if(n.expired()) return def;
+    return n.lock()->asDouble();
+}
+
+std::string Tree::getString(std::string path, std::string def) {
+    boost::weak_ptr<TreeNode> n = node(path, false);
+    if(n.expired()) return def;
+    return n.lock()->asString();
 }
 
 }  // namespace Config

@@ -55,7 +55,8 @@ void Parser::parseFile(const std::string &filename) {
         for(i = value.size()-1; std::isspace(value[i]); i --) ;
         value = value.substr(0, i+1);
 
-        boost::weak_ptr<TreeNode> node = m_tree->node(path);
+        // get node, allowing creation
+        boost::weak_ptr<TreeNode> node = m_tree->node(path, true);
         
         // use a stringstream to parse.
         std::istringstream ssv(value);
