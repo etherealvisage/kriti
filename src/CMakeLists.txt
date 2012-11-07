@@ -16,7 +16,7 @@ set(sources
     ${eventSources}
 )
 
-find_package(Boost COMPONENTS filesystem system)
+find_package(Boost COMPONENTS filesystem system signals)
 include_directories(${Boost_INCLUDE_DIR})
 
 find_package(Bullet)

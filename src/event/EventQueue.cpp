@@ -4,7 +4,9 @@ namespace Kriti {
 namespace Event {
 
 void EventQueue::process(int max) {
-    for(int i = 0; (i < max || max == -1) && m_queue.size() > 0; i ++) {
+    /* Only process events currently in the queue. */
+    int size = m_queue.size();
+    for(int i = 0; (i < max || max == -1) && i < size; i ++) {
         auto f = m_queue.front();
         m_queue.pop();
 

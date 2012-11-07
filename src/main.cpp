@@ -4,6 +4,16 @@
 
 #include "config/Parser.h"
 #include "interface/Video.h"
+#include "event/EventQueue.h"
+#include "event/EventRouter.h"
+
+void listener(int param) {
+    std::cout << "Listener! Param: " << param << std::endl;
+}
+
+void invoker(boost::signal<void ()> *signal) {
+    (*signal)();
+}
 
 int main() {
     using namespace Kriti;
@@ -21,7 +31,14 @@ int main() {
 
     Interface::Video::instance();
 
-    
+    Event::EventQueue eq;
+
+    Event::EventRouter er;
+    er.exampleListener.connect(listener);
+
+    eq.enqueue(er.exampleListener, 42);
+
+    eq.process();
 
     Interface::Video::destroy();
 
