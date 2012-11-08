@@ -70,6 +70,9 @@ void Parser::parseFile(const std::string &filename) {
         else if(ssv >> dv) {
             node.lock()->set(dv);
         }
+        else if(value == "true" || value == "false") {
+            node.lock()->set(value == "true");
+        }
         else {
             if(value[0] != '"' || value[value.length()-1] != '"') {
                 Message3(Config, Warning, "Don't know how to parse value \""

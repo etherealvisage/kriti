@@ -62,6 +62,20 @@ void Video::initializeGL() {
         << ", version: " << glGetString(GL_VERSION)
         << ", with shading language "
         << glGetString(GL_SHADING_LANGUAGE_VERSION) << ")");
+
+    if(!GLEW_VERSION_3_0) {
+        Message3(Interface, Error, "No OpenGL 3.0 support available.");
+        Message3(Interface, Fatal, "Kriti uses some OpenGL 3.0 features. "
+            "Please upgrade your video drivers and try again.");
+    }
+
+    /* If video profiling is enabled . . . */
+    if(Config::Tree::instance()->getBool("video.profile")) {
+        if(!GLEW_ARB_timer_query) {
+            Message3(Interface, Fatal, "Video profiling enabled, but "
+                "GLEW_ARB_timer_query not supported.");
+        }
+    }
 }
 
 }  // namespace Interface

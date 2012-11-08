@@ -1,4 +1,6 @@
 #include <iostream>
+#include <boost/function.hpp>
+#include <boost/bind/protect.hpp>
 
 #include "MessageSystem.h"
 
@@ -11,9 +13,10 @@ void listener(int param) {
     std::cout << "Listener! Param: " << param << std::endl;
 }
 
-void invoker(boost::signal<void ()> *signal) {
-    (*signal)();
-}
+class ListenerClass {
+public:
+    void listener(int param) { std::cout << "param: " << param << std::endl; }
+};
 
 int main() {
     using namespace Kriti;
@@ -34,9 +37,13 @@ int main() {
     Event::EventQueue eq;
 
     Event::EventRouter er;
-    er.exampleListener.connect(listener);
+    ListenerClass lc;
+    er.exampleListener.connect(boost::bind(&ListenerClass::listener, &lc, _1));
 
-    eq.enqueue(er.exampleListener, 42);
+    eq.enqueue(er.exampleListener, 2);
+
+    // 42 should be printed before 2 . . .
+    er.fire(er.exampleListener, 42);
 
     eq.process();
 
