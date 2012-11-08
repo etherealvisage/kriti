@@ -4,19 +4,14 @@
 
 #include "MessageSystem.h"
 
+#include "SDL.h"
+
 #include "config/Parser.h"
 #include "interface/Video.h"
+#include "interface/Keyboard.h"
+#include "interface/DeviceManager.h"
 #include "event/EventQueue.h"
 #include "event/EventRouter.h"
-
-void listener(int param) {
-    std::cout << "Listener! Param: " << param << std::endl;
-}
-
-class ListenerClass {
-public:
-    void listener(int param) { std::cout << "param: " << param << std::endl; }
-};
 
 int main() {
     using namespace Kriti;
@@ -30,26 +25,33 @@ int main() {
     parser.parseFile("kriti.config");
 
     /* Set the log file. */
-    MessageSystem::setLogFile(tree->getString("kriti.logfile", "logs/kriti-%d.log"));
+    MessageSystem::setLogFile(
+        tree->getString("kriti.logfile", "logs/kriti-%d.log")
+    );
 
+    // explicit calls to create the singleton instances.
+    Interface::DeviceManager *dmanager = Interface::DeviceManager::instance();
     Interface::Video::instance();
 
-    Event::EventQueue eq;
+    // create a keyboard device.
+    dmanager->registerDevice<Interface::Keyboard>();
 
-    Event::EventRouter er;
-    ListenerClass lc;
-    er.exampleListener.connect(boost::bind(&ListenerClass::listener, &lc, _1));
+    // temporary loop
+    bool quit = false;
+    while(!quit) {
+        SDL_Event event;
+        while(SDL_PollEvent(&event)) {
+            if(event.type == SDL_QUIT) quit = true;
+            else dmanager->handleEvent(&event);
+        }
+        dmanager->pollDevices();
+        SDL_Delay(30);
+    }
 
-    eq.enqueue(er.exampleListener, 2);
-
-    // 42 should be printed before 2 . . .
-    er.fire(er.exampleListener, 42);
-
-    eq.process();
-
+    /* clean up. */
     Interface::Video::destroy();
+    Interface::DeviceManager::destroy();
 
-    /* Close the log file as part of cleanup. */
     MessageSystem::closeLogFile();
 
     Config::Tree::destroy();
