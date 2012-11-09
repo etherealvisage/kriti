@@ -5,6 +5,8 @@ aux_source_directory(math mathSources)
 aux_source_directory(config configSources)
 aux_source_directory(interface interfaceSources)
 aux_source_directory(event eventSources)
+aux_source_directory(context contextSources)
+aux_source_directory(game gameSources)
 
 include_directories(.)
 
@@ -14,6 +16,8 @@ set(sources
     ${configSources}
     ${interfaceSources}
     ${eventSources}
+    ${contextSources}
+    ${gameSources}
 )
 
 find_package(Boost COMPONENTS filesystem system signals)
@@ -43,4 +47,6 @@ target_link_libraries(kriti
     ${SDLIMAGE_LIBRARY}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARY}
+    # for clock_gettime().
+    rt
 )

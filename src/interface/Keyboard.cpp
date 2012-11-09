@@ -9,12 +9,19 @@ namespace Interface {
 Keyboard::Keyboard(Event::EventQueue *queue, KeyboardRouter *router)
     : m_queue(queue), m_router(router) {
 
+    // lowercase/digits/punctuation
     for(int i = 0; i <= SDLK_LAST; i ++) {
-        if(std::islower(i) || std::isdigit(i)) {
+        if(std::islower(i) || std::isdigit(i) || std::ispunct(i)) {
             m_mappings[StreamAsString() << (char)i] = i;
         }
     }
+    // special keys.
     m_mappings["escape"] = SDLK_ESCAPE;
+
+    m_mappings["up"] = SDLK_UP;
+    m_mappings["down"] = SDLK_DOWN;
+    m_mappings["left"] = SDLK_LEFT;
+    m_mappings["right"] = SDLK_RIGHT;
 }
 
 void Keyboard::poll() {
@@ -22,7 +29,6 @@ void Keyboard::poll() {
         auto event = m_eventQueue.front();
         m_eventQueue.pop();
 
-        //auto signal = m_keyMapping[event.key.keysym.sym];
         auto iterator = m_keyMapping.find(event.key.keysym.sym);
         while(iterator != m_keyMapping.end() &&
             iterator->first == event.key.keysym.sym) {
@@ -31,10 +37,6 @@ void Keyboard::poll() {
             
             ++iterator;
         }
-        // fire the signal if it is mapped.
-        //if(signal != NULL) {
-            //Event::EventRouter::fire(*signal, event.type == SDL_KEYDOWN);
-        //}
     }
 }
 

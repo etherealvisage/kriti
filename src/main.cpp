@@ -12,6 +12,8 @@
 #include "interface/DeviceManager.h"
 #include "event/EventQueue.h"
 #include "event/EventRouter.h"
+#include "context/ContextManager.h"
+#include "game/MainMenuContext.h"
 
 void setQuit(bool *quit, bool down) {
     if(down == false) *quit = true;
@@ -37,27 +39,24 @@ int main() {
     Interface::DeviceManager *dmanager = Interface::DeviceManager::instance();
     Interface::Video::instance();
 
-    // create a keyboard device.
-    //dmanager->registerDevice<Interface::Keyboard>();
+    // create input devices.
     dmanager->registerDevices();
 
-    // temporary loop
-    bool quit = false;
+    // initialize context manager
+    Context::ContextManager::instance();
 
-    dmanager->keyboardRouter()->signal(Interface::KeyboardRouter::GUI_REJECT).
-        connect(boost::bind(setQuit, &quit, _1));
+    Context::ContextManager::instance()->addContext(
+        new Game::MainMenuContext()
+    );
 
-    while(!quit) {
-        SDL_Event event;
-        while(SDL_PollEvent(&event)) {
-            if(event.type == SDL_QUIT) quit = true;
-            else dmanager->handleEvent(&event);
-        }
-        dmanager->pollDevices();
-        SDL_Delay(30);
-    }
+    Context::ContextManager::instance()->pushContext("main menu");
+    
+    // run the rest of the program.
+    Context::ContextManager::instance()->loop();
 
-    /* clean up. */
+    // clean up.
+    Context::ContextManager::destroy();
+
     Interface::Video::destroy();
     Interface::DeviceManager::destroy();
 
