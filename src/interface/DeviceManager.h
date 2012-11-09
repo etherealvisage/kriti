@@ -5,6 +5,7 @@
 
 #include "InputDevice.h"
 #include "event/EventQueue.h"
+#include "KeyboardRouter.h"
 
 namespace Kriti {
 namespace Interface {
@@ -23,14 +24,16 @@ public:
         delete s_singleton;
     }
 private:
+    KeyboardRouter *m_keyboardRouter;
     std::vector<InputDevice *> m_deviceList;
     Event::EventQueue *m_queue;
 private:
     DeviceManager();
     ~DeviceManager();
 public:
-    template<typename DeviceType>
-    void registerDevice();
+    KeyboardRouter *keyboardRouter() const { return m_keyboardRouter; }
+
+    void registerDevices();
 private:
     void registerDevice(InputDevice *device);
 public:
@@ -38,11 +41,6 @@ public:
 
     void handleEvent(SDL_Event *event);
 };
-
-template<typename DeviceType>
-void DeviceManager::registerDevice() {
-    registerDevice(new DeviceType(m_queue));
-}
 
 }  // namespace Interface
 }  // namespace Kriti

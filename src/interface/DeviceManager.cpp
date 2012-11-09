@@ -1,4 +1,5 @@
 #include "DeviceManager.h"
+#include "Keyboard.h"
 
 namespace Kriti {
 namespace Interface {
@@ -13,6 +14,13 @@ DeviceManager::~DeviceManager() {
     for(auto device : m_deviceList) {
         delete device;
     }
+}
+
+void DeviceManager::registerDevices() {
+    m_keyboardRouter = new KeyboardRouter();
+    Keyboard *keyboard = new Keyboard(m_queue, m_keyboardRouter);
+    registerDevice(keyboard);
+    keyboard->reloadMapping();
 }
 
 void DeviceManager::registerDevice(InputDevice *device) {

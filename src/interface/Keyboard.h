@@ -1,24 +1,29 @@
 #ifndef KRITI_INTERFACE__KEYBOARD_H
 #define KRITI_INTERFACE__KEYBOARD_H
 
+#include <string>
 #include <boost/signal.hpp>
 
 #include "SDL.h"
 
 #include "InputDevice.h"
+#include "KeyboardRouter.h"
 #include "event/EventQueue.h"
-#include "event/EventRouter.h"
 
 namespace Kriti {
 namespace Interface {
 
 class Keyboard : public InputDevice {
 private:
+    std::map<std::string, int> m_mappings;
     Event::EventQueue *m_queue;
     std::queue<SDL_Event> m_eventQueue;
-    std::map<int, boost::signal<void (bool)> *> m_keyMapping;
+
+    std::multimap<int, boost::signal<void (bool)> *> m_keyMapping;
+
+    KeyboardRouter *m_router;
 public:
-    Keyboard(Event::EventQueue *queue) : m_queue(queue) {}
+    Keyboard(Event::EventQueue *queue, KeyboardRouter *router);
     virtual ~Keyboard() {}
 
     virtual void poll();
@@ -26,6 +31,8 @@ public:
     virtual void reloadMapping();
 
     virtual void handleEvent(SDL_Event *event);
+private:
+    
 };
 
 }  // namespace Interface

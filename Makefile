@@ -4,4 +4,8 @@ all:
 
 .PHONY: redep
 redep:
-	cd build/ ; cmake .. ; cd ..
+	mkdir -p build/ ; cd build/ ; cmake .. ; cd ..
+
+.PHONY: clean
+clean:
+	$(MAKE) -C build clean

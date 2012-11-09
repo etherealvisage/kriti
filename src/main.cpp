@@ -13,6 +13,10 @@
 #include "event/EventQueue.h"
 #include "event/EventRouter.h"
 
+void setQuit(bool *quit, bool down) {
+    if(down == false) *quit = true;
+}
+
 int main() {
     using namespace Kriti;
     std::cout << "Kriti." << std::endl;
@@ -34,10 +38,15 @@ int main() {
     Interface::Video::instance();
 
     // create a keyboard device.
-    dmanager->registerDevice<Interface::Keyboard>();
+    //dmanager->registerDevice<Interface::Keyboard>();
+    dmanager->registerDevices();
 
     // temporary loop
     bool quit = false;
+
+    dmanager->keyboardRouter()->signal(Interface::KeyboardRouter::GUI_REJECT).
+        connect(boost::bind(setQuit, &quit, _1));
+
     while(!quit) {
         SDL_Event event;
         while(SDL_PollEvent(&event)) {

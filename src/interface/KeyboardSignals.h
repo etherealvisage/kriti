@@ -1,0 +1,4 @@
+// GUI keys
+
+KEYBOARD_SIGNAL(GUI_ACCEPT, gui_accept)
+KEYBOARD_SIGNAL(GUI_REJECT, gui_reject)
