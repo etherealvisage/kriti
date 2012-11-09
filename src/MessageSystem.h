@@ -1,7 +1,7 @@
 #ifndef KRITI__MESSAGE_SYSTEM_H
 #define KRITI__MESSAGE_SYSTEM_H
 
-#include <fstream>
+#include <iosfwd>
 
 #include "StreamAsString.h"
 

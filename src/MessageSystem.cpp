@@ -1,5 +1,6 @@
 #include <cstring>
 #include <ctime>
+#include <fstream>
 
 #include <boost/filesystem.hpp>
 
