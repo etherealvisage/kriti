@@ -35,6 +35,7 @@ public:
     int getInt(std::string path, int def = 0);
     double getDouble(std::string path, double def = 0.0);
     std::string getString(std::string path, std::string def = "");
+    std::vector<std::string> childrenOf(std::string path) const;
 };
 
 }  // namespace Config

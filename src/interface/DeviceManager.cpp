@@ -4,7 +4,7 @@
 namespace Kriti {
 namespace Interface {
 
-DeviceManager *DeviceManager::s_singleton;
+boost::shared_ptr<DeviceManager> DeviceManager::s_singleton;
 
 DeviceManager::DeviceManager() {
     m_queue = new Event::EventQueue();

@@ -7,6 +7,7 @@
 #include "SDL.h"
 
 #include "config/Parser.h"
+#include "ResourceRegistry.h"
 #include "interface/Video.h"
 #include "interface/Keyboard.h"
 #include "interface/DeviceManager.h"
@@ -35,8 +36,12 @@ int main() {
         tree->getString("kriti.logfile", "logs/kriti-%d.log")
     );
 
+    // create resource registry.
+    ResourceRegistry::instance();
+
     // explicit calls to create the singleton instances.
-    Interface::DeviceManager *dmanager = Interface::DeviceManager::instance();
+    boost::shared_ptr<Interface::DeviceManager> dmanager
+        = Interface::DeviceManager::instance();
     Interface::Video::instance();
 
     // create input devices.
@@ -49,7 +54,7 @@ int main() {
         new Game::MainMenuContext()
     );
 
-    Context::ContextManager::instance()->pushContext("main menu");
+    Context::ContextManager::instance()->pushContext("Game::MainMenuContext");
     
     // run the rest of the program.
     Context::ContextManager::instance()->loop();
@@ -59,6 +64,8 @@ int main() {
 
     Interface::Video::destroy();
     Interface::DeviceManager::destroy();
+
+    ResourceRegistry::destroy();
 
     MessageSystem::closeLogFile();
 

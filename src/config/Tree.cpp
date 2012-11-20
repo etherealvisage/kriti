@@ -86,5 +86,12 @@ std::string Tree::getString(std::string path, std::string def) {
     return n.lock()->asString();
 }
 
+std::vector<std::string> Tree::childrenOf(std::string path) const {
+    boost::weak_ptr<TreeNode> n = node(path);
+    if(n.expired()) return std::vector<std::string>();
+    
+    return n.lock()->childList();
+}
+
 }  // namespace Config
 }  // namespace Kriti

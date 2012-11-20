@@ -63,5 +63,13 @@ boost::weak_ptr<TreeNode> TreeNode::child(const std::string &name) const {
     return i->second;
 }
 
+std::vector<std::string> TreeNode::childList() const {
+    std::vector<std::string> list;
+    for(auto i : m_children) {
+        list.push_back(i.first);
+    }
+    return list;
+}
+
 }  // namespace Config
 }  // namespace Kriti

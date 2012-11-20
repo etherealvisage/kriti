@@ -9,7 +9,8 @@
     MS_Subsystem(General), \
     MS_Subsystem(Math), \
     MS_Subsystem(Config), \
-    MS_Subsystem(Interface)
+    MS_Subsystem(Interface), \
+    MS_Subsystem(Render)
 
 #define MS_Types \
     MS_Type(Debug), \

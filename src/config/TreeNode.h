@@ -46,6 +46,7 @@ public:
 
     boost::weak_ptr<TreeNode> addChild(const std::string &name);
     boost::weak_ptr<TreeNode> child(const std::string &name) const;
+    std::vector<std::string> childList() const;
 };
 
 }  // namespace Config

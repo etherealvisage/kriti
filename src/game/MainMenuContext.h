@@ -10,7 +10,7 @@ class MainMenuContext : public Context::AbstractContext {
 public:
     MainMenuContext();
 
-    virtual std::string contextName() { return "main menu"; }
+    virtual std::string contextName() { return "Game::MainMenuContext"; }
     
     virtual void run();
 private:

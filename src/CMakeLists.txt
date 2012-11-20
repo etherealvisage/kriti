@@ -7,6 +7,7 @@ aux_source_directory(interface interfaceSources)
 aux_source_directory(event eventSources)
 aux_source_directory(context contextSources)
 aux_source_directory(game gameSources)
+aux_source_directory(render renderSources)
 
 include_directories(.)
 
@@ -18,6 +19,7 @@ set(sources
     ${eventSources}
     ${contextSources}
     ${gameSources}
+    ${renderSources}
 )
 
 find_package(Boost COMPONENTS filesystem system signals)

@@ -12,16 +12,17 @@ namespace Interface {
 
 class DeviceManager {
 private:
-    static DeviceManager *s_singleton;
+    static boost::shared_ptr<DeviceManager> s_singleton;
 public:
-    static DeviceManager *instance() {
+    static boost::shared_ptr<DeviceManager> instance() {
         if(!s_singleton) {
-            s_singleton = new DeviceManager();
+            s_singleton
+                = boost::shared_ptr<DeviceManager>(new DeviceManager());
         }
         return s_singleton;
     }
     static void destroy() {
-        delete s_singleton;
+        s_singleton.reset();
     }
 private:
     KeyboardRouter *m_keyboardRouter;
@@ -29,6 +30,7 @@ private:
     Event::EventQueue *m_queue;
 private:
     DeviceManager();
+public:
     ~DeviceManager();
 public:
     KeyboardRouter *keyboardRouter() const { return m_keyboardRouter; }
