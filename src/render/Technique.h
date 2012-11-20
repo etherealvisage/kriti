@@ -16,6 +16,8 @@ private:
     boost::shared_ptr<Shader> m_vertexShader;
     std::string m_fragShaderName;
     boost::shared_ptr<Shader> m_fragShader;
+
+    GLuint m_programID;
 public:
     Technique();
     

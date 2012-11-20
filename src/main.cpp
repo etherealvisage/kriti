@@ -15,6 +15,7 @@
 #include "event/EventRouter.h"
 #include "context/ContextManager.h"
 #include "game/MainMenuContext.h"
+#include "render/Technique.h"
 
 void setQuit(bool *quit, bool down) {
     if(down == false) *quit = true;
@@ -30,6 +31,8 @@ int main() {
 
     /* Parse main configuration file. */
     parser.parseFile("kriti.config");
+
+    parser.parseFile(tree->getString("kriti.data_path") + "techniques.config");
 
     /* Set the log file. */
     MessageSystem::setLogFile(
@@ -49,6 +52,9 @@ int main() {
 
     // initialize context manager
     Context::ContextManager::instance();
+
+    boost::shared_ptr<Render::Technique> simpleTechnique
+        = ResourceRegistry::instance()->get<Render::Technique>("simple");
 
     Context::ContextManager::instance()->addContext(
         new Game::MainMenuContext()

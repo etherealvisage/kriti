@@ -76,6 +76,10 @@ void Video::initializeGL() {
                 "GLEW_ARB_timer_query not supported.");
         }
     }
+    if(!GL_ARB_explicit_attrib_location) {
+        Message3(Interface, Fatal,
+            "GL_ARB_explicit_attrib_location OpenGL extension required.");
+    }
 }
 
 }  // namespace Interface

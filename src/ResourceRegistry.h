@@ -36,11 +36,10 @@ public:
     boost::shared_ptr<ResourceType> get(
         std::string identifier) {
 
-        boost::shared_ptr<Resource> result = m_resources.at(
-            typeid(ResourceType).name() + identifier
-        );
+        auto ir = m_resources.find(typeid(ResourceType).name() + identifier);
 
-        if(!result) {
+        boost::shared_ptr<Resource> result;
+        if(ir == m_resources.end()) {
             result = boost::shared_ptr<ResourceType>(new ResourceType());
 
             if(!result->loadFrom(identifier)) {
@@ -51,6 +50,7 @@ public:
             }
             m_resources[typeid(ResourceType).name() + identifier] = result;
         }
+        else result = (*ir).second;
 
         return boost::dynamic_pointer_cast<ResourceType>(result);
     }

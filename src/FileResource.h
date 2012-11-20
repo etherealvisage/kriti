@@ -14,7 +14,7 @@ public:
 
     virtual bool loadFrom(std::string filename);
 
-    std::string fileContent() const;
+    std::string fileContent() const { return m_content; }
 };
 
 }  // namespace Kriti

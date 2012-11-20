@@ -26,7 +26,7 @@ bool FileResource::loadFrom(std::string filename) {
     m_content = "";
     std::string l;
     while(std::getline(f, l)) {
-        m_content += l;
+        m_content += l + "\n";
     }
 
     return true;
