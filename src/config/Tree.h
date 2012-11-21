@@ -35,6 +35,8 @@ public:
     int getInt(std::string path, int def = 0);
     double getDouble(std::string path, double def = 0.0);
     std::string getString(std::string path, std::string def = "");
+    Math::Vector getVector(std::string path,
+        Math::Vector def = Math::Vector());
     std::vector<std::string> childrenOf(std::string path) const;
 };
 

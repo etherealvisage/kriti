@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "Parser.h"
 #include "MessageSystem.h"
@@ -72,6 +73,26 @@ void Parser::parseFile(const std::string &filename) {
         }
         else if(value == "true" || value == "false") {
             node.lock()->set(value == "true");
+        }
+        else if(value[0] == '(' && value[value.length()-1] == ')') {
+            std::vector<std::string> split;
+            value = value.substr(1, value.length()-2);
+            boost::algorithm::split(
+                split,
+                value,
+                boost::algorithm::is_any_of(","),
+                boost::algorithm::token_compress_on
+            );
+            double c[3] = {0};
+            if(split.size() > 3) {
+                Message3(Config, Warning,
+                    "More than three coefficients in vector specification.");
+            }
+            for(int i = 0; i < split.size(); i ++) {
+                boost::algorithm::trim(split[i]);
+                c[i] = boost::lexical_cast<double>(split[i]);
+            }
+            node.lock()->set(Math::Vector(c[0], c[1], c[2]));
         }
         else {
             if(value[0] != '"' || value[value.length()-1] != '"') {

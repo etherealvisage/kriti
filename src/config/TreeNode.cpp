@@ -71,5 +71,14 @@ std::vector<std::string> TreeNode::childList() const {
     return list;
 }
 
+Math::Vector TreeNode::asVector() const {
+    if(m_type != Vector) {
+        Message3(Config, Warning, m_path << ": this is not a vector node!");
+        Message3(Config, Warning, m_path << ": actual type is " << m_type);
+        return Math::Vector();
+    }
+    return m_valueVector;
+}
+
 }  // namespace Config
 }  // namespace Kriti

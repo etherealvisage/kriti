@@ -8,6 +8,8 @@
 
 #include "MessageSystem.h"
 
+#include "math/Vector.h"
+
 namespace Kriti {
 namespace Config {
 
@@ -19,6 +21,7 @@ public:
         Integer,
         Double,
         String,
+        Vector,
     };
 private:
     std::string m_path;
@@ -28,6 +31,7 @@ private:
     int m_valueInt;
     double m_valueDouble;
     std::string m_valueString;
+    Math::Vector m_valueVector;
 
     std::map<std::string, boost::shared_ptr<TreeNode>> m_children;
 public:
@@ -38,11 +42,14 @@ public:
     void set(double value) { m_valueDouble = value, m_type = Double; }
     void set(const std::string &value)
         { m_valueString = value, m_type = String; }
+    void set(const Math::Vector &value)
+        { m_valueVector = value, m_type = Vector; }
 
     bool asBool() const;
     int asInt() const;
     double asDouble() const;
     std::string asString() const;
+    Math::Vector asVector() const;
 
     boost::weak_ptr<TreeNode> addChild(const std::string &name);
     boost::weak_ptr<TreeNode> child(const std::string &name) const;

@@ -86,6 +86,12 @@ std::string Tree::getString(std::string path, std::string def) {
     return n.lock()->asString();
 }
 
+Math::Vector Tree::getVector(std::string path, Math::Vector def) {
+    boost::weak_ptr<TreeNode> n = node(path, false);
+    if(n.expired()) return def;
+    return n.lock()->asVector();
+}
+
 std::vector<std::string> Tree::childrenOf(std::string path) const {
     boost::weak_ptr<TreeNode> n = node(path);
     if(n.expired()) return std::vector<std::string>();
