@@ -42,9 +42,6 @@ int main() {
     // create resource registry.
     ResourceRegistry::instance();
 
-    Math::Vector v = tree->getVector("example.vector");
-    Message("Vector parsing: " << v.x() << "," << v.y() << "," << v.z());
-
     // explicit calls to create the singleton instances.
     boost::shared_ptr<Interface::DeviceManager> dmanager
         = Interface::DeviceManager::instance();

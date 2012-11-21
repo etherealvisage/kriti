@@ -7,7 +7,7 @@
 
 namespace Kriti {
 
-FileResource::FileResource() {
+FileResource::FileResource() : m_contentLoaded(false) {
 
 }
 
@@ -18,10 +18,20 @@ FileResource::~FileResource() {
 bool FileResource::loadFrom(std::string filename) {
     std::string prefix
         = Config::Tree::instance()->getString("kriti.data_path", "data/");
-    filename = prefix + filename;
-    if(!boost::filesystem::exists(filename)) return false;
+    m_filename = prefix + filename;
+    if(!boost::filesystem::exists(m_filename)) return false;
 
-    std::ifstream f(filename.c_str());
+    return true;
+}
+
+std::string FileResource::fileContent() {
+    if(!m_contentLoaded) loadFile();
+
+    return m_content;
+}
+
+void FileResource::loadFile() {
+    std::ifstream f(m_filename.c_str());
 
     m_content = "";
     std::string l;
@@ -29,7 +39,7 @@ bool FileResource::loadFrom(std::string filename) {
         m_content += l + "\n";
     }
 
-    return true;
+    m_contentLoaded = true;
 }
 
 }  // namespace Kriti

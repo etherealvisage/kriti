@@ -7,6 +7,8 @@ namespace Kriti {
 
 class FileResource : public Resource {
 private:
+    std::string m_filename;
+    bool m_contentLoaded;
     std::string m_content;
 public:
     FileResource();
@@ -14,7 +16,10 @@ public:
 
     virtual bool loadFrom(std::string filename);
 
-    std::string fileContent() const { return m_content; }
+    std::string filename() const { return m_filename; }
+    std::string fileContent();
+private:
+    void loadFile();
 };
 
 }  // namespace Kriti
