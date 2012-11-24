@@ -22,6 +22,8 @@ public:
     Technique();
     
     virtual bool loadFrom(std::string identifier);
+
+    void activate();
 };
 
 }  // namespace Render

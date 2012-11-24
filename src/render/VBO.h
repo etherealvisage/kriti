@@ -16,6 +16,7 @@ private:
 public:
     VBO();
 
+    void setData2(const std::vector<Math::Vector> &data);
     void setData(const std::vector<Math::Vector> &data);
     void setData(const std::vector<Math::Vector> &data, float padding);
 

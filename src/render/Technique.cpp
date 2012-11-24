@@ -65,5 +65,12 @@ bool Technique::loadFrom(std::string identifier) {
     return true;
 }
 
+void Technique::activate() {
+    if(m_programID == 0) {
+        Message3(Render, Error, "Activating non-loaded Technique . . .");
+    }
+    glUseProgram(m_programID);
+}
+
 }  // namespace Render
 }  // namespace Kriti

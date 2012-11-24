@@ -9,6 +9,21 @@ VBO::VBO() : m_bufferID(0) {
 
 }
 
+void VBO::setData2(const std::vector<Math::Vector> &data) {
+    m_dataType = GL_FLOAT;
+    m_dataWidth = 2;
+
+    float *memory = new float[data.size()*2];
+    for(int i = 0; i < data.size()*2; i += 2) {
+        memory[i] = data[i].x();
+        memory[i+1] = data[i].y();
+    }
+
+    makeVBO(memory, sizeof(float)*data.size()*2);
+
+    delete[] memory;
+}
+
 void VBO::setData(const std::vector<Math::Vector> &data) {
     m_dataType = GL_FLOAT;
     m_dataWidth = 3;
