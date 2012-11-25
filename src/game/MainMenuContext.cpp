@@ -2,8 +2,11 @@
 
 #include "SDL.h"
 
+#include "ResourceRegistry.h"
+
 #include "context/ContextManager.h"
 #include "interface/DeviceManager.h"
+#include "render/Model.h"
 
 namespace Kriti {
 namespace Game {
@@ -14,6 +17,7 @@ MainMenuContext::MainMenuContext() {
         ).connect(
             boost::bind(&MainMenuContext::quitMenu, this, _1)
         );
+    m_simpleModel = ResourceRegistry::instance()->get<Render::Model>("simple");
 }
 
 void MainMenuContext::run() {

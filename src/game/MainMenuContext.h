@@ -1,12 +1,18 @@
 #ifndef KRITI_GAME__MAIN_MENU_CONTEXT_H
 #define KRITI_GAME__MAIN_MENU_CONTEXT_H
 
+#include <boost/shared_ptr.hpp>
+
 #include "context/AbstractContext.h"
+
+#include "render/Model.h"
 
 namespace Kriti {
 namespace Game {
 
 class MainMenuContext : public Context::AbstractContext {
+private:
+    boost::shared_ptr<Render::Model> m_simpleModel;
 public:
     MainMenuContext();
 

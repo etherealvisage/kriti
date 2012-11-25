@@ -1,0 +1,93 @@
+#include <sstream>
+
+#include "Model.h"
+
+#include "FileResource.h"
+#include "ResourceRegistry.h"
+
+namespace Kriti {
+namespace Render {
+
+bool Model::loadFrom(std::string identifier) {
+    boost::shared_ptr<FileResource> file
+        = ResourceRegistry::instance()->get<FileResource>("models/"
+            + identifier + ".obj");
+    if(!file) return false;
+
+    Message3(Render, Log, "Loading model \"" << identifier << "\"");
+
+    std::istringstream fileStream(file->fileContent());
+
+    std::string line;
+    while(std::getline(fileStream, line)) {
+        std::istringstream ss(line);
+        std::string type;
+        ss >> type;
+        // comment?
+        if(line[0] == '#') continue;
+        // vertex specification?
+        else if(type == "v") {
+            double x, y, z;
+            ss >> x >> y >> z;
+            m_objVertices.push_back(Math::Vector(x, y, z));
+        }
+        // normal specification?
+        else if(type == "vn") {
+            double x, y, z;
+            ss >> x >> y >> z;
+            m_objNormals.push_back(Math::Vector(x, y, z));
+        }
+        // normal specification?
+        else if(type == "vt") {
+            double x, y, z;
+            ss >> x >> y >> z;
+            m_objNormals.push_back(Math::Vector(x, y, z));
+        }
+        // face specification?
+        else if(type == "f") {
+            int vi, ti, ni;
+            for(int i = 0; i < 3; i ++) {
+                ss >> vi;
+                if(ss.peek() != '/') ss >> ti;
+                else ti = 0;
+                if(ss.peek() != '/') ss >> ni;
+                else ni = 0;
+                addFaceEntry(vi-1, ti-1, ni-1);
+            }
+        }
+    }
+
+    // clear temporary vectors.
+    std::vector<Math::Vector>().swap(m_objVertices);
+    std::vector<Math::Vector>().swap(m_objNormals);
+    std::vector<Math::Vector>().swap(m_objTexCoords);
+    std::map<std::tuple<int, int, int>, int>().swap(m_objIndices);
+
+    return true;
+}
+
+void Model::addFaceEntry(int vi, int ti, int ni) {
+    std::tuple<int, int, int> t(vi, ti, ni);
+    auto fi = m_objIndices.find(t);
+    // have we seen this combination before?
+    if(fi != m_objIndices.end()) {
+        m_indices.push_back(fi->second);
+        return;
+    }
+
+    // add it.
+    m_vertices.push_back(m_objVertices[vi]);
+    if(ni != -1)
+        m_normals.push_back(m_objNormals[ni]);
+    else
+        m_normals.push_back(Math::Vector());
+
+    if(ti != -1)
+        m_texCoords.push_back(m_objTexCoords[ti]);
+    else
+        m_texCoords.push_back(Math::Vector());
+    m_objIndices[t] = m_vertices.size()-1;
+}
+
+}  // namespace Render
+}  // namespace Kriti
