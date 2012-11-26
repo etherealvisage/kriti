@@ -9,18 +9,15 @@ namespace Render {
 
 class RenderSequence {
 private:
-    Technique *m_technique;
-    std::vector<int> m_elements;
-    GLuint m_elementBufferID;
-    VAO *m_meshVAO;
+    boost::shared_ptr<Technique> m_technique;
+    int m_start, m_end;
+    boost::shared_ptr<VAO> m_vao;
 public:
-    void setTechnique(Technique *technique) { m_technique = technique; }
-    void setElementList(std::vector<int> elements);
-    void setVAO(VAO *vao) { m_meshVAO = vao; }
+    RenderSequence(boost::shared_ptr<Technique> technique,
+        boost::shared_ptr<VAO> vao, int start, int end)
+        : m_technique(technique), m_start(start), m_end(end), m_vao(vao) {}
 
     void draw();
-private:
-    void generateBuffer();
 };
 
 }  // namespace Render

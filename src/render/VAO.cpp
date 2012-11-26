@@ -7,33 +7,29 @@
 namespace Kriti {
 namespace Render {
 
-VAO::VAO() : m_arrayID(0), m_mesh(NULL) {
-    
+VAO::VAO() : m_arrayID(0) {
+    glGenVertexArrays(1, &m_arrayID);
 }
 
-void VAO::wrap(Mesh *mesh) {
-    m_mesh = mesh;
+VAO::~VAO() {
+    glDeleteVertexArrays(1, &m_arrayID);
+}
 
-    glGenVertexArrays(1, &m_arrayID);
+void VAO::addVBO(boost::shared_ptr<VBO> vbo) {
     glBindVertexArray(m_arrayID);
+    vbo->bindVBO();
+    glBindVertexArray(0);
+    m_elementVBO = vbo;
+}
 
-    VBO *vertex = mesh->vertexVBO();
-    vertex->bindVBO(0);
-    VBO *normal = mesh->normalVBO();
-    normal->bindVBO(1);
-
-    for(int i = 0; i < mesh->texCoordCount(); i ++) {
-        VBO *texture = mesh->texCoordVBO(i);
-        texture->bindVBO(i + 2);
-    }
+void VAO::addVBO(boost::shared_ptr<VBO> vbo, int location) {
+    glBindVertexArray(m_arrayID);
+    vbo->bindVBO(location);
+    glBindVertexArray(0);
+    m_dataVBOs.push_back(vbo);
 }
 
 void VAO::bind() {
-    if(m_mesh == NULL || m_arrayID == 0) {
-        Message3(Render, Error, "Trying to bind unwrapped VAO object.");
-        return;
-    }
-
     glBindVertexArray(m_arrayID);
 }
 

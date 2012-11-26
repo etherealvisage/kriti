@@ -3,7 +3,8 @@
 
 #include <vector>
 
-#include "Mesh.h"
+#include "RenderSequence.h"
+
 #include "math/Vector.h"
 #include "math/Quaternion.h"
 
@@ -12,16 +13,16 @@ namespace Render {
 
 class Renderable {
 private:
-    std::vector<Mesh *> m_meshes;
+    std::vector<boost::shared_ptr<RenderSequence>> m_sequences;
     Math::Vector m_location;
     Math::Quaternion m_orientation;
 public:
     Renderable();
     ~Renderable();
 
-    void addMesh(Mesh *mesh);
-    int meshCount() const { return m_meshes.size(); }
-    Mesh *mesh(int i) const { return m_meshes[i]; }
+    void addRenderSequence(boost::shared_ptr<RenderSequence> sequence);
+
+    void draw();
 
     Math::Vector &location() { return m_location; }
     Math::Quaternion &orientation() { return m_orientation; }

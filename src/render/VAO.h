@@ -1,7 +1,10 @@
 #ifndef KRITI_RENDER__VAO_H
 #define KRITI_RENDER__VAO_H
 
-#include "Mesh.h"
+#include <vector>
+#include <boost/shared_ptr.hpp>
+
+#include "VBO.h"
 
 namespace Kriti {
 namespace Render {
@@ -9,11 +12,15 @@ namespace Render {
 class VAO {
 private:
     GLuint m_arrayID;
-    Mesh *m_mesh;
+    boost::shared_ptr<VBO> m_elementVBO;
+    std::vector<boost::shared_ptr<VBO>> m_dataVBOs;
 public:
     VAO();
+    ~VAO();
 
-    void wrap(Mesh *mesh);
+    void addVBO(boost::shared_ptr<VBO> vbo);
+    void addVBO(boost::shared_ptr<VBO> vbo, int location);
+
     void bind();
 };
 

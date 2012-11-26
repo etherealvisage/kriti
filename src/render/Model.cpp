@@ -18,6 +18,8 @@ bool Model::loadFrom(std::string identifier) {
 
     std::istringstream fileStream(file->fileContent());
 
+    int sequenceStart = 0;
+    std::string techniqueName;
     std::string line;
     while(std::getline(fileStream, line)) {
         std::istringstream ss(line);
@@ -55,6 +57,26 @@ bool Model::loadFrom(std::string identifier) {
                 addFaceEntry(vi-1, ti-1, ni-1);
             }
         }
+        // new model sequence start?
+        else if(type == "usemtl") {
+            // avoid adding empty sequences.
+            if(sequenceStart != static_cast<int>(m_indices.size())) {
+                m_sequences.push_back(ModelSequence(techniqueName,
+                    sequenceStart, m_indices.size()-1));
+            }
+            sequenceStart = m_indices.size();
+            ss >> techniqueName;
+        }
+        else {
+            Message3(Render, Log, "Unknown command \"" << type
+                << "\" in .OBJ model");
+        }
+    }
+
+    // finish off last sequence if necessary.
+    if(sequenceStart != static_cast<int>(m_indices.size())) {
+        m_sequences.push_back(ModelSequence(techniqueName,
+            sequenceStart, m_indices.size()-1));
     }
 
     // clear temporary vectors.
@@ -87,6 +109,7 @@ void Model::addFaceEntry(int vi, int ti, int ni) {
     else
         m_texCoords.push_back(Math::Vector());
     m_objIndices[t] = m_vertices.size()-1;
+    m_indices.push_back(m_vertices.size()-1);
 }
 
 }  // namespace Render
