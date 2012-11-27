@@ -20,6 +20,19 @@ public:
     double y() const { return m_y; }
     double z() const { return m_z; }
 
+    double &operator[](int which) {
+        switch(which) {
+        case 0:
+            return m_x;
+        case 1:
+            return m_y;
+        case 2:
+            return m_z;
+        default:
+            return m_x;
+        }
+    }
+
     double length() const {
         return std::sqrt(m_x*m_x + m_y*m_y + m_z*m_z);
     }
@@ -132,6 +145,8 @@ inline Vector operator/(double scalar, const Vector &vector) {
         scalar / vector.z()
     );
 }
+
+class Point : public Vector {};
 
 }  // namespace Math
 }  // namespace Kriti

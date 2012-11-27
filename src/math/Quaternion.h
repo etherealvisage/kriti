@@ -2,6 +2,7 @@
 #define KRITI_MATH__QUATERNION_H
 
 #include "Vector.h"
+#include "Matrix.h"
 
 namespace Kriti {
 namespace Math {
@@ -35,6 +36,8 @@ public:
     Vector operator*(const Vector &other) const {
         return ((*this) * Quaternion(0.0, other) * conjugate()).m_v;
     }
+
+    Matrix toMatrix() const;
 };
 
 inline Vector operator*(const Vector &vec, const Quaternion &quat) {
