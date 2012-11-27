@@ -12,6 +12,8 @@ class AffineTransformation {
 private:
     Matrix m_transformation;
 public:
+    const Matrix &matrix() const { return m_transformation; }
+
     void translate(Vector by);
     void rotate(Point around, Quaternion by);
     void scale(Point around, double factor);

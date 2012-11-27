@@ -4,6 +4,8 @@
 #include "Technique.h"
 #include "VAO.h"
 
+#include "math/Matrix.h"
+
 namespace Kriti {
 namespace Render {
 
@@ -17,7 +19,8 @@ public:
         boost::shared_ptr<VAO> vao, int start, int end)
         : m_technique(technique), m_start(start), m_end(end), m_vao(vao) {}
 
-    void draw();
+    void draw(const Math::Matrix &projection,
+        const Math::Matrix &modelTransformation);
 };
 
 }  // namespace Render

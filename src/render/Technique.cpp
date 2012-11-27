@@ -65,11 +65,37 @@ bool Technique::loadFrom(std::string identifier) {
     return true;
 }
 
+void Technique::setUniform(const std::string &name,
+    const Math::Matrix &matrix) {
+
+
+    GLint location = getUniformLocation(name);
+    if(location != -1) {
+        glUniformMatrix4fv(location, 1, false, matrix.matrixData());
+    }
+}
+
 void Technique::activate() {
     if(m_programID == 0) {
         Message3(Render, Error, "Activating non-loaded Technique . . .");
     }
     glUseProgram(m_programID);
+}
+
+GLint Technique::getUniformLocation(const std::string &name) {
+    if(m_programID == 0) {
+        Message3(Render, Error,
+            "Getting uniform location for non-loaded technique!");
+
+        return -1;
+    }
+    auto fi = m_uniformLocations.find(name);
+    if(fi != m_uniformLocations.end()) return fi->second;
+
+    GLint location = glGetUniformLocation(m_programID, name.c_str());
+    m_uniformLocations[name] = location;
+
+    return location;
 }
 
 }  // namespace Render

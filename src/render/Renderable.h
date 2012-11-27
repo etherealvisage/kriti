@@ -7,6 +7,7 @@
 
 #include "math/Vector.h"
 #include "math/Quaternion.h"
+#include "math/Matrix.h"
 
 namespace Kriti {
 namespace Render {
@@ -17,12 +18,9 @@ private:
     Math::Vector m_location;
     Math::Quaternion m_orientation;
 public:
-    Renderable();
-    ~Renderable();
-
     void addRenderSequence(boost::shared_ptr<RenderSequence> sequence);
 
-    void draw();
+    void draw(const Math::Matrix &projection);
 
     Math::Vector &location() { return m_location; }
     Math::Quaternion &orientation() { return m_orientation; }

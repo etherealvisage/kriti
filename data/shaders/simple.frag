@@ -2,8 +2,9 @@
 
 #extension GL_ARB_explicit_attrib_location : require
 
-layout(location = 0) out vec4 fragColour;
+//out vec4 fragColour;
 
 void main() {
-    fragColour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    //fragColour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    gl_FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }

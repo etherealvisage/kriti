@@ -8,8 +8,12 @@ namespace Kriti {
 namespace Render {
 
 VBO::VBO(bool isElementData) : m_bufferID(0) {
-    if(isElementData) m_bindType = GL_ELEMENT_ARRAY_BUFFER;
-    else m_bindType = GL_ARRAY_BUFFER;
+    if(isElementData) {
+        m_bindType = GL_ELEMENT_ARRAY_BUFFER;
+    }
+    else {
+        m_bindType = GL_ARRAY_BUFFER;
+    }
 }
 
 VBO::~VBO() {

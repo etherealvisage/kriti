@@ -83,7 +83,7 @@ bool Model::loadFrom(std::string identifier) {
     std::vector<Math::Vector>().swap(m_objVertices);
     std::vector<Math::Vector>().swap(m_objNormals);
     std::vector<Math::Vector>().swap(m_objTexCoords);
-    std::map<std::tuple<int, int, int>, int>().swap(m_objIndices);
+    std::map<std::tuple<int, int, int>, unsigned int>().swap(m_objIndices);
 
     return true;
 }
