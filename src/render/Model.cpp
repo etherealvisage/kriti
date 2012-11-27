@@ -48,12 +48,19 @@ bool Model::loadFrom(std::string identifier) {
         // face specification?
         else if(type == "f") {
             int vi, ti, ni;
+            char dummy;
             for(int i = 0; i < 3; i ++) {
                 ss >> vi;
+                if(ss.peek() != '/') {
+                    Message3(Render, Warning, "Malformed .OBJ file.");
+                    return false;
+                }
+                ss >> dummy;
+
                 if(ss.peek() != '/') ss >> ti;
-                else ti = 0;
+                else ti = 0, ss >> dummy;
                 if(ss.peek() != '/') ss >> ni;
-                else ni = 0;
+                else ni = 0, ss >> dummy;
                 addFaceEntry(vi-1, ti-1, ni-1);
             }
         }
@@ -79,6 +86,9 @@ bool Model::loadFrom(std::string identifier) {
             sequenceStart, m_indices.size()-1));
     }
 
+    Message3(Render, Debug, "Loaded OBJ model with " << m_indices.size()
+        << " indices.");
+
     // clear temporary vectors.
     std::vector<Math::Vector>().swap(m_objVertices);
     std::vector<Math::Vector>().swap(m_objNormals);
@@ -90,9 +100,11 @@ bool Model::loadFrom(std::string identifier) {
 
 void Model::addFaceEntry(int vi, int ti, int ni) {
     std::tuple<int, int, int> t(vi, ti, ni);
+    //Message3(Render, Debug, "Tuple: <" << vi << "," << ti << "," << ni << ">");
     auto fi = m_objIndices.find(t);
     // have we seen this combination before?
     if(fi != m_objIndices.end()) {
+        //Message3(Render, Debug, "Adding (old) index " << fi->second);
         m_indices.push_back(fi->second);
         return;
     }
@@ -110,6 +122,7 @@ void Model::addFaceEntry(int vi, int ti, int ni) {
         m_texCoords.push_back(Math::Vector());
     m_objIndices[t] = m_vertices.size()-1;
     m_indices.push_back(m_vertices.size()-1);
+    /*Message3(Render, Debug, "Adding (new) index " << m_vertices.size()-1);*/
 }
 
 }  // namespace Render

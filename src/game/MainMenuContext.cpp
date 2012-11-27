@@ -49,8 +49,11 @@ MainMenuContext::MainMenuContext() {
     p = m * p;
     Message("p transformed: " << p.x() << "," << p.y() << "," << p.z());*/
 
-    m_pipeline->addRenderable(
-        Render::RenderableFactory().fromModel(m_simpleModel));
+    m_simpleRenderable =
+        Render::RenderableFactory().fromModel(m_simpleModel);
+
+    m_simpleRenderable->location() = Math::Vector(0.0, 0.0, -20.0);
+    m_pipeline->addRenderable(m_simpleRenderable);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_GEQUAL);
@@ -67,11 +70,13 @@ MainMenuContext::MainMenuContext() {
     glBindVertexArray(g_vaoID);
     glGenBuffers(1, &g_vboID);
     glBindBuffer(GL_ARRAY_BUFFER, g_vboID);
+
     const float vertexData[] = {
         0.0f, -1.0f, 0.0f,
         -1.0f, 1.0f, 0.0f,
         1.0f, 1.0f, 0.0f
     };
+
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData,
         GL_STATIC_DRAW);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
@@ -81,9 +86,13 @@ MainMenuContext::MainMenuContext() {
 
 void MainMenuContext::run() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_simpleRenderable->orientation() = m_simpleRenderable->orientation()
+        * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), 0.01);
+
     m_pipeline->render();
 
-    glBindVertexArray(g_vaoID);
+    /*glBindVertexArray(g_vaoID);
     auto shader = ResourceRegistry::instance()->get<Render::Technique>(
         "simple");
 
@@ -95,7 +104,7 @@ void MainMenuContext::run() {
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    glBindVertexArray(0);
+    glBindVertexArray(0);*/
 
     GLint err = glGetError();
     while(err != GL_NO_ERROR) {

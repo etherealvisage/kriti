@@ -7,6 +7,7 @@
 
 #include "render/Model.h"
 #include "render/Pipeline.h"
+#include "render/Renderable.h"
 
 namespace Kriti {
 namespace Game {
@@ -14,6 +15,7 @@ namespace Game {
 class MainMenuContext : public Context::AbstractContext {
 private:
     boost::shared_ptr<Render::Model> m_simpleModel;
+    boost::shared_ptr<Render::Renderable> m_simpleRenderable;
     Render::Pipeline *m_pipeline;
 public:
     MainMenuContext();
