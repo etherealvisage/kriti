@@ -39,6 +39,35 @@ Matrix &Matrix::operator-=(const Matrix &other) {
     return *this;
 }
 
+Matrix Matrix::operator*(const Matrix &other) const {
+    Matrix m;
+    for(int i = 0; i < 4; i ++) {
+        for(int j = 0; j < 4; j ++) {
+            m(i, j) = (*this)(i, 0)*other(0, j)
+                + (*this)(i, 1)*other(1, j)
+                + (*this)(i, 2)*other(2, j)
+                + (*this)(i, 3)*other(3, j);
+        }
+    }
+    return m;
+}
+
+Matrix &Matrix::operator*=(const Matrix &other) {
+    *this = *this * other;
+    return *this;
+}
+
+Matrix Matrix::operator*(double factor) const {
+    Matrix result = *this;
+    for(int i = 0; i < 16; i ++) result.m_coefficients[i] *= factor;
+    return result;
+}
+
+Matrix &Matrix::operator*=(double factor) {
+    for(int i = 0; i < 16; i ++) m_coefficients[i] *= factor;
+    return *this;
+}
+
 Vector Matrix::operator*(const Vector &other) const {
     Vector v;
     for(int i = 0; i < 4; i ++) {
