@@ -16,7 +16,7 @@ void RenderSequence::draw(const Math::Matrix &projection,
     m_technique->setUniform("model", modelTransformation);
 
     glDrawElements(GL_TRIANGLES, m_end-m_start+1, GL_UNSIGNED_INT,
-        (void *)(sizeof(int)*m_start));
+        (void *)(sizeof(unsigned int)*m_start));
 }
 
 }  // namespace Render

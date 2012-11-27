@@ -79,14 +79,14 @@ Vector Matrix::operator*(const Vector &other) const {
 }
 
 Point Matrix::operator*(const Point &other) const {
-    Point p;
+    double pc[4];
     for(int i = 0; i < 4; i ++) {
-        p[i] = m_coefficients[i*4+0]*other.x()
+        pc[i] = m_coefficients[i*4+0]*other.x()
             + m_coefficients[i*4+1]*other.y()
             + m_coefficients[i*4+2]*other.z()
             + m_coefficients[i*4+3];
     }
-    return p;
+    return Point(pc[0]/pc[3],pc[1]/pc[3],pc[2]/pc[3]);
 }
 
 }  // namespace Math

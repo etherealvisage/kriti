@@ -4,9 +4,9 @@ namespace Kriti {
 namespace Math {
 
 void AffineTransformation::translate(Vector by) {
-    m_transformation(3, 0) += by.x();
-    m_transformation(3, 1) += by.y();
-    m_transformation(3, 2) += by.z();
+    m_transformation(0, 3) += by.x();
+    m_transformation(1, 3) += by.y();
+    m_transformation(2, 3) += by.z();
 }
 
 void AffineTransformation::rotate(Point around, Quaternion by) {

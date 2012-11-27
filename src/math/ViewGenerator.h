@@ -8,6 +8,8 @@ namespace Math {
 
 class ViewGenerator {
 public:
+    Matrix frustum(double left, double right, double top, double bottom,
+        double near, double far);
     Matrix perspective(double fov, double ratio, double near, double far);
 };
 
