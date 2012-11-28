@@ -30,7 +30,7 @@ MainMenuContext::MainMenuContext() {
         Math::Constants::Pi/3.0, 4.0/3.0, 0.01, 1000.0
     ));
 
-    m_pipeline->camera()->setTarget(Math::Vector(0.0, 0.0, -10.0),
+    m_pipeline->camera()->setTarget(Math::Vector(0.0, 0.0, -5.0),
         Math::Quaternion());
 
     m_pipeline->camera()->step(0.0);
@@ -48,11 +48,18 @@ MainMenuContext::MainMenuContext() {
             (rand()%1000)/5.0 - 10.0,
             (rand()%1000)/5.0 - 10.0);
 
+        rp->orientation() = Math::Quaternion(
+            Math::Vector(0.1 + (rand()%1000)/1000.0,
+                0.1 + (rand()%1000)/1000.0,
+                0.1 + (rand()%1000)/1000.0).normalized(),
+            (rand()%1000)/150.0
+        );
+
         m_pipeline->addRenderable(rp);
     }
 
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+    glDepthFunc(GL_LESS);
     glFrontFace(GL_CCW);
     glEnable(GL_CULL_FACE);
     glDisable(GL_CULL_FACE);
@@ -69,7 +76,7 @@ void MainMenuContext::run() {
         * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), 0.01);*/
 
     static int steps = 0;
-    m_pipeline->camera()->setTarget(Math::Vector(0.0, 0.0, -10.0),
+    m_pipeline->camera()->setTarget(Math::Vector(0.0, 0.0, -5.0),
         Math::Quaternion(Math::Vector(0.0f, 1.0f, 0.0f), steps/100.0));
     steps ++;
     m_pipeline->camera()->step(0.0);
