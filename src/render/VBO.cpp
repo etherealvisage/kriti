@@ -49,10 +49,10 @@ void VBO::setData(const std::vector<Math::Vector> &data) {
     m_dataWidth = 3;
 
     float *memory = new float[data.size()*3];
-    for(unsigned i = 0; i < data.size()*3; i += 3) {
-        memory[i] = data[i].x();
-        memory[i+1] = data[i].y();
-        memory[i+2] = data[i].z();
+    for(unsigned i = 0; i < data.size(); i ++) {
+        memory[(i*3)] = data[i].x();
+        memory[(i*3)+1] = data[i].y();
+        memory[(i*3)+2] = data[i].z();
     }
 
     makeVBO(memory, sizeof(float)*data.size()*3);

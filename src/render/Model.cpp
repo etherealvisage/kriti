@@ -100,11 +100,10 @@ bool Model::loadFrom(std::string identifier) {
 
 void Model::addFaceEntry(int vi, int ti, int ni) {
     std::tuple<int, int, int> t(vi, ti, ni);
-    //Message3(Render, Debug, "Tuple: <" << vi << "," << ti << "," << ni << ">");
+
     auto fi = m_objIndices.find(t);
     // have we seen this combination before?
     if(fi != m_objIndices.end()) {
-        //Message3(Render, Debug, "Adding (old) index " << fi->second);
         m_indices.push_back(fi->second);
         return;
     }
@@ -122,7 +121,6 @@ void Model::addFaceEntry(int vi, int ti, int ni) {
         m_texCoords.push_back(Math::Vector());
     m_objIndices[t] = m_vertices.size()-1;
     m_indices.push_back(m_vertices.size()-1);
-    /*Message3(Render, Debug, "Adding (new) index " << m_vertices.size()-1);*/
 }
 
 }  // namespace Render

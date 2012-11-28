@@ -1,6 +1,8 @@
 #include "Renderable.h"
 #include "math/AffineTransformation.h"
 
+#include "MessageSystem.h"
+
 namespace Kriti {
 namespace Render {
 
