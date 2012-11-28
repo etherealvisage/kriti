@@ -24,6 +24,7 @@ private:
 public:
     ~Video();
 
+    double aspectRatio() const;
 private:
     void initializeSDL();
     void setVideoMode();

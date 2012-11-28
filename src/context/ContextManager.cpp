@@ -22,6 +22,7 @@ void ContextManager::pushContext(std::string name) {
 
 void ContextManager::popContext() {
     m_contextStack.pop_back();
+    if(m_contextStack.size()) m_contextStack.back()->activate();
 }
 
 void ContextManager::loop() {

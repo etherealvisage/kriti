@@ -21,6 +21,13 @@ Video::~Video() {
     SDL_Quit();
 }
 
+double Video::aspectRatio() const {
+    int width = Config::Tree::instance()->getInt("video.width", 800);
+    int height = Config::Tree::instance()->getInt("video.height", 600);
+    
+    return (double)width/height;
+}
+
 void Video::initializeSDL() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         Message3(Interface, Fatal, "Failed to initialize SDL: " << SDL_GetError());
@@ -56,6 +63,15 @@ void Video::initializeGL() {
 
     /* Basic OpenGL setup. */
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glFrontFace(GL_CCW);
+    glEnable(GL_CULL_FACE);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     Message3(Interface, Log, "Created OpenGL context (vendor:"
         << glGetString(GL_VENDOR) << ", renderer: " << glGetString(GL_RENDERER)

@@ -9,16 +9,15 @@
 #include "render/Pipeline.h"
 #include "render/Renderable.h"
 
+#include "TimeValue.h"
+
 namespace Kriti {
 namespace Game {
 
 class MainMenuContext : public Context::AbstractContext {
 private:
-    boost::shared_ptr<Render::Model> m_simpleModel;
-    boost::shared_ptr<Render::Renderable> m_simpleRenderable;
     Render::Pipeline *m_pipeline;
-    std::vector<boost::shared_ptr<Render::Renderable>> m_objects;
-    std::vector<Math::Vector> m_speeds;
+    TimeValue m_lastTime;
 public:
     MainMenuContext();
 
@@ -26,7 +25,7 @@ public:
     
     virtual void run();
 private:
-    virtual void activateHook() {}
+    virtual void activateHook() { m_lastTime = TimeValue::current(); }
     virtual void deactivateHook() {}
 private:
     void quitMenu(bool);
