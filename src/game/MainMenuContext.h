@@ -17,6 +17,8 @@ private:
     boost::shared_ptr<Render::Model> m_simpleModel;
     boost::shared_ptr<Render::Renderable> m_simpleRenderable;
     Render::Pipeline *m_pipeline;
+    std::vector<boost::shared_ptr<Render::Renderable>> m_objects;
+    std::vector<Math::Vector> m_speeds;
 public:
     MainMenuContext();
 
