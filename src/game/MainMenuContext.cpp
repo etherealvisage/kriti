@@ -27,11 +27,11 @@ MainMenuContext::MainMenuContext() {
     m_pipeline = new Render::Pipeline();
 
     m_pipeline->camera()->setProjection(Math::ViewGenerator().perspective(
-        Math::Constants::Pi/3.0, 4.0/3.0, 0.01, 100.0
+        Math::Constants::Pi/3.0, 4.0/3.0, 0.01, 1000.0
     ));
 
-    /*m_pipeline->camera()->setTarget(Math::Vector(0.0, 0.0, 10.0),
-        Math::Quaternion());*/
+    m_pipeline->camera()->setTarget(Math::Vector(0.0, 0.0, -10.0),
+        Math::Quaternion());
 
     m_pipeline->camera()->step(0.0);
 
@@ -40,6 +40,16 @@ MainMenuContext::MainMenuContext() {
 
     m_simpleRenderable->location() = Math::Vector(0.0, 0.0, -10.0);
     m_pipeline->addRenderable(m_simpleRenderable);
+
+    for(int i = 0; i < 1000; i ++) {
+        auto rp = Render::RenderableFactory().fromModel(m_simpleModel);
+        rp->location() = Math::Vector(
+            (rand()%1000)/5.0 + 10.0,
+            (rand()%1000)/5.0 - 10.0,
+            (rand()%1000)/5.0 - 10.0);
+
+        m_pipeline->addRenderable(rp);
+    }
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -55,8 +65,14 @@ MainMenuContext::MainMenuContext() {
 void MainMenuContext::run() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_simpleRenderable->orientation() = m_simpleRenderable->orientation()
-        * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), 0.01);
+    /*m_simpleRenderable->orientation() = m_simpleRenderable->orientation()
+        * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), 0.01);*/
+
+    static int steps = 0;
+    m_pipeline->camera()->setTarget(Math::Vector(0.0, 0.0, -10.0),
+        Math::Quaternion(Math::Vector(0.0f, 1.0f, 0.0f), steps/100.0));
+    steps ++;
+    m_pipeline->camera()->step(0.0);
 
     m_pipeline->render();
 
