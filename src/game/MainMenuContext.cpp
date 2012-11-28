@@ -17,8 +17,6 @@
 namespace Kriti {
 namespace Game {
 
-GLuint g_vaoID, g_vboID;
-
 MainMenuContext::MainMenuContext() {
     Interface::DeviceManager::instance()->keyboardRouter()->signal(
             Interface::KeyboardRouter::GUI_exit
@@ -44,8 +42,7 @@ MainMenuContext::MainMenuContext() {
     m_pipeline->addRenderable(m_simpleRenderable);
 
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_GEQUAL);
-    glDisable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
     glFrontFace(GL_CCW);
     glEnable(GL_CULL_FACE);
     glDisable(GL_CULL_FACE);
@@ -53,23 +50,6 @@ MainMenuContext::MainMenuContext() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.03f, 0.03f, 0.03f, 1.0f);
-
-    glGenVertexArrays(1, &g_vaoID);
-    glBindVertexArray(g_vaoID);
-    glGenBuffers(1, &g_vboID);
-    glBindBuffer(GL_ARRAY_BUFFER, g_vboID);
-
-    const float vertexData[] = {
-        0.0f, -1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f,
-        1.0f, 1.0f, 0.0f
-    };
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData,
-        GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
-    glEnableVertexAttribArray(0);
-    glBindVertexArray(0);
 }
 
 void MainMenuContext::run() {
