@@ -27,9 +27,9 @@ void VBO::setData2(const std::vector<Math::Vector> &data) {
     m_dataWidth = 2;
 
     float *memory = new float[data.size()*2];
-    for(unsigned i = 0; i < data.size()*2; i += 2) {
-        memory[i] = data[i].x();
-        memory[i+1] = data[i].y();
+    for(unsigned i = 0; i < data.size(); i ++) {
+        memory[(i*2)] = data[i].x();
+        memory[(i*2)+1] = data[i].y();
     }
 
     makeVBO(memory, sizeof(float)*data.size()*2);
@@ -50,7 +50,7 @@ void VBO::setData(const std::vector<Math::Vector> &data) {
 
     float *memory = new float[data.size()*3];
     for(unsigned i = 0; i < data.size(); i ++) {
-        memory[(i*3)] = data[i].x();
+        memory[(i*3)+0] = data[i].x();
         memory[(i*3)+1] = data[i].y();
         memory[(i*3)+2] = data[i].z();
     }
@@ -65,11 +65,11 @@ void VBO::setData(const std::vector<Math::Vector> &data, float padding) {
     m_dataWidth = 4;
 
     float *memory = new float[data.size()*4];
-    for(unsigned i = 0; i < data.size()*4; i += 4) {
-        memory[i] = data[i].x();
-        memory[i+1] = data[i].y();
-        memory[i+2] = data[i].z();
-        memory[i+3] = padding;
+    for(unsigned i = 0; i < data.size(); i ++) {
+        memory[(i*4)+0] = data[i].x();
+        memory[(i*4)+1] = data[i].y();
+        memory[(i*4)+2] = data[i].z();
+        memory[(i*4)+3] = padding;
     }
 
     makeVBO(memory, sizeof(float)*data.size()*4);
