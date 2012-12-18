@@ -10,7 +10,8 @@
     MS_Subsystem(Math), \
     MS_Subsystem(Config), \
     MS_Subsystem(Interface), \
-    MS_Subsystem(Render)
+    MS_Subsystem(Render), \
+    MS_Subsystem(Physics)
 
 #define MS_Types \
     MS_Type(Debug), \
