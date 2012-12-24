@@ -11,7 +11,8 @@
     MS_Subsystem(Config), \
     MS_Subsystem(Interface), \
     MS_Subsystem(Render), \
-    MS_Subsystem(Physics)
+    MS_Subsystem(Physics), \
+    MS_Subsystem(Game)
 
 #define MS_Types \
     MS_Type(Debug), \
