@@ -10,7 +10,7 @@ namespace Game {
 
 class Track {
 private:
-    boost::shared_ptr<TrackNode> m_rootNode;
+    TrackNodePtr m_rootNode;
 public:
     Track() {}
     ~Track() {}
@@ -20,12 +20,15 @@ private:
     void seedTrack();
 
     void subdivide(int levels);
-    void performChaikin(int levels);
-    void openChaikinHelper(std::vector<boost::shared_ptr<TrackNode>> path,
-        boost::shared_ptr<TrackNode> &start,
-        boost::shared_ptr<TrackNode> &end, int levels);
+    void performChaikin();
+    void openChaikinHelper(std::vector<TrackNodePtr> path,
+        std::map<TrackNodePtr, TrackNodePtr> &nodeMap, TrackNodePtr &start,
+        TrackNodePtr &end);
 
     void extrude();
+
+private:
+    std::vector<std::vector<TrackNodePtr>> findPaths();
 };
 
 }  // namespace Game

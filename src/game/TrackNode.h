@@ -30,6 +30,8 @@ public:
     void removeNext(boost::shared_ptr<TrackNode> next);
 };
 
+typedef boost::shared_ptr<TrackNode> TrackNodePtr;
+
 }  // namespace Game
 }  // namespace Kriti
 

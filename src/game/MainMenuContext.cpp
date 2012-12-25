@@ -18,6 +18,8 @@
 #include "physics/PhysicalObject.h"
 #include "Object.h"
 
+#include "game/Track.h"
+
 namespace Kriti {
 namespace Game {
 
@@ -53,6 +55,9 @@ MainMenuContext::MainMenuContext() {
     g_exampleObject = boost::shared_ptr<Object>(new Object());
     g_exampleObject->setRenderable(simpleRenderable);
     g_exampleObject->setPhysical(simplePhysical);
+
+    Game::Track gt;
+    gt.generateTrack();
 }
 
 void MainMenuContext::run() {
