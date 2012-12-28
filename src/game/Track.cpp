@@ -7,6 +7,8 @@
 
 #include "Track.h"
 #include "MessageSystem.h"
+#include "math/Constants.h"
+#include "math/Quaternion.h"
 
 namespace Kriti {
 namespace Game {
@@ -14,10 +16,20 @@ namespace Game {
 void Track::generateTrack() {
     seedTrack();
 
-    //randomizeTrack();
-
-    subdivide(8);
+    subdivide(4);
     extrude();
+
+    if(1) {
+        auto pathList = findPaths();
+
+        for(auto v : pathList) {
+            Message3(Game, Debug, "Path:");
+            for(auto t : v) {
+                Message3(Game, Debug, "    (" << t->position().x() << ","
+                    << t->position().y() << "," << t->position().z() << ")");
+            }
+        }
+    }
 }
 
 void Track::seedTrack() {
@@ -25,10 +37,10 @@ void Track::seedTrack() {
         new TrackNode(Math::Vector(0.0, 0.0, 0.0)));
 
     auto second = boost::shared_ptr<TrackNode>(
-        new TrackNode(Math::Vector(-100.0, 0.0, 100.0)));
+        new TrackNode(Math::Vector(-100.0, 0.0, -100.0)));
 
     auto third = boost::shared_ptr<TrackNode>(
-        new TrackNode(Math::Vector(100.0, 0.0, 200.0)));
+        new TrackNode(Math::Vector(100.0, 0.0, -200.0)));
 
     m_rootNode->addNext(second);
 
@@ -61,7 +73,9 @@ void Track::performChaikin() {
 
         if(first) {
             if(path.front() == m_rootNode) {
-                m_rootNode = nstart;
+                m_rootNode =
+                    boost::make_shared<TrackNode>(m_rootNode->position());
+                m_rootNode->addNext(nstart);
             }
             else {
                 nmap[path.front()]->addNext(nstart);
@@ -112,7 +126,7 @@ void Track::openChaikinHelper(std::vector<boost::shared_ptr<TrackNode>> path,
 }
 
 void Track::extrude() {
-    std::map<TrackNodePtr, Math::Vector> curveNormals;
+    std::map<TrackNodePtr, Math::Vector> curveNormals, projNormals;
 
     auto list = findPaths();
 
@@ -134,11 +148,43 @@ void Track::extrude() {
             }
 
             curveNormals[path[i]] = normal;
+
+            Math::Vector projNormal(normal.x(), 0, normal.z());
+            if(projNormal.length2() < Math::Constants::Epsilon) {
+                // rotate the normal slightly and try again.
+                Math::Quaternion q(tangent, Math::Constants::Pi/3);
+                projNormal = Math::Vector((q*normal).x(), 0, (q*normal).z());
+
+                if(projNormal.length2() < Math::Constants::Epsilon) {
+                    Message3(Game, Fatal,
+                        "Couldn't find appropriate curve normal.");
+                }
+            }
+
+            projNormal = projNormal.normalized();
+            if(std::fabs(projNormal.x()) < Math::Constants::Epsilon) {
+                Message3(Game, Fatal, "Resulting normal has x-value 0.");
+            }
+            if(projNormal.x() < 0) projNormal *= -1.0;
+
+            projNormals[path[i]] = projNormal.normalized();
         }
     }
 
     for(auto path : list) {
-        
+        for(unsigned i = 1; i < path.size(); i ++) {
+            auto c1 = path[i-1]->position(), c2 = path[i]->position();
+            auto pn1 = projNormals[path[i-1]], pn2 = projNormals[path[i]];
+            auto v1 = c1 + pn1, v2 = c1 - pn1;
+            auto v3 = c2 + pn2, v4 = c2 - pn2;
+            m_geometry.push_back(v1);
+            m_geometry.push_back(v3);
+            m_geometry.push_back(v2);
+
+            m_geometry.push_back(v2);
+            m_geometry.push_back(v3);
+            m_geometry.push_back(v4);
+        }
     }
 }
 

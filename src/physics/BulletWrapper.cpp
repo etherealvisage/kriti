@@ -35,7 +35,7 @@ BulletWrapper::~BulletWrapper() {
 }
 
 void BulletWrapper::stepWorld(int usec) {
-    m_world->stepSimulation(usec, 10, 1 / 100.0);
+    m_world->stepSimulation(usec / 1000.0, 10, 1 / 100.0);
 }
 
 }  // namespace Physics

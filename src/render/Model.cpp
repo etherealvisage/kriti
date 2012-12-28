@@ -75,7 +75,7 @@ bool Model::loadFrom(std::string identifier) {
             ss >> techniqueName;
         }
         else {
-            Message3(Render, Log, "Unknown command \"" << type
+            Message3(Render, Debug, "Unknown command \"" << type
                 << "\" in .OBJ model");
         }
     }

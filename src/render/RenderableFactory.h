@@ -4,12 +4,16 @@
 #include "Renderable.h"
 #include "Model.h"
 
+#include "game/Track.h"
+
 namespace Kriti {
 namespace Render {
 
 class RenderableFactory {
 public:
     boost::shared_ptr<Renderable> fromModel(boost::shared_ptr<Model> model);
+    boost::shared_ptr<Renderable> fromTriangleGeometry(
+        const std::vector<Math::Vector> &geometry, std::string technique);
 };
 
 }  // namespace Render

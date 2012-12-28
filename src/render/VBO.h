@@ -15,7 +15,7 @@ private:
     GLenum m_dataType;
     GLint m_dataWidth;
 public:
-    VBO(bool isElementData = false);
+    explicit VBO(bool isElementData = false);
     ~VBO();
 
     void setData2(const std::vector<Math::Vector> &data);

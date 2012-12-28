@@ -15,6 +15,7 @@ void RenderSequence::draw(const Math::Matrix &projection,
     m_technique->setUniform("camera", projection);
     m_technique->setUniform("model", modelTransformation);
 
+    Message3(Render, Debug, "Drawing " << m_end-m_start+1 << " vertices!");
     glDrawElements(GL_TRIANGLES, m_end-m_start+1, GL_UNSIGNED_INT,
         (void *)(sizeof(unsigned int)*m_start));
 }

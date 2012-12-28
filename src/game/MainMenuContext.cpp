@@ -50,7 +50,7 @@ MainMenuContext::MainMenuContext() {
 
     simplePhysical->setLocation(Math::Vector(0.0, 0.0, -20.0));
 
-    m_pipeline->addRenderable(simpleRenderable);
+    //m_pipeline->addRenderable(simpleRenderable);
 
     g_exampleObject = boost::shared_ptr<Object>(new Object());
     g_exampleObject->setRenderable(simpleRenderable);
@@ -58,6 +58,11 @@ MainMenuContext::MainMenuContext() {
 
     Game::Track gt;
     gt.generateTrack();
+
+    auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
+        gt.geometry(), "white");
+
+    m_pipeline->addRenderable(trackRenderable);
 }
 
 void MainMenuContext::run() {
@@ -65,15 +70,15 @@ void MainMenuContext::run() {
     TimeValue sinceLast = current - m_lastTime;
     m_lastTime = current;
 
-    Message3(General, Log, "Time since last frame: " << sinceLast.toUsec());
+    //Message3(General, Log, "Time since last frame: " << sinceLast.toUsec());
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     Physics::BulletWrapper::instance()->stepWorld(sinceLast.toUsec());
     g_exampleObject->updateRenderableFromPhysical();
-    Message("Y coordinate: " << g_exampleObject->physical()->location().y());
+    //Message("Y coordinate: " << g_exampleObject->physical()->location().y());
 
-    m_pipeline->camera()->step(sinceLast.toUsec() / 1e6);
+    m_pipeline->camera()->step(sinceLast.toUsec() / 1e3);
 
     m_pipeline->render();
 

@@ -11,11 +11,13 @@ namespace Game {
 class Track {
 private:
     TrackNodePtr m_rootNode;
+    std::vector<Math::Vector> m_geometry;
 public:
     Track() {}
     ~Track() {}
 
     void generateTrack();
+    const std::vector<Math::Vector> &geometry() const { return m_geometry; }
 private:
     void seedTrack();
 
@@ -26,7 +28,6 @@ private:
         TrackNodePtr &end);
 
     void extrude();
-
 private:
     std::vector<std::vector<TrackNodePtr>> findPaths();
 };

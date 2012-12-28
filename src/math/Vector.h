@@ -83,6 +83,10 @@ public:
         return Vector(-m_x, -m_y, -m_z);
     }
 
+    Vector projectOnto(const Vector &u) const {
+        return *this * (u.dot(*this)/dot(*this));
+    }
+
     double dot(const Vector &other) const {
         return m_x*other.m_x + m_y*other.m_y + m_z*other.m_z;
     }
