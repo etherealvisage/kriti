@@ -50,7 +50,7 @@ MainMenuContext::MainMenuContext() {
 
     simplePhysical->setLocation(Math::Vector(0.0, 0.0, -20.0));
 
-    //m_pipeline->addRenderable(simpleRenderable);
+    m_pipeline->addRenderable(simpleRenderable);
 
     g_exampleObject = boost::shared_ptr<Object>(new Object());
     g_exampleObject->setRenderable(simpleRenderable);
@@ -60,7 +60,9 @@ MainMenuContext::MainMenuContext() {
     gt.generateTrack();
 
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
-        gt.geometry(), "white");
+        gt.geometry(), "simple");
+
+    trackRenderable->location() = Math::Vector(0.0, -2.0, -0.0);
 
     m_pipeline->addRenderable(trackRenderable);
 }

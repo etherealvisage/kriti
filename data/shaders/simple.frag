@@ -8,6 +8,6 @@ out vec4 fragColour;
 void main() {
     //fragColour = vec4(1.0f, 1.0f, 1.0f, 1.0f);
     fragColour = max(0, dot(v_normal, vec4(0.0f, 0.0f, 1.0f, 0.0f)))
-        * vec4(1.0f, 1.0f, 1.0f, 0.0f)
-        + vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        * vec4(0.9f, 0.9f, 0.9f, 0.0f)
+        + vec4(0.1f, 0.1f, 0.1f, 1.0f);
 }

@@ -16,10 +16,10 @@ namespace Game {
 void Track::generateTrack() {
     seedTrack();
 
-    subdivide(4);
+    subdivide(8);
     extrude();
 
-    if(1) {
+    if(0) {
         auto pathList = findPaths();
 
         for(auto v : pathList) {
@@ -36,15 +36,21 @@ void Track::seedTrack() {
     m_rootNode = boost::shared_ptr<TrackNode>(
         new TrackNode(Math::Vector(0.0, 0.0, 0.0)));
 
+    auto straight = boost::shared_ptr<TrackNode>(
+        new TrackNode(Math::Vector(0.0, 0.0, -10.0)));
+
     auto second = boost::shared_ptr<TrackNode>(
-        new TrackNode(Math::Vector(-100.0, 0.0, -100.0)));
+        new TrackNode(Math::Vector(-20.0, -5.0, -50.0)));
 
     auto third = boost::shared_ptr<TrackNode>(
-        new TrackNode(Math::Vector(100.0, 0.0, -200.0)));
+        new TrackNode(Math::Vector(100.0, 0.0, -100.0)));
 
-    m_rootNode->addNext(second);
+    m_rootNode->addNext(straight);
 
-    second->addPrevious(m_rootNode);
+    straight->addPrevious(m_rootNode);
+    straight->addNext(second);
+
+    second->addPrevious(straight);
     second->addNext(third);
 
     third->addPrevious(second);
@@ -147,6 +153,8 @@ void Track::extrude() {
                 normal = Math::Vector(0.0, 0.0, 1.0);
             }
 
+            /*Message3(Game, Debug, "Curve normal: (" << normal.x() << ","
+                << normal.y() << "," << normal.z() << ")");*/
             curveNormals[path[i]] = normal;
 
             Math::Vector projNormal(normal.x(), 0, normal.z());
@@ -169,6 +177,7 @@ void Track::extrude() {
 
             projNormals[path[i]] = projNormal.normalized();
         }
+        projNormals[path[0]] = projNormals[path[1]];
     }
 
     for(auto path : list) {
@@ -177,6 +186,13 @@ void Track::extrude() {
             auto pn1 = projNormals[path[i-1]], pn2 = projNormals[path[i]];
             auto v1 = c1 + pn1, v2 = c1 - pn1;
             auto v3 = c2 + pn2, v4 = c2 - pn2;
+            /*Message3(Game, Debug, "pn1: " << pn1.x() << "," << pn1.y() << "," << pn1.z());*/
+
+            /*Message3(Game, Debug, "Connecting ("
+                << v1.x() << "," << v1.y() << "," << v1.z() << "), ("
+                << v2.x() << "," << v2.y() << "," << v2.z() << "), ("
+                << v3.x() << "," << v3.y() << "," << v3.z() << "), ("
+                << v4.x() << "," << v4.y() << "," << v4.z() << ")");*/
             m_geometry.push_back(v1);
             m_geometry.push_back(v3);
             m_geometry.push_back(v2);

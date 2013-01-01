@@ -61,8 +61,8 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
 
     std::vector<Math::Vector> normals;
     for(unsigned i = 0; i < geometry.size(); i += 3) {
-        auto normal = (geometry[i+2] - geometry[i]).cross(
-            geometry[i+1] - geometry[i]).normalized();
+        auto normal = (geometry[i+1] - geometry[i]).cross(
+            geometry[i+2] - geometry[i]).normalized();
         normals.push_back(normal);
         normals.push_back(normal);
         normals.push_back(normal);
