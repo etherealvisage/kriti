@@ -53,6 +53,19 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     const std::vector<Math::Vector> &vertices,
     const std::vector<Math::Vector> &normals,
     const std::vector<unsigned int> &tris, std::string technique) {
+
+    std::vector<Math::Vector> texs;
+    for(unsigned i = 0; i < tris.size(); i ++) {
+        texs.push_back(Math::Vector());
+    }
+    return fromTriangleGeometry(vertices, normals, texs, tris, technique);
+}
+
+boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
+    const std::vector<Math::Vector> &vertices,
+    const std::vector<Math::Vector> &normals,
+    const std::vector<Math::Vector> &texs,
+    const std::vector<unsigned int> &tris, std::string technique) {
     
     auto renderable = boost::make_shared<Renderable>();
     auto vao = boost::make_shared<VAO>();
@@ -66,10 +79,6 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     vao->addVBO(normalVBO, 1);
 
     auto textureVBO = boost::make_shared<VBO>();
-    std::vector<Math::Vector> texs;
-    for(unsigned i = 0; i < tris.size(); i ++) {
-        texs.push_back(Math::Vector());
-    }
     textureVBO->setData(texs);
     vao->addVBO(textureVBO, 2);
 

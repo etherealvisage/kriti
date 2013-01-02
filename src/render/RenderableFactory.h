@@ -14,6 +14,11 @@ public:
         const std::vector<Math::Vector> &vertices,
         const std::vector<Math::Vector> &normals,
         const std::vector<unsigned int> &tris, std::string technique);
+    boost::shared_ptr<Renderable> fromTriangleGeometry(
+        const std::vector<Math::Vector> &vertices,
+        const std::vector<Math::Vector> &normals,
+        const std::vector<Math::Vector> &texs,
+        const std::vector<unsigned int> &tris, std::string technique);
     boost::shared_ptr<Renderable> fromLineGeometry(
         const std::vector<Math::Vector> &vertices, std::string technique);
 };

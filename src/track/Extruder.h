@@ -4,16 +4,14 @@
 #include <utility>
 
 #include "Node.h"
+#include "ExtrusionResult.h"
 
 namespace Kriti {
 namespace Track {
 
 class Extruder {
 public:
-    virtual void extrude(Node::Ptr root,
-        std::vector<Math::Vector> &vertices,
-        std::vector<Math::Vector> &normals,
-        std::vector<unsigned int> &tris) = 0;
+    virtual boost::shared_ptr<ExtrusionResult> extrude(Node::Ptr root) = 0;
 };
 
 }  // namespace Track

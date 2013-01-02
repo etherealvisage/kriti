@@ -22,7 +22,7 @@ void RandomGenerator::build() {
     std::queue<Node::Ptr> heads;
     heads.push(m_root->next()[0]);
 
-    double cutoff = 300.0;
+    double cutoff = 30000.0;
 
     while(heads.size() > 0) {
         auto next = heads.front();
@@ -122,7 +122,7 @@ Math::Vector RandomGenerator::delta(double angleFactor) {
         * Math::Vector(0.0, 0.0, rdouble(1, 100));
 
     if(rotated.z() > 0) rotated.setZ(-rotated.z());
-    rotated.setY(0);
+    rotated.setY(rotated.y()/100.0);
     return rotated;
 }
 

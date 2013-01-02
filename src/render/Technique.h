@@ -29,6 +29,7 @@ public:
     virtual bool loadFrom(std::string identifier);
 
     void setUniform(const std::string &name, const Math::Matrix &matrix);
+    void setUniform(const std::string &name, int value);
 
     void activate();
 private:

@@ -88,32 +88,20 @@ MainMenuContext::MainMenuContext() {
     g_exampleObject->setRenderable(simpleRenderable);
     g_exampleObject->setPhysical(simplePhysical);
 
-    /*Game::Track gt;
-    gt.generateTrack();
-
-    auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
-        gt.geometry(), "simple");
-
-    trackRenderable->location() = Math::Vector(0.0, -2.0, -0.0);
-
-    m_pipeline->addRenderable(trackRenderable);*/
-
     Track::RandomGenerator rg(3);
-    rg.generate(
-        new Track::ClosedSubdivider(6),
+    auto trackExtrusion = rg.generate(
+        new Track::ClosedSubdivider(3),
         new Track::PlanarExtruder(3.5)
     );
 
-    std::vector<Math::Vector> vertices, normals;
-    std::vector<unsigned int> tris;
-    rg.getExtrusion(vertices, normals, tris);
-
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
-        vertices, normals, tris, "simple");
+        trackExtrusion->vertices(), trackExtrusion->normals(), 
+        trackExtrusion->texs(), trackExtrusion->indices(), "track");
 
     m_pipeline->addRenderable(trackRenderable);
 
-    {
+#if 0
+    if(0) {
         std::vector<Math::Vector> nlv;
         for(unsigned i = 0; i < tris.size(); i += 3) {
             auto v1 = vertices[tris[i]];
@@ -135,6 +123,7 @@ MainMenuContext::MainMenuContext() {
 
         m_pipeline->addRenderable(trackNormalsRenderable);
     }
+#endif
 }
 
 void MainMenuContext::run() {
@@ -213,7 +202,6 @@ void MainMenuContext::debugRotateRight(bool pressed) {
     if(!pressed) amount *= -1.0;
     m_rotation = m_rotation + amount;
 }
-
 
 }  // namespace Game
 }  // namespace Kriti

@@ -11,7 +11,9 @@
 namespace Kriti {
 namespace Track {
 
-void Generator::generate(Subdivider *subdivider, Extruder *extruder) {
+boost::shared_ptr<ExtrusionResult> Generator::generate(Subdivider *subdivider,
+    Extruder *extruder) {
+
     TimeValue before = TimeValue::current();
     seed();
     build();
@@ -20,6 +22,8 @@ void Generator::generate(Subdivider *subdivider, Extruder *extruder) {
     TimeValue after = TimeValue::current();
     Message3(Track, Log, "Generated track geometry in "
         << (after - before).toMsec() << " ms.");
+
+    return m_result;
 }
 
 void Generator::seed() {
@@ -118,7 +122,7 @@ void Generator::subdivide(Subdivider *subdivider) {
 }
 
 void Generator::extrude(Extruder *extruder) {
-    extruder->extrude(m_root, m_vertices, m_normals, m_tris);
+    m_result = extruder->extrude(m_root);
 }
 
 }  // namespace Track

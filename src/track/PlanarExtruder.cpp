@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include <boost/make_shared.hpp>
+
 #include "PlanarExtruder.h"
 #include "Partitioner.h"
 
@@ -10,10 +12,7 @@
 namespace Kriti {
 namespace Track {
 
-void PlanarExtruder::extrude(Node::Ptr root,
-    std::vector<Math::Vector> &vertices, std::vector<Math::Vector> &normals,
-    std::vector<unsigned int> &tris) {
-
+boost::shared_ptr<ExtrusionResult> PlanarExtruder::extrude(Node::Ptr root) {
     m_root = root;
 
     m_nmap.clear();
@@ -26,14 +25,11 @@ void PlanarExtruder::extrude(Node::Ptr root,
     generateVertices();
     generateTris();
     generateNormals();
+    generateTexs();
 
     // swap values into input references
-    vertices.swap(m_vertices);
-    normals.swap(m_normals);
-    tris.swap(m_tris);
-
-    Message3(Track, Log, "Extruded track has " << vertices.size()
-        << " vertices and " << tris.size()/3 << " triangles.");
+    auto ret = boost::make_shared<ExtrusionResult>(m_vertices, m_normals,
+        m_texs, m_tris);
 
     // release memory given to data structures
     (decltype(m_pathList)()).swap(m_pathList);
@@ -43,6 +39,8 @@ void PlanarExtruder::extrude(Node::Ptr root,
     (decltype(m_vertices)()).swap(m_vertices);
     (decltype(m_normals)()).swap(m_normals);
     (decltype(m_tris)()).swap(m_tris);
+
+    return ret;
 }
 
 void PlanarExtruder::findPathProperties(const std::vector<Node::Ptr> &path) {
@@ -71,7 +69,7 @@ void PlanarExtruder::findPathProperties(const std::vector<Node::Ptr> &path) {
 
         m_tmap[path[i]] = tangent;
         m_nmap[path[i]] = normal;
-        Message3(Track, Debug, "Normal: " << normal.toString());
+        //Message3(Track, Debug, "Normal: " << normal.toString());
     }
 
     // Set path normals for special nodes if they haven't been set already.
@@ -184,6 +182,16 @@ void PlanarExtruder::generateNormals() {
     }
     for(unsigned i = 0; i < m_normals.size(); i ++) {
         m_normals[i] /= (double)m_vertexTriCount[i];
+    }
+}
+
+void PlanarExtruder::generateTexs() {
+    m_texs.clear();
+    for(unsigned i = 0; i < m_vertices.size(); i += 4) {
+        m_texs.push_back(0.0);
+        m_texs.push_back(1.0);
+        m_texs.push_back(1.0);
+        m_texs.push_back(0.0);
     }
 }
 

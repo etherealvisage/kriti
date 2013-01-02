@@ -75,6 +75,13 @@ void Technique::setUniform(const std::string &name,
     }
 }
 
+void Technique::setUniform(const std::string &name, int value) {
+    GLint location = getUniformLocation(name);
+    if(location != -1) {
+        glUniform1i(location, value);
+    }
+}
+
 void Technique::activate() {
     if(m_programID == 0) {
         Message3(Render, Error, "Activating non-loaded Technique . . .");
