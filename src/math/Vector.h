@@ -56,8 +56,22 @@ public:
         return Vector(m_x + other.m_x, m_y + other.m_y, m_z + other.m_z);
     }
 
+    Vector &operator+=(const Vector &other) {
+        m_x += other.m_x;
+        m_y += other.m_y;
+        m_z += other.m_z;
+        return *this;
+    }
+
     Vector operator-(const Vector &other) const {
         return Vector(m_x - other.m_x, m_y - other.m_y, m_z - other.m_z);
+    }
+
+    Vector &operator-=(const Vector &other) {
+        m_x -= other.m_x;
+        m_y -= other.m_y;
+        m_z -= other.m_z;
+        return *this;
     }
 
     Vector operator*(const Vector &other) const {

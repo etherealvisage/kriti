@@ -8,10 +8,12 @@ layout(location = 1) in vec3 i_normal;
 uniform mat4 camera;
 uniform mat4 model;
 
+out vec4 v_position;
 out vec4 v_normal;
 
 void main() {
     gl_Position = camera * model * vec4(i_position, 1.0);
+    v_position = vec4(i_position, 1.0);
     v_normal = model * vec4(i_normal, 0.0);
     v_normal /= length(v_normal);
 }

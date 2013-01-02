@@ -33,8 +33,12 @@ private:
 private:
     void quitMenu(bool);
 
-    void debugMoveForward(bool);
-    void debugMoveBackward(bool);
+    void debugMoveForward(bool pressed);
+    void debugMoveBackward(bool pressed);
+    void debugMoveUp(bool pressed);
+    void debugMoveDown(bool pressed);
+    void debugRotateLeft(bool pressed);
+    void debugRotateRight(bool pressed);
 };
 
 }  // namespace Game

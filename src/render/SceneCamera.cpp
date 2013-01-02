@@ -8,8 +8,9 @@ namespace Render {
 Math::Matrix SceneCamera::matrix() const {
     Math::AffineTransformation at;
     at.translate(m_position);
-    at.rotate(Math::Point(), m_orientation);
-    return m_projection * at.matrix();
+    Math::AffineTransformation at2;
+    at2.rotate(Math::Point(), m_orientation);
+    return m_projection * at2.matrix() * at.matrix();
 }
 
 void SceneCamera::step(double time) {

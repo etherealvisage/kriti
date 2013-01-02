@@ -17,6 +17,7 @@ private:
     std::vector<Node::Ptr> m_nodeList;
     std::map<Node::Ptr, int> m_nodeIndices;
     std::vector<Math::Vector> m_vertices, m_normals;
+    std::vector<int> m_vertexTriCount;
     std::vector<unsigned int> m_tris;
 public:
     PlanarExtruder(double width) : m_width(width) {}

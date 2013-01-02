@@ -88,7 +88,7 @@ void Parser::parseFile(const std::string &filename) {
                 Message3(Config, Warning,
                     "More than three coefficients in vector specification.");
             }
-            for(int i = 0; i < split.size(); i ++) {
+            for(unsigned i = 0; i < split.size(); i ++) {
                 boost::algorithm::trim(split[i]);
                 c[i] = boost::lexical_cast<double>(split[i]);
             }

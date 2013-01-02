@@ -88,5 +88,41 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     return renderable;
 }
 
+boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
+    const std::vector<Math::Vector> &vertices, std::string technique) {
+    
+    auto renderable = boost::make_shared<Renderable>();
+    auto vao = boost::make_shared<VAO>();
+
+    auto vertexVBO = boost::make_shared<VBO>();
+    vertexVBO->setData(vertices);
+    vao->addVBO(vertexVBO, 0);
+
+    // zero normals.
+    std::vector<Math::Vector> normals;
+    for(auto v : vertices) normals.push_back(Math::Vector());
+    auto normalVBO = boost::make_shared<VBO>();
+    normalVBO->setData(normals);
+    vao->addVBO(normalVBO, 1);
+
+    auto textureVBO = boost::make_shared<VBO>();
+    std::vector<Math::Vector> texs;
+    for(auto v : vertices) texs.push_back(Math::Vector());
+    textureVBO->setData(texs);
+    vao->addVBO(textureVBO, 2);
+
+    std::vector<unsigned int> indices;
+    for(unsigned i = 0; i < vertices.size(); i ++) indices.push_back(i);
+    auto indexVBO = boost::make_shared<VBO>(true);
+    indexVBO->setData(indices);
+    vao->addVBO(indexVBO);
+
+    renderable->addRenderSequence(boost::make_shared<RenderSequence>(
+        ResourceRegistry::instance()->get<Technique>(technique), vao, 0,
+        vertices.size()-1, RenderSequence::Lines));
+
+    return renderable;
+}
+
 }  // namespace Render
 }  // namespace Kriti
