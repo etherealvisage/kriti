@@ -15,6 +15,7 @@ private:
     std::vector<std::vector<Node::Ptr>> m_pathList;
     std::map<Node::Ptr, Math::Vector> m_tmap, m_nmap;
     std::vector<Node::Ptr> m_nodeList;
+    std::map<Node::Ptr, int> m_nodeIndices;
     std::vector<Math::Vector> m_vertices, m_normals;
     std::vector<unsigned int> m_tris;
 public:

@@ -86,6 +86,8 @@ void PlanarExtruder::findPathProperties(const std::vector<Node::Ptr> &path) {
 }
 
 void PlanarExtruder::generateNodeList() {
+    m_nodeList.clear();
+    m_nodeIndices.clear();
     std::vector<Node::Ptr> nodes;
     std::set<Node::Ptr> visited;
     nodes.push_back(m_root);
@@ -97,6 +99,7 @@ void PlanarExtruder::generateNodeList() {
         visited.insert(next);
 
         m_nodeList.push_back(next);
+        m_nodeIndices[next] = m_nodeList.size()-1;
 
         for(auto n : next->next()) nodes.push_back(n);
     }
@@ -125,10 +128,8 @@ void PlanarExtruder::generateVertices() {
 void PlanarExtruder::generateTris() {
     for(auto path : m_pathList) {
         for(unsigned i = 1; i < path.size(); i ++) {
-            int i1 = std::binary_search(m_nodeList.begin(), m_nodeList.end(),
-                path[i-1]);
-            int i2 = std::binary_search(m_nodeList.begin(), m_nodeList.end(),
-                path[i]);
+            int i1 = m_nodeIndices[path[i-1]];
+            int i2 = m_nodeIndices[path[i]];
 
             int v1 = i1*2, v2 = i1*2 + 1;
             int v3 = i2*2, v4 = i2*2 + 1;
@@ -148,8 +149,8 @@ void PlanarExtruder::generateTris() {
             m_tris.push_back(v4);
 
             m_tris.push_back(v2);
-            m_tris.push_back(v3);
             m_tris.push_back(v4);
+            m_tris.push_back(v3);
         }
     }
 }

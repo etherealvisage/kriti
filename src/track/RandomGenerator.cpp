@@ -26,6 +26,7 @@ void RandomGenerator::build() {
 
     while(heads.size() > 0) {
         auto next = heads.front();
+        Message3(Track, Debug, "Head: " << next->position().toString());
         heads.pop();
 
         // don't grow any more if past the cutoff . . .

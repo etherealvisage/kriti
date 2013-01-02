@@ -79,7 +79,7 @@ MainMenuContext::MainMenuContext() {
     rg.getExtrusion(vertices, normals, tris);
 
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
-        vertices, normals, tris, "white");
+        vertices, normals, tris, "simple");
 
     trackRenderable->location() = Math::Vector(0.0, -20.0, 0.0);
 
