@@ -11,7 +11,9 @@ class RenderableFactory {
 public:
     boost::shared_ptr<Renderable> fromModel(boost::shared_ptr<Model> model);
     boost::shared_ptr<Renderable> fromTriangleGeometry(
-        const std::vector<Math::Vector> &geometry, std::string technique);
+        const std::vector<Math::Vector> &vertices,
+        const std::vector<Math::Vector> &normals,
+        const std::vector<unsigned int> &tris, std::string technique);
 };
 
 }  // namespace Render

@@ -22,7 +22,7 @@ void RandomGenerator::build() {
     std::queue<Node::Ptr> heads;
     heads.push(m_root->next()[0]);
 
-    double cutoff = 100.0;
+    double cutoff = 1000.0;
 
     while(heads.size() > 0) {
         auto next = heads.front();

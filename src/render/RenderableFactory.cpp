@@ -50,23 +50,16 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
 }
 
 boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
-    const std::vector<Math::Vector> &geometry, std::string technique) {
+    const std::vector<Math::Vector> &vertices,
+    const std::vector<Math::Vector> &normals,
+    const std::vector<unsigned int> &tris, std::string technique) {
     
     auto renderable = boost::make_shared<Renderable>();
     auto vao = boost::make_shared<VAO>();
 
     auto vertexVBO = boost::make_shared<VBO>();
-    vertexVBO->setData(geometry);
+    vertexVBO->setData(vertices);
     vao->addVBO(vertexVBO, 0);
-
-    std::vector<Math::Vector> normals;
-    for(unsigned i = 0; i < geometry.size(); i += 3) {
-        auto normal = (geometry[i+1] - geometry[i]).cross(
-            geometry[i+2] - geometry[i]).normalized();
-        normals.push_back(normal);
-        normals.push_back(normal);
-        normals.push_back(normal);
-    }
 
     auto normalVBO = boost::make_shared<VBO>();
     normalVBO->setData(normals);
@@ -74,25 +67,23 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
 
     auto textureVBO = boost::make_shared<VBO>();
     std::vector<Math::Vector> texs;
-    for(unsigned i = 0; i < geometry.size(); i ++) {
+    for(unsigned i = 0; i < tris.size(); i ++) {
         texs.push_back(Math::Vector());
     }
     textureVBO->setData(texs);
     vao->addVBO(textureVBO, 2);
 
-    std::vector<unsigned int> indices;
-    for(unsigned i = 0; i < geometry.size(); i ++) indices.push_back(i);
     auto indexVBO = boost::make_shared<VBO>(true);
-    indexVBO->setData(indices);
+    indexVBO->setData(tris);
     vao->addVBO(indexVBO);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
         ResourceRegistry::instance()->get<Technique>(technique), vao, 0,
-        geometry.size()-1));
+        tris.size()-1));
 
     Message3(Render, Debug, "Created Renderable from tri geom: "
         << renderable);
-    Message3(Render, Debug, "Triangles: " << geometry.size()/3);
+    Message3(Render, Debug, "Triangles: " << tris.size()/3);
 
     return renderable;
 }

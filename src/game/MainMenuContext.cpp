@@ -73,6 +73,17 @@ MainMenuContext::MainMenuContext() {
         new Track::ClosedSubdivider(5),
         new Track::PlanarExtruder(2.5)
     );
+
+    std::vector<Math::Vector> vertices, normals;
+    std::vector<unsigned int> tris;
+    rg.getExtrusion(vertices, normals, tris);
+
+    auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
+        vertices, normals, tris, "white");
+
+    trackRenderable->location() = Math::Vector(0.0, -20.0, 0.0);
+
+    m_pipeline->addRenderable(trackRenderable);
 }
 
 void MainMenuContext::run() {

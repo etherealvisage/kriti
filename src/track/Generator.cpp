@@ -35,9 +35,7 @@ void Generator::subdivide(Subdivider *subdivider) {
 }
 
 void Generator::extrude(Extruder *extruder) {
-    std::vector<Math::Vector> vert, norm;
-    std::vector<unsigned int> tris;
-    extruder->extrude(m_root, vert, norm, tris);
+    extruder->extrude(m_root, m_vertices, m_normals, m_tris);
 }
 
 }  // namespace Track
