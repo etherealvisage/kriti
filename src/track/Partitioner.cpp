@@ -28,7 +28,7 @@ void Partitioner::partitionHelper(std::vector<std::vector<Node::Ptr>> &paths,
     }
 
     visited.insert(n);
-    if(n->next().size() == 1) {
+    if(n->next().size() == 1 && n->prev().size() <= 1) {
         partitionHelper(paths, visited, current, n->next()[0]);
     }
     else {

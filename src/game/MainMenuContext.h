@@ -18,6 +18,9 @@ class MainMenuContext : public Context::AbstractContext {
 private:
     Render::Pipeline *m_pipeline;
     TimeValue m_lastTime;
+
+    Math::Vector m_rotation;
+    Math::Vector m_translation;
 public:
     MainMenuContext();
 
@@ -29,6 +32,9 @@ private:
     virtual void deactivateHook() {}
 private:
     void quitMenu(bool);
+
+    void debugMoveForward(bool);
+    void debugMoveBackward(bool);
 };
 
 }  // namespace Game

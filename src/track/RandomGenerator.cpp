@@ -22,11 +22,11 @@ void RandomGenerator::build() {
     std::queue<Node::Ptr> heads;
     heads.push(m_root->next()[0]);
 
-    double cutoff = 1000.0;
+    double cutoff = 10000.0;
 
     while(heads.size() > 0) {
         auto next = heads.front();
-        Message3(Track, Debug, "Head: " << next->position().toString());
+        //Message3(Track, Debug, "Head: " << next->position().toString());
         heads.pop();
 
         // don't grow any more if past the cutoff . . .
@@ -50,7 +50,14 @@ void RandomGenerator::build() {
             heads.pop();
 
             auto centre = (next->position() + next2->position())/2;
+            if(centre.z() < next->position().z()) {
+                centre.setZ(next->position().z() + 1);
+            }
+            if(centre.z() < next2->position().z()) {
+                centre.setZ(next2->position().z() + 1);
+            }
             auto jp = centre + delta(1.0);
+
             auto n = boost::make_shared<Node>(jp);
 
             n->addPrev(next);
@@ -61,7 +68,7 @@ void RandomGenerator::build() {
 
             heads.push(n);
         }
-        else if(choice < 30) {
+        else if(choice < 30 && heads.size() < 15) {
             // split
             auto off = delta(2.0);
             auto roff = Math::Vector(-off.x(), -off.y(), off.z());
@@ -115,6 +122,7 @@ Math::Vector RandomGenerator::delta(double angleFactor) {
         * Math::Vector(0.0, 0.0, rdouble(1, 100));
 
     if(rotated.z() > 0) rotated.setZ(-rotated.z());
+    rotated.setY(rotated.y()/4);
     return rotated;
 }
 

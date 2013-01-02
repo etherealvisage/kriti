@@ -33,6 +33,16 @@ MainMenuContext::MainMenuContext() {
         ).connect(
             boost::bind(&MainMenuContext::quitMenu, this, _1)
         );
+    Interface::DeviceManager::instance()->keyboardRouter()->signal(
+            Interface::KeyboardRouter::MM_debugForward
+        ).connect(
+            boost::bind(&MainMenuContext::debugMoveForward, this, _1)
+        );
+    Interface::DeviceManager::instance()->keyboardRouter()->signal(
+            Interface::KeyboardRouter::MM_debugBackward
+        ).connect(
+            boost::bind(&MainMenuContext::debugMoveBackward, this, _1)
+        );
     m_pipeline = new Render::Pipeline();
 
     m_pipeline->camera()->setProjection(Math::ViewGenerator().perspective(
@@ -70,7 +80,7 @@ MainMenuContext::MainMenuContext() {
 
     Track::RandomGenerator rg(1);
     rg.generate(
-        new Track::ClosedSubdivider(5),
+        new Track::ClosedSubdivider(4),
         new Track::PlanarExtruder(2.5)
     );
 
@@ -101,6 +111,10 @@ void MainMenuContext::run() {
 
     m_pipeline->camera()->step(sinceLast.toUsec() / 1e3);
 
+    m_pipeline->camera()->setTarget(
+        m_pipeline->camera()->position() + m_translation,
+        m_pipeline->camera()->orientation());
+
     m_pipeline->render();
 
     GLint err = glGetError();
@@ -118,6 +132,18 @@ void MainMenuContext::quitMenu(bool) {
     if(!activated()) return;
 
     Context::ContextManager::instance()->popContext();
+}
+
+void MainMenuContext::debugMoveForward(bool pressed) {
+    Math::Vector amount(0.0, 0.0, 2.0);
+    if(!pressed) amount *= -1.0;
+    m_translation = m_translation + amount;
+}
+
+void MainMenuContext::debugMoveBackward(bool pressed) {
+    Math::Vector amount(0.0, 0.0, -1.0);
+    if(!pressed) amount *= -1.0;
+    m_translation = m_translation + amount;
 }
 
 }  // namespace Game
