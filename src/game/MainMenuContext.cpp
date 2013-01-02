@@ -18,7 +18,9 @@
 #include "physics/PhysicalObject.h"
 #include "Object.h"
 
-#include "game/Track.h"
+#include "track/RandomGenerator.h"
+#include "track/ClosedSubdivider.h"
+#include "track/PlanarExtruder.h"
 
 namespace Kriti {
 namespace Game {
@@ -56,7 +58,7 @@ MainMenuContext::MainMenuContext() {
     g_exampleObject->setRenderable(simpleRenderable);
     g_exampleObject->setPhysical(simplePhysical);
 
-    Game::Track gt;
+    /*Game::Track gt;
     gt.generateTrack();
 
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
@@ -64,7 +66,13 @@ MainMenuContext::MainMenuContext() {
 
     trackRenderable->location() = Math::Vector(0.0, -2.0, -0.0);
 
-    m_pipeline->addRenderable(trackRenderable);
+    m_pipeline->addRenderable(trackRenderable);*/
+
+    Track::RandomGenerator rg(1);
+    rg.generate(
+        new Track::ClosedSubdivider(5),
+        new Track::PlanarExtruder(2.5)
+    );
 }
 
 void MainMenuContext::run() {

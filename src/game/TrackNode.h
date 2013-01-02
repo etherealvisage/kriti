@@ -7,7 +7,7 @@
 #include "math/Vector.h"
 
 namespace Kriti {
-namespace Game {
+namespace GameTEMP {
 
 class TrackNode {
 private:

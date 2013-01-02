@@ -1,7 +1,7 @@
 #include "TrackNode.h"
 
 namespace Kriti {
-namespace Game {
+namespace GameTEMP {
 
 void TrackNode::removePrevious(boost::shared_ptr<TrackNode> prev) {
     for(unsigned i = 0; i < m_previous.size(); i ++) {

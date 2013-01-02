@@ -9,6 +9,7 @@ aux_source_directory(context contextSources)
 aux_source_directory(game gameSources)
 aux_source_directory(render renderSources)
 aux_source_directory(physics physicsSources)
+aux_source_directory(track trackSources)
 
 include_directories(.)
 
@@ -22,6 +23,7 @@ set(sources
     ${gameSources}
     ${renderSources}
     ${physicsSources}
+    ${trackSources}
 )
 
 find_package(Boost COMPONENTS filesystem system signals)
