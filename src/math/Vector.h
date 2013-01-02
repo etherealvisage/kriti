@@ -2,6 +2,7 @@
 #define KRITI_MATH__VECTOR_H
 
 #include <cmath>
+#include <string>
 
 #include "Constants.h"
 
@@ -19,6 +20,10 @@ public:
     double x() const { return m_x; }
     double y() const { return m_y; }
     double z() const { return m_z; }
+
+    void setX(double x) { m_x = x; }
+    void setY(double y) { m_y = y; }
+    void setZ(double z) { m_z = z; }
 
     double &operator[](int which) {
         switch(which) {
@@ -132,6 +137,8 @@ public:
     bool operator==(const Vector &other) const {
         return m_x == other.m_x && m_y == other.m_y && m_z == other.m_z;
     }
+
+    std::string toString() const;
 };
 
 inline Vector operator*(double scalar, const Vector &vector) {

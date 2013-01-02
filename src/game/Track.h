@@ -1,6 +1,9 @@
 #ifndef KRITI_GAME__TRACK_H
 #define KRITI_GAME__TRACK_H
 
+#include <vector>
+#include <set>
+
 #include <boost/shared_ptr.hpp>
 
 #include "TrackNode.h"
@@ -21,6 +24,9 @@ public:
 private:
     void seedTrack();
 
+    void buildTrack();
+    Math::Vector randomDelta(double factor) const;
+
     void subdivide(int levels);
     void performChaikin();
     void openChaikinHelper(std::vector<TrackNodePtr> path,
@@ -30,6 +36,9 @@ private:
     void extrude();
 private:
     std::vector<std::vector<TrackNodePtr>> findPaths();
+    void findPathHelper(std::vector<std::vector<TrackNodePtr>> &paths,
+        std::set<TrackNodePtr> &visited, std::vector<TrackNodePtr> &current,
+        TrackNodePtr n);
 };
 
 }  // namespace Game
