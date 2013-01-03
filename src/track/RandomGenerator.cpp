@@ -122,7 +122,7 @@ Math::Vector RandomGenerator::delta(double angleFactor) {
         * Math::Vector(0.0, 0.0, rdouble(1, 100));
 
     if(rotated.z() > 0) rotated.setZ(-rotated.z());
-    rotated.setY(rotated.y()/100.0);
+    rotated.setY(rotated.y()/1.0);
     return rotated;
 }
 

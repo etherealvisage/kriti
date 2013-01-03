@@ -122,30 +122,52 @@ float snoise(vec4 v)
   }
 
 void main() {
-    float nvalue = snoise(
-        vec4(v_position.xyz, 0.0)
-    );
+    // components: edge blending, internal colouring, edge highlighting.
 
-    float evalue = clamp(pow(max(cos(v_tex.x*2*pi), 0), 3), 0.0f, 1.0f);
+    // edge colours
+    const vec4 edge_normal = vec4(0.05f, 0.7f, 0.1f, 1.0f);
+    const vec4 edge_highlight = vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-    float trans = mix(abs(nvalue), 0.0f, evalue);
-    vec4 normal_highlight = vec4(0.1f, 0.0f, 0.7f, 1.0f);
-    //vec4 active_highlight = vec4(0.7f, 0.1f, 0.1f, 1.0f);
-    vec4 active_highlight = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    // edge distance
+    float edist = clamp(pow(max(cos(v_tex.x*2*pi), 0), 2.0f), 0.0f, 1.0f);
 
-    float highlight_z = -mod(g_time / 4.0f, 100.0f);
-    float abs_p = -mod(-v_position.z, 100.0f);
-    float d = mod(abs(abs_p - highlight_z), 100.0f);
-    //float d = distance(abs_p, highlight_z)/10.0f;
-    d = min(d/2.0f, pi);
+    const float highlight_speed = 1.0f;
+    const float highlight_interval = 250.0f;
+    float highlight_z = -mod(g_time / highlight_speed, highlight_interval);
+    float abs_p = -mod(-v_position.z, highlight_interval);
+    float d = mod(abs(abs_p - highlight_z), highlight_interval);
+    d = min(d/8.0f, pi);
     float highlight_mix = cos(d);
 
-    vec4 highlight = mix(normal_highlight, active_highlight, highlight_mix);
+    vec4 edge = mix(edge_normal, edge_highlight, highlight_mix);
+
+    const float internal_speed = 1000.0f;
+    float ivalue = snoise(vec4(v_position.xyz, g_time / internal_speed));
+
+    const vec4 pos_internal = vec4(0.1f, 0.0f, 0.9f, 1.0f);
+    const vec4 neg_internal = vec4(0.9f, 0.1f, 0.1f, 1.0f);
+
+    vec4 internal;
+    if(ivalue > 0) internal = ivalue * pos_internal;
+    else internal = -ivalue * neg_internal;
+
+    float id = distance(-g_time / 100.0f, v_position.z);
+    id = min(id, pi);
+    id = cos(id);
+
+    float idvalue = abs(snoise(vec4(v_position.xyz,
+        g_time / internal_speed + 0.1f)));
+
+    //internal += id * vec4(idvalue, idvalue, idvalue, 0.0f);
+
+    fragColour = mix(internal, edge, edist);
+
+    /*vec4 highlight = mix(normal_highlight, active_highlight, highlight_mix);
     fragColour = mix(vec4(0.05f, 0.05f, 0.1f, 1.0f), highlight, trans);
     
     // yellow centre line
     fragColour = mix(
         fragColour,
         vec4(1.0f, 1.0f, 0.0f, 1.0f),
-        cos(min(pi, distance(v_tex.x, 0.5f)*20.0f)));
+        cos(min(pi, distance(v_tex.x, 0.5f)*20.0f)));*/
 }
