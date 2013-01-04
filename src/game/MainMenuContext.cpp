@@ -25,7 +25,8 @@
 namespace Kriti {
 namespace Game {
 
-boost::shared_ptr<Object> g_exampleObject;
+boost::shared_ptr<Object> g_exampleObject, g_trackObject;
+boost::shared_ptr<Physics::ObjectManipulator> g_exampleManipulator;
 
 MainMenuContext::MainMenuContext() {
     Interface::DeviceManager::instance()->keyboardRouter()->signal(
@@ -75,12 +76,12 @@ MainMenuContext::MainMenuContext() {
 
     boost::shared_ptr<Render::Renderable> simpleRenderable(
         Render::RenderableFactory().fromModel(
-            ResourceRegistry::instance()->get<Render::Model>("simple")));
+            ResourceRegistry::instance()->get<Render::Model>("ball")));
 
     boost::shared_ptr<Physics::PhysicalObject> simplePhysical(
         Physics::PhysicalObject::fromSphere(1.0, 1.0));
 
-    simplePhysical->setLocation(Math::Vector(0.0, 0.0, -20.0));
+    simplePhysical->setLocation(Math::Vector(0.0, 20.0, -60.0));
 
     m_pipeline->addRenderable(simpleRenderable);
 
@@ -88,17 +89,36 @@ MainMenuContext::MainMenuContext() {
     g_exampleObject->setRenderable(simpleRenderable);
     g_exampleObject->setPhysical(simplePhysical);
 
+    g_exampleManipulator =
+        boost::make_shared<Physics::ObjectManipulator>(simplePhysical);
+
+    Physics::BulletWrapper::instance()->addObjectManipulator(
+        g_exampleManipulator);
+
     Track::RandomGenerator rg(3);
     auto trackExtrusion = rg.generate(
-        new Track::ClosedSubdivider(3),
-        new Track::PlanarExtruder(3.5)
+        new Track::ClosedSubdivider(4),
+        new Track::PlanarExtruder(7.5)
     );
 
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
         trackExtrusion->vertices(), trackExtrusion->normals(), 
         trackExtrusion->texs(), trackExtrusion->indices(), "track");
 
+    boost::shared_ptr<Physics::PhysicalObject> trackPhysical(
+        Physics::PhysicalObject::fromTriGeometry(0.0,
+            trackExtrusion->vertices(), trackExtrusion->indices()));
+
     m_pipeline->addRenderable(trackRenderable);
+
+    g_trackObject = boost::make_shared<Object>();
+    g_trackObject->setRenderable(trackRenderable);
+    g_trackObject->setPhysical(trackPhysical);
+
+    auto r = Physics::BulletWrapper::instance()->debugRenderable();
+
+    m_pipeline->addRenderable(r);
+    Physics::BulletWrapper::instance()->updateDebugRenderable();
 
 #if 0
     if(0) {
@@ -135,18 +155,27 @@ void MainMenuContext::run() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    g_exampleManipulator->setLinearForce(m_translation);
+
     Physics::BulletWrapper::instance()->stepWorld(sinceLast.toUsec());
     g_exampleObject->updateRenderableFromPhysical();
+    g_trackObject->updateRenderableFromPhysical();
     //Message("Y coordinate: " << g_exampleObject->physical()->location().y());
+    if(g_exampleObject->physical()->location().y() < -100) {
+        g_exampleObject->physical()->setLocation(
+            Math::Vector(0.0, 20.0, -20.0));
+    }
 
     m_pipeline->camera()->step(sinceLast.toUsec() / 1e3);
 
-    m_pipeline->camera()->setTarget(
-        m_pipeline->camera()->position()
-            + m_pipeline->camera()->orientation().conjugate() * m_translation,
-        m_pipeline->camera()->orientation()
+    Math::Quaternion orientation = m_pipeline->camera()->orientation()
             * Math::Quaternion(Math::Vector(1.0, 0.0, 0.0),m_rotation.x())
-            * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0),m_rotation.y()));
+            * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0),m_rotation.y());
+    m_pipeline->camera()->setTarget(-g_exampleObject->physical()->location()
+        + orientation.conjugate() * Math::Vector(0.0, 0.0, -5.0),
+        orientation);
+
+    //Physics::BulletWrapper::instance()->updateDebugRenderable();
 
     m_pipeline->render();
 
@@ -161,10 +190,10 @@ void MainMenuContext::run() {
     //SDL_Delay(30);
 }
 
-void MainMenuContext::quitMenu(bool) {
+void MainMenuContext::quitMenu(bool pressed) {
     if(!activated()) return;
 
-    Context::ContextManager::instance()->popContext();
+    if(pressed) Context::ContextManager::instance()->popContext();
 }
 
 void MainMenuContext::debugMoveForward(bool pressed) {

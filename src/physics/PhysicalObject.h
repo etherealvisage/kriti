@@ -16,6 +16,7 @@ namespace Physics {
 class PhysicalObject {
 private:
     btRigidBody *m_body;
+    Math::Vector m_linearForce;
 private:
     PhysicalObject(btRigidBody *body);
 public:
@@ -23,6 +24,15 @@ public:
 
     static PhysicalObject *fromModel(boost::shared_ptr<Render::Model> model,
         double mass);
+
+    static PhysicalObject *fromTriGeometry(double mass,
+        const std::vector<Math::Vector> &vertices,
+        const std::vector<unsigned int> &indices);
+
+    btRigidBody *body() const { return m_body; }
+
+    Math::Vector linearForce() const { return m_linearForce; }
+    void setLinearForce(Math::Vector force) { m_linearForce = force; }
 
     void setLocation(Math::Vector location);
     void setOrientation(Math::Quaternion orientation);

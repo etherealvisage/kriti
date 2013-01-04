@@ -116,8 +116,8 @@ float snoise(vec4 v)
   vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);
   m0 = m0 * m0;
   m1 = m1 * m1;
-  return 49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))
-               + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) ;
+  return clamp(49.0 * ( dot(m0*m0, vec3( dot( p0, x0 ), dot( p1, x1 ), dot( p2, x2 )))
+               + dot(m1*m1, vec2( dot( p3, x3 ), dot( p4, x4 ) ) ) ) , -1.0f, 1.0f);
 
   }
 
@@ -161,6 +161,7 @@ void main() {
     //internal += id * vec4(idvalue, idvalue, idvalue, 0.0f);
 
     fragColour = mix(internal, edge, edist);
+    fragColour.a = 1.0f;
 
     /*vec4 highlight = mix(normal_highlight, active_highlight, highlight_mix);
     fragColour = mix(vec4(0.05f, 0.05f, 0.1f, 1.0f), highlight, trans);

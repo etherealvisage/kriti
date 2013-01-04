@@ -22,19 +22,19 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
 
     boost::shared_ptr<VBO> vertexVBO(new VBO());
     vertexVBO->setData(model->vertices());
-    vao->addVBO(vertexVBO, 0);
+    vao->addVBO(vertexVBO, VAO::Vertex);
 
     boost::shared_ptr<VBO> normalVBO(new VBO());
     normalVBO->setData(model->normals());
-    vao->addVBO(normalVBO, 1);
+    vao->addVBO(normalVBO, VAO::Normal);
 
     boost::shared_ptr<VBO> textureVBO(new VBO());
     textureVBO->setData(model->texCoords());
-    vao->addVBO(textureVBO, 2);
+    vao->addVBO(textureVBO, VAO::Texture);
 
-    boost::shared_ptr<VBO> indexVBO(new VBO(true));
+    boost::shared_ptr<VBO> indexVBO(new VBO(VBO::Element));
     indexVBO->setData(model->indices());
-    vao->addVBO(indexVBO);
+    vao->addVBO(indexVBO, VAO::Element);
 
     /* Create RenderSequence objects. */
     for(auto ms : model->sequences()) {
@@ -72,19 +72,19 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
 
     auto vertexVBO = boost::make_shared<VBO>();
     vertexVBO->setData(vertices);
-    vao->addVBO(vertexVBO, 0);
+    vao->addVBO(vertexVBO, VAO::Vertex);
 
     auto normalVBO = boost::make_shared<VBO>();
     normalVBO->setData(normals);
-    vao->addVBO(normalVBO, 1);
+    vao->addVBO(normalVBO, VAO::Normal);
 
     auto textureVBO = boost::make_shared<VBO>();
     textureVBO->setData(texs);
-    vao->addVBO(textureVBO, 2);
+    vao->addVBO(textureVBO, VAO::Texture);
 
-    auto indexVBO = boost::make_shared<VBO>(true);
+    auto indexVBO = boost::make_shared<VBO>(VBO::Element);
     indexVBO->setData(tris);
-    vao->addVBO(indexVBO);
+    vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
         ResourceRegistry::instance()->get<Technique>(technique), vao, 0,
@@ -105,26 +105,26 @@ boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
 
     auto vertexVBO = boost::make_shared<VBO>();
     vertexVBO->setData(vertices);
-    vao->addVBO(vertexVBO, 0);
+    vao->addVBO(vertexVBO, VAO::Vertex);
 
     // zero normals.
     std::vector<Math::Vector> normals;
     for(auto v : vertices) normals.push_back(Math::Vector());
     auto normalVBO = boost::make_shared<VBO>();
     normalVBO->setData(normals);
-    vao->addVBO(normalVBO, 1);
+    vao->addVBO(normalVBO, VAO::Normal);
 
     auto textureVBO = boost::make_shared<VBO>();
     std::vector<Math::Vector> texs;
     for(auto v : vertices) texs.push_back(Math::Vector());
     textureVBO->setData(texs);
-    vao->addVBO(textureVBO, 2);
+    vao->addVBO(textureVBO, VAO::Texture);
 
     std::vector<unsigned int> indices;
     for(unsigned i = 0; i < vertices.size(); i ++) indices.push_back(i);
-    auto indexVBO = boost::make_shared<VBO>(true);
+    auto indexVBO = boost::make_shared<VBO>(VBO::Element);
     indexVBO->setData(indices);
-    vao->addVBO(indexVBO);
+    vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
         ResourceRegistry::instance()->get<Technique>(technique), vao, 0,

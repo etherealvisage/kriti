@@ -31,7 +31,7 @@ private:
     virtual void activateHook() { m_lastTime = TimeValue::current(); }
     virtual void deactivateHook() {}
 private:
-    void quitMenu(bool);
+    void quitMenu(bool pressed);
 
     void debugMoveForward(bool pressed);
     void debugMoveBackward(bool pressed);

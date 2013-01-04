@@ -16,16 +16,28 @@ public:
         Triangles,
         Quads
     };
+    enum RenderMode {
+        Sequential,
+        Indexed
+    };
 private:
     boost::shared_ptr<Technique> m_technique;
     int m_start, m_end;
     boost::shared_ptr<VAO> m_vao;
     RenderType m_type;
+    RenderMode m_mode;
 public:
     RenderSequence(boost::shared_ptr<Technique> technique,
         boost::shared_ptr<VAO> vao, int start, int end,
-        RenderType type = Triangles) : m_technique(technique),
-        m_start(start), m_end(end), m_vao(vao), m_type(type) {}
+        RenderType type = Triangles, RenderMode mode = Indexed)
+        : m_technique(technique), m_start(start), m_end(end), m_vao(vao),
+            m_type(type), m_mode(mode) {}
+
+    boost::shared_ptr<VAO> vao() const { return m_vao; }
+    int start() const { return m_start; }
+    int end() const { return m_end; }
+
+    void updateRange(int start, int end) { m_start = start, m_end = end; }
 
     void draw(const Math::Matrix &projection,
         const Math::Matrix &modelTransformation);

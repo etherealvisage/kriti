@@ -17,6 +17,7 @@ public:
     SceneCamera *camera() { return &m_camera; }
 
     void addRenderable(boost::shared_ptr<Renderable> renderable);
+    void removeRenderable(boost::shared_ptr<Renderable> renderable);
 
     void render();
 };

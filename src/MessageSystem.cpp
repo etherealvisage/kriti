@@ -59,7 +59,7 @@ void MessageSystem::message(Subsystem system, MessageType type,
 
     char buffer[4096];
     std::snprintf(buffer, sizeof(buffer),
-        "[%02i:%02i:%02i %-12s %-7s]        %s\n",
+        "[%02i:%02i:%02i %-12s %-7s]         %s\n",
         lt->tm_hour, lt->tm_min, lt->tm_sec,
         s_subsystemNames[system], s_typeNames[type],
         msg.c_str());

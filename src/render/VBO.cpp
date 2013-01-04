@@ -7,13 +7,8 @@
 namespace Kriti {
 namespace Render {
 
-VBO::VBO(bool isElementData) : m_bufferID(0) {
-    if(isElementData) {
-        m_bindType = GL_ELEMENT_ARRAY_BUFFER;
-    }
-    else {
-        m_bindType = GL_ARRAY_BUFFER;
-    }
+VBO::VBO(BindType btype, UseType utype) : m_useType(utype), m_bindType(btype),
+    m_bufferID(0) {
 }
 
 VBO::~VBO() {
@@ -78,9 +73,9 @@ void VBO::setData(const std::vector<Math::Vector> &data, float padding) {
 }
 
 void VBO::bindVBO() {
-    if(m_bindType != GL_ELEMENT_ARRAY_BUFFER) {
+    if(m_bindType != Element) {
         Message3(Render, Error,
-            "Tried to bind data VBO to be element buffer.");
+            "Tried to bind non-element VBO to be element buffer.");
 
         return;
     }
@@ -89,9 +84,9 @@ void VBO::bindVBO() {
 }
 
 void VBO::bindVBO(int location) {
-    if(m_bindType != GL_ARRAY_BUFFER) {
+    if(m_bindType != Data) {
         Message3(Render, Error,
-            "Tried to bind element data VBO to data location.");
+            "Tried to bind non-data VBO to data location.");
 
         return;
     }
@@ -106,8 +101,23 @@ void VBO::makeVBO(const void *data, int byteSize) {
         glGenBuffers(1, &m_bufferID);
     }
 
-    glBindBuffer(m_bindType, m_bufferID);
-    glBufferData(m_bindType, byteSize, data, GL_STATIC_DRAW);
+    GLenum btype, utype;
+    if(m_bindType == Data) {
+        btype = GL_ARRAY_BUFFER;
+    }
+    else {
+        btype = GL_ELEMENT_ARRAY_BUFFER;
+    }
+
+    if(m_useType == Static) {
+        utype = GL_STATIC_DRAW;
+    }
+    else if(m_useType == Streaming) {
+        utype = GL_STREAM_DRAW;
+    }
+
+    glBindBuffer(btype, m_bufferID);
+    glBufferData(btype, byteSize, data, utype);
 }
 
 }  // namespace Render

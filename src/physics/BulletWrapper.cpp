@@ -1,6 +1,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "BulletWrapper.h"
+#include "DebugRenderableUpdater.h"
 
 #include "MessageSystem.h"
 
@@ -28,14 +29,48 @@ BulletWrapper::BulletWrapper() {
             m_bpInterface.get(), m_solver.get(), m_collisionConfig.get()));
 
     m_world->setGravity(btVector3(0.0, -1.0, 0.0));
+
+    // set up debug renderable generator
+    m_updater = new DebugRenderableUpdater();
+    m_updater->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+    m_world->setDebugDrawer(m_updater);
+
+    // set up tick callback
+    m_world->setInternalTickCallback(step, NULL, NULL);
 }
 
 BulletWrapper::~BulletWrapper() {
     Message3(Physics, Log, "Destroying bullet . . .");
 }
 
+void BulletWrapper::addObjectManipulator(
+    boost::shared_ptr<ObjectManipulator> manipulator) {
+
+    m_world->addAction(manipulator.get());
+    m_manipulators.insert(manipulator);
+}
+
+void BulletWrapper::removeObjectManipulator(
+    boost::shared_ptr<ObjectManipulator> manipulator) {
+
+    m_manipulators.erase(m_manipulators.find(manipulator));
+    m_world->removeAction(manipulator.get());
+}
+
+boost::shared_ptr<Render::Renderable> BulletWrapper::debugRenderable() {
+    return m_updater->renderable();
+}
+
+void BulletWrapper::updateDebugRenderable() {
+    m_updater->updateRenderable();
+}
+
 void BulletWrapper::stepWorld(int usec) {
     m_world->stepSimulation(usec / 1000.0, 10, 1 / 100.0);
+}
+
+void BulletWrapper::step(btDynamicsWorld *, btScalar passed) {
+    // step!
 }
 
 }  // namespace Physics

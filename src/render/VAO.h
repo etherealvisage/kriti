@@ -10,16 +10,24 @@ namespace Kriti {
 namespace Render {
 
 class VAO {
+public:
+    enum Location {
+        Vertex,
+        Normal,
+        Texture,
+        Element,
+        Locations
+    };
 private:
     GLuint m_arrayID;
-    boost::shared_ptr<VBO> m_elementVBO;
-    std::vector<boost::shared_ptr<VBO>> m_dataVBOs;
+    boost::shared_ptr<VBO> m_vbos[Locations];
 public:
     VAO();
     ~VAO();
 
-    void addVBO(boost::shared_ptr<VBO> vbo);
-    void addVBO(boost::shared_ptr<VBO> vbo, int location);
+    void addVBO(boost::shared_ptr<VBO> vbo, Location where);
+    boost::shared_ptr<VBO> vbo(int location) const
+        { return m_vbos[location]; }
 
     void bind();
 };

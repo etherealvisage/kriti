@@ -31,8 +31,13 @@ void RenderSequence::draw(const Math::Matrix &projection,
         type = GL_QUADS;
         break;
     }
-    glDrawElements(type, m_end-m_start+1, GL_UNSIGNED_INT,
-        (void *)(sizeof(unsigned int)*m_start));
+    if(m_mode == Indexed) {
+        glDrawElements(type, m_end-m_start+1, GL_UNSIGNED_INT,
+            (void *)(sizeof(unsigned int)*m_start));
+    }
+    else if(m_mode == Sequential) {
+        glDrawArrays(type, m_start, m_end-m_start+1);
+    }
 }
 
 }  // namespace Render

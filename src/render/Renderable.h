@@ -19,6 +19,10 @@ private:
     Math::Quaternion m_orientation;
 public:
     void addRenderSequence(boost::shared_ptr<RenderSequence> sequence);
+    boost::shared_ptr<RenderSequence> renderSequence(int which) const
+        { return m_sequences[which]; }
+    int renderSequenceCount() const { return m_sequences.size(); }
+    void clearRenderSequences() { m_sequences.clear(); }
 
     void draw(const Math::Matrix &projection);
 

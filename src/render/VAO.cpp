@@ -15,18 +15,16 @@ VAO::~VAO() {
     glDeleteVertexArrays(1, &m_arrayID);
 }
 
-void VAO::addVBO(boost::shared_ptr<VBO> vbo) {
+void VAO::addVBO(boost::shared_ptr<VBO> vbo, Location where) {
     glBindVertexArray(m_arrayID);
-    vbo->bindVBO();
+    if(where != Element) {
+        vbo->bindVBO(where);
+    }
+    else {
+        vbo->bindVBO();
+    }
     glBindVertexArray(0);
-    m_elementVBO = vbo;
-}
-
-void VAO::addVBO(boost::shared_ptr<VBO> vbo, int location) {
-    glBindVertexArray(m_arrayID);
-    vbo->bindVBO(location);
-    glBindVertexArray(0);
-    m_dataVBOs.push_back(vbo);
+    m_vbos[where] = vbo;
 }
 
 void VAO::bind() {

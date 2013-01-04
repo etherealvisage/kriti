@@ -9,13 +9,23 @@ namespace Kriti {
 namespace Render {
 
 class VBO {
+public:
+    enum UseType {
+        Static,
+        Streaming
+    };
+    enum BindType {
+        Data,
+        Element
+    };
 private:
+    UseType m_useType;
+    BindType m_bindType;
     GLuint m_bufferID;
-    GLenum m_bindType;
     GLenum m_dataType;
     GLint m_dataWidth;
 public:
-    explicit VBO(bool isElementData = false);
+    explicit VBO(BindType btype = Data, UseType utype = Static);
     ~VBO();
 
     void setData2(const std::vector<Math::Vector> &data);
