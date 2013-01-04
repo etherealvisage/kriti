@@ -30,6 +30,9 @@ PhysicalObject *PhysicalObject::fromSphere(double radius, double mass) {
         btRigidBody::btRigidBodyConstructionInfo(mass, ms, sphereShape,
             initialInertia));
 
+    // never sleep.
+    rigidBody->setSleepingThresholds(0, 0);
+
     BulletWrapper::instance()->world()->addRigidBody(rigidBody);
 
     return new PhysicalObject(rigidBody);
