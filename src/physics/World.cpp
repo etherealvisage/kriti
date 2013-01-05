@@ -33,5 +33,15 @@ void World::addObject(boost::shared_ptr<PhysicalObject> object) {
     m_world->addRigidBody(object->body());
 }
 
+void World::addModifier(boost::shared_ptr<ObjectModifier> modifier) {
+    m_modifiers.push_back(modifier);
+    m_world->addAction(modifier.get());
+}
+
+void World::step(TimeValue interval) {
+    // step the requisite number of times @100Hz
+    m_world->stepSimulation(interval.toUsec() / 1000.0, 10, 1 / 100.0);
+}
+
 }  // namespace Physics
 }  // namespace Kriti

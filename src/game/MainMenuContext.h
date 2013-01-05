@@ -5,9 +5,14 @@
 
 #include "context/AbstractContext.h"
 
+#include "Object.h"
+
 #include "render/Model.h"
 #include "render/Pipeline.h"
 #include "render/Renderable.h"
+
+#include "physics/World.h"
+#include "physics/ObjectForceModifier.h"
 
 #include "TimeValue.h"
 
@@ -17,6 +22,9 @@ namespace Game {
 class MainMenuContext : public Context::AbstractContext {
 private:
     boost::shared_ptr<Render::Pipeline> m_pipeline;
+    boost::shared_ptr<Physics::World> m_world;
+    boost::shared_ptr<Physics::ObjectForceModifier> m_forceModifier;
+    boost::shared_ptr<Object> m_playerObject, m_trackObject;
     TimeValue m_lastTime;
 
     Math::Vector m_rotation;

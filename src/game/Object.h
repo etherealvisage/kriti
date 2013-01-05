@@ -5,11 +5,23 @@
 
 #include "render/Renderable.h"
 #include "physics/PhysicalObject.h"
+#include "physics/ObjectFeedback.h"
 
 namespace Kriti {
 namespace Game {
 
 class Object {
+private:
+    class Updater : public Physics::ObjectFeedback {
+    private:
+        Object *m_object;
+    public:
+        Updater(Object *object) : m_object(object) {}
+        virtual ~Updater() {}
+    protected:
+        virtual void updateTransform(Math::Vector location,
+            Math::Quaternion rotation);
+    };
 private:
     boost::shared_ptr<Physics::PhysicalObject> m_physical;
     boost::shared_ptr<Render::Renderable> m_renderable;
@@ -23,12 +35,9 @@ public:
     boost::shared_ptr<Render::Renderable> renderable()
 	const { return m_renderable; }
 
-    void setPhysical(boost::shared_ptr<Physics::PhysicalObject> phy)
-        { m_physical = phy; }
+    void setPhysical(boost::shared_ptr<Physics::PhysicalObject> phy);
     void setRenderable(boost::shared_ptr<Render::Renderable> render)
         { m_renderable = render; }
-
-    void updateRenderableFromPhysical();
 };
 
 }  // namespace Game

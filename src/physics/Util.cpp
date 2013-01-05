@@ -13,5 +13,17 @@ Math::Vector toMath(const btVector3 &vector) {
     return Math::Vector(vector.x(), vector.y(), vector.z());
 }
 
+btQuaternion toBullet(const Math::Quaternion &quaternion) {
+    Math::Vector axis;
+    double angle;
+    quaternion.toAxisAngle(axis, angle);
+    return btQuaternion(toBullet(axis), angle);
+}
+
+Math::Quaternion toMath(const btQuaternion &quaternion) {
+    return Math::Quaternion(toMath(quaternion.getAxis()),
+        quaternion.getAngle());
+}
+
 }  // namespace Physics
 }  // namespace Kriti

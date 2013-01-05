@@ -1,4 +1,5 @@
 add_definitions(-Wall -Wextra -std=c++11)
+add_definitions(-Wno-unused-parameter)
 
 aux_source_directory(. dotSources)
 aux_source_directory(math mathSources)

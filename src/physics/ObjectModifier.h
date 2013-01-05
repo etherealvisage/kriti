@@ -5,10 +5,10 @@
 
 #include <BulletDynamics/Dynamics/btActionInterface.h>
 
-#include "World.h"
-
 namespace Kriti {
 namespace Physics {
+
+class World;
 
 class ObjectModifier : public btActionInterface {
 public:

@@ -7,7 +7,7 @@ namespace Render {
 
 Math::Matrix SceneCamera::matrix() const {
     Math::AffineTransformation at;
-    at.translate(m_position);
+    at.translate(-m_position);
     Math::AffineTransformation at2;
     at2.rotate(Math::Point(), m_orientation);
     return m_projection * at2.matrix() * at.matrix();

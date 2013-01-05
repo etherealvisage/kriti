@@ -6,8 +6,11 @@
 #include <boost/shared_ptr.hpp>
 
 #include "PhysicalObject.h"
+#include "ObjectModifier.h"
 
 #include "math/Vector.h"
+
+#include "TimeValue.h"
 
 namespace Kriti {
 namespace Physics {
@@ -19,6 +22,8 @@ private:
     boost::shared_ptr<btCollisionDispatcher> m_collisionDispatcher;
     boost::shared_ptr<btSequentialImpulseConstraintSolver> m_solver;
     boost::shared_ptr<btDiscreteDynamicsWorld> m_world;
+
+    std::vector<boost::shared_ptr<ObjectModifier>> m_modifiers;
 public:
     World(Math::Vector gravity);
     ~World();
@@ -27,6 +32,9 @@ public:
         { return m_world.get() == world; }
 
     void addObject(boost::shared_ptr<PhysicalObject> object);
+    void addModifier(boost::shared_ptr<ObjectModifier> modifier);
+
+    void step(TimeValue interval);
 };
 
 }  // namespace Physics

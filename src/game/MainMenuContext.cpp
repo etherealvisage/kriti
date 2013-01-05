@@ -15,6 +15,8 @@
 #include "math/Constants.h"
 #include "math/AffineTransformation.h"
 #include "physics/PhysicalObject.h"
+#include "physics/WorldRegistry.h"
+#include "physics/ObjectFactory.h"
 #include "Object.h"
 
 #include "track/RandomGenerator.h"
@@ -25,7 +27,6 @@ namespace Kriti {
 namespace Game {
 
 boost::shared_ptr<Object> g_exampleObject, g_trackObject;
-//boost::shared_ptr<Physics::ObjectManipulator> g_exampleManipulator;
 
 MainMenuContext::MainMenuContext() {
     Interface::DeviceManager::instance()->keyboardRouter()->signal(
@@ -65,56 +66,50 @@ MainMenuContext::MainMenuContext() {
         );
     m_pipeline = boost::make_shared<Render::Pipeline>();
 
+    // camera setup
     m_pipeline->camera()->setProjection(Math::ViewGenerator().perspective(
         Math::Constants::Pi/3.0, Interface::Video::instance()->aspectRatio(),
-        0.01, 1000.0
+        0.1, 1000.0
     ));
-
-#if 0
-    m_pipeline->camera()->setTarget(Math::Vector(), Math::Quaternion());
+    /*m_pipeline->camera()->setTarget(Math::Vector(-5.0, 5.0, 20.0),
+        Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), 1.0/8.0*Math::Constants::Pi));*/
     m_pipeline->camera()->step(0.0);
 
-    boost::shared_ptr<Render::Renderable> simpleRenderable(
-        Render::RenderableFactory().fromModel(
-            ResourceRegistry::instance()->get<Render::Model>("ball")));
+    m_world = Physics::WorldRegistry::instance()->makeWorld();
 
-    boost::shared_ptr<Physics::PhysicalObject> simplePhysical(
-        Physics::PhysicalObject::fromSphere(1.0, 1.0));
+    m_forceModifier = boost::make_shared<Physics::ObjectForceModifier>();
+    m_world->addModifier(m_forceModifier);
 
-    simplePhysical->setLocation(Math::Vector(0.0, 20.0, -60.0));
+    m_playerObject = boost::make_shared<Object>();
+    m_playerObject->setRenderable(Render::RenderableFactory().fromModel(
+        ResourceRegistry::instance()->get<Render::Model>("ball")));
 
-    m_pipeline->addRenderable(simpleRenderable);
+    m_playerObject->setPhysical(Physics::ObjectFactory().makeSphere(1.0, 1.0));
+    m_playerObject->physical()->moveTo(Math::Vector(0.0, 20.0, -20.0));
+    m_world->addObject(m_playerObject->physical());
 
-    g_exampleObject = boost::shared_ptr<Object>(new Object());
-    g_exampleObject->setRenderable(simpleRenderable);
-    g_exampleObject->setPhysical(simplePhysical);
+    m_pipeline->addRenderable(m_playerObject->renderable());
 
-    g_exampleManipulator =
-        boost::make_shared<Physics::ObjectManipulator>(simplePhysical);
-
-    Physics::BulletWrapper::instance()->addObjectManipulator(
-        g_exampleManipulator);
-
+    // generate track
     Track::RandomGenerator rg(3);
-    auto trackExtrusion = rg.generate(
-        new Track::ClosedSubdivider(4),
-        new Track::PlanarExtruder(7.5)
-    );
+
+    auto trackExtrusion = rg.generate(new Track::ClosedSubdivider(4),
+        new Track::PlanarExtruder(8));
 
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
         trackExtrusion->vertices(), trackExtrusion->normals(), 
         trackExtrusion->texs(), trackExtrusion->indices(), "track");
 
-    /*boost::shared_ptr<Physics::PhysicalObject> trackPhysical(
-        Physics::PhysicalObject::fromTriGeometry(0.0,
-            trackExtrusion->vertices(), trackExtrusion->indices()));*/
+    m_trackObject = boost::make_shared<Object>();
+    m_trackObject->setRenderable(trackRenderable);
+    m_trackObject->setPhysical(Physics::ObjectFactory().makeIndexedTriMesh(0.0,
+        trackExtrusion->vertices(), trackExtrusion->indices()));
+    //m_trackObject->setPhysical(Physics::ObjectFactory().makeSphere(1.0, 1.0));
+    m_world->addObject(m_trackObject->physical());
 
-    m_pipeline->addRenderable(trackRenderable);
+    m_pipeline->addRenderable(m_trackObject->renderable());
 
-    g_trackObject = boost::make_shared<Object>();
-    g_trackObject->setRenderable(trackRenderable);
-    //g_trackObject->setPhysical(trackPhysical);
-#endif
+    m_world->addModifier(m_forceModifier);
 }
 
 void MainMenuContext::run() {
@@ -122,35 +117,21 @@ void MainMenuContext::run() {
     TimeValue sinceLast = current - m_lastTime;
     m_lastTime = current;
 
-    //Message3(General, Log, "Time since last frame: " << sinceLast.toUsec());
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#if 0
-    g_exampleManipulator->setLinearForce(m_translation/10.0);
+    Math::Quaternion q = m_pipeline->camera()->orientation()
+        * Math::Quaternion(Math::Vector(1,0,0), m_rotation.x())
+        * Math::Quaternion(Math::Vector(0,1,0), m_rotation.y());
 
-    Physics::BulletWrapper::instance()->stepWorld(sinceLast.toUsec());
-    g_exampleObject->updateRenderableFromPhysical();
-    g_trackObject->updateRenderableFromPhysical();
-    //Message("Y coordinate: " << g_exampleObject->physical()->location().y());
-    if(g_exampleObject->physical()->location().y() < -100) {
-        g_exampleObject->physical()->setLocation(
-            Math::Vector(0.0, 20.0, -20.0));
-    }
+    m_forceModifier->setLinearForce(m_playerObject->physical(),
+        q.conjugate()*m_translation/10.0);
 
+    m_world->step(sinceLast);
+
+    m_pipeline->camera()->setTarget(m_playerObject->renderable()->location()
+        + q.conjugate() * Math::Vector(0.0, 2.0, 5.0), q);
     m_pipeline->camera()->step(sinceLast.toUsec() / 1e3);
-
-    Math::Quaternion orientation = m_pipeline->camera()->orientation()
-            * Math::Quaternion(Math::Vector(1.0, 0.0, 0.0),m_rotation.x())
-            * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0),m_rotation.y());
-    m_pipeline->camera()->setTarget(-g_exampleObject->physical()->location()
-        + orientation.conjugate() * Math::Vector(0.0, 0.0, -5.0),
-        orientation);
-
-    //Physics::BulletWrapper::instance()->updateDebugRenderable();
-
     m_pipeline->render();
-#endif
 
     GLint err = glGetError();
     while(err != GL_NO_ERROR) {
@@ -182,7 +163,7 @@ void MainMenuContext::debugMoveBackward(bool pressed) {
 }
 
 void MainMenuContext::debugMoveUp(bool pressed) {
-    Math::Vector amount(0.0, 0.8, 0.0);
+    Math::Vector amount(0.0, 2.5, 0.0);
     if(!pressed) amount *= -1.0;
     m_translation = m_translation + amount;
 }
@@ -194,13 +175,13 @@ void MainMenuContext::debugMoveDown(bool pressed) {
 }
 
 void MainMenuContext::debugRotateLeft(bool pressed) {
-    Math::Vector amount(0.0, -0.1);
+    Math::Vector amount(0.0, -0.05);
     if(!pressed) amount *= -1.0;
     m_rotation = m_rotation + amount;
 }
 
 void MainMenuContext::debugRotateRight(bool pressed) {
-    Math::Vector amount(0.0, 0.1);
+    Math::Vector amount(0.0, 0.05);
     if(!pressed) amount *= -1.0;
     m_rotation = m_rotation + amount;
 }
