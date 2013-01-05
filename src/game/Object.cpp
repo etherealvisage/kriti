@@ -12,8 +12,8 @@ Object::~Object() {
 }
 
 void Object::updateRenderableFromPhysical() {
-    m_renderable->location() = m_physical->location();
-    m_renderable->orientation() = m_physical->orientation();
+    /*m_renderable->location() = m_physical->location();
+    m_renderable->orientation() = m_physical->orientation();*/
 }
 
 }  // namespace Game

@@ -16,7 +16,6 @@
 #include "context/ContextManager.h"
 #include "game/MainMenuContext.h"
 #include "render/Technique.h"
-#include "physics/BulletWrapper.h"
 
 int main() {
     using namespace Kriti;
@@ -47,9 +46,6 @@ int main() {
     // create input devices.
     dmanager->registerDevices();
 
-    // initialize physics
-    Physics::BulletWrapper::instance();
-
     // initialize context manager
     Context::ContextManager::instance();
 
@@ -67,8 +63,6 @@ int main() {
 
     // clean up.
     Context::ContextManager::destroy();
-
-    Physics::BulletWrapper::destroy();
 
     Interface::Video::destroy();
     Interface::DeviceManager::destroy();

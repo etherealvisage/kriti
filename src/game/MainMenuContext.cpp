@@ -14,7 +14,6 @@
 #include "math/ViewGenerator.h"
 #include "math/Constants.h"
 #include "math/AffineTransformation.h"
-#include "physics/BulletWrapper.h"
 #include "physics/PhysicalObject.h"
 #include "Object.h"
 
@@ -26,7 +25,7 @@ namespace Kriti {
 namespace Game {
 
 boost::shared_ptr<Object> g_exampleObject, g_trackObject;
-boost::shared_ptr<Physics::ObjectManipulator> g_exampleManipulator;
+//boost::shared_ptr<Physics::ObjectManipulator> g_exampleManipulator;
 
 MainMenuContext::MainMenuContext() {
     Interface::DeviceManager::instance()->keyboardRouter()->signal(
@@ -64,13 +63,14 @@ MainMenuContext::MainMenuContext() {
         ).connect(
             boost::bind(&MainMenuContext::debugRotateRight, this, _1)
         );
-    m_pipeline = new Render::Pipeline();
+    m_pipeline = boost::make_shared<Render::Pipeline>();
 
     m_pipeline->camera()->setProjection(Math::ViewGenerator().perspective(
         Math::Constants::Pi/3.0, Interface::Video::instance()->aspectRatio(),
         0.01, 1000.0
     ));
 
+#if 0
     m_pipeline->camera()->setTarget(Math::Vector(), Math::Quaternion());
     m_pipeline->camera()->step(0.0);
 
@@ -105,44 +105,15 @@ MainMenuContext::MainMenuContext() {
         trackExtrusion->vertices(), trackExtrusion->normals(), 
         trackExtrusion->texs(), trackExtrusion->indices(), "track");
 
-    boost::shared_ptr<Physics::PhysicalObject> trackPhysical(
+    /*boost::shared_ptr<Physics::PhysicalObject> trackPhysical(
         Physics::PhysicalObject::fromTriGeometry(0.0,
-            trackExtrusion->vertices(), trackExtrusion->indices()));
+            trackExtrusion->vertices(), trackExtrusion->indices()));*/
 
     m_pipeline->addRenderable(trackRenderable);
 
     g_trackObject = boost::make_shared<Object>();
     g_trackObject->setRenderable(trackRenderable);
-    g_trackObject->setPhysical(trackPhysical);
-
-    auto r = Physics::BulletWrapper::instance()->debugRenderable();
-
-    m_pipeline->addRenderable(r);
-    Physics::BulletWrapper::instance()->updateDebugRenderable();
-
-#if 0
-    if(0) {
-        std::vector<Math::Vector> nlv;
-        for(unsigned i = 0; i < tris.size(); i += 3) {
-            auto v1 = vertices[tris[i]];
-            auto v2 = vertices[tris[i+1]];
-            auto v3 = vertices[tris[i+2]];
-            auto centre = (v1+v2+v3)/3;
-            auto normal1 = normals[tris[i]];
-            nlv.push_back(centre);
-            nlv.push_back(centre + normal1);
-            auto normal2 = normals[tris[i+1]];
-            nlv.push_back(centre);
-            nlv.push_back(centre + normal2);
-            auto normal3 = normals[tris[i+2]];
-            nlv.push_back(centre);
-            nlv.push_back(centre + normal3);
-        }
-        auto trackNormalsRenderable =
-            Render::RenderableFactory().fromLineGeometry(nlv, "red");
-
-        m_pipeline->addRenderable(trackNormalsRenderable);
-    }
+    //g_trackObject->setPhysical(trackPhysical);
 #endif
 }
 
@@ -155,7 +126,8 @@ void MainMenuContext::run() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    g_exampleManipulator->setLinearForce(m_translation);
+#if 0
+    g_exampleManipulator->setLinearForce(m_translation/10.0);
 
     Physics::BulletWrapper::instance()->stepWorld(sinceLast.toUsec());
     g_exampleObject->updateRenderableFromPhysical();
@@ -178,6 +150,7 @@ void MainMenuContext::run() {
     //Physics::BulletWrapper::instance()->updateDebugRenderable();
 
     m_pipeline->render();
+#endif
 
     GLint err = glGetError();
     while(err != GL_NO_ERROR) {
@@ -209,13 +182,13 @@ void MainMenuContext::debugMoveBackward(bool pressed) {
 }
 
 void MainMenuContext::debugMoveUp(bool pressed) {
-    Math::Vector amount(0.0, 0.4, 0.0);
+    Math::Vector amount(0.0, 0.8, 0.0);
     if(!pressed) amount *= -1.0;
     m_translation = m_translation + amount;
 }
 
 void MainMenuContext::debugMoveDown(bool pressed) {
-    Math::Vector amount(0.0, -0.4, 0.0);
+    Math::Vector amount(0.0, -0.8, 0.0);
     if(!pressed) amount *= -1.0;
     m_translation = m_translation + amount;
 }

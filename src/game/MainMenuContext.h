@@ -16,7 +16,7 @@ namespace Game {
 
 class MainMenuContext : public Context::AbstractContext {
 private:
-    Render::Pipeline *m_pipeline;
+    boost::shared_ptr<Render::Pipeline> m_pipeline;
     TimeValue m_lastTime;
 
     Math::Vector m_rotation;
