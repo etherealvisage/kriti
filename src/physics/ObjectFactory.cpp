@@ -18,6 +18,14 @@ boost::shared_ptr<PhysicalObject> ObjectFactory::makeSphere(double mass,
     return fromShape(mass, shape);
 }
 
+boost::shared_ptr<PhysicalObject> ObjectFactory::makeBox(double mass, double w,
+    double h, double d) {
+
+    btCollisionShape *shape = new btBoxShape(btVector3(w, h, d));
+
+    return fromShape(mass, shape);
+}
+
 boost::shared_ptr<PhysicalObject> ObjectFactory::makeIndexedTriMesh(
     double mass, const std::vector<Math::Vector> &vertices,
     const std::vector<unsigned int> &indices) {

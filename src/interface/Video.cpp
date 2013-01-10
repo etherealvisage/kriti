@@ -30,7 +30,8 @@ double Video::aspectRatio() const {
 
 void Video::initializeSDL() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        Message3(Interface, Fatal, "Failed to initialize SDL: " << SDL_GetError());
+        Message3(Interface, Fatal, "Failed to initialize SDL: "
+            << SDL_GetError());
     }
 }
 
@@ -38,6 +39,8 @@ void Video::setVideoMode() {
     int width = Config::Tree::instance()->getInt("video.width", 800);
     int height = Config::Tree::instance()->getInt("video.height", 600);
     int bpp = Config::Tree::instance()->getInt("video.bpp", 24);
+    bool fullscreen = Config::Tree::instance()->getBool("video.fullscreen",
+        false);
 
     //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
@@ -48,7 +51,9 @@ void Video::setVideoMode() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    SDL_Surface *screen = SDL_SetVideoMode(width, height, bpp, SDL_OPENGL);
+    int flags = SDL_OPENGL;
+    if(fullscreen) flags |= SDL_FULLSCREEN;
+    SDL_Surface *screen = SDL_SetVideoMode(width, height, bpp, flags);
 
     if(screen == NULL) {
         Message3(Interface, Fatal, "Failed to set video mode "

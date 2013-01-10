@@ -1,6 +1,8 @@
 #ifndef KRITI_PHYSICS__WORLD_H
 #define KRITI_PHYSICS__WORLD_H
 
+#include <map>
+
 #include <btBulletDynamicsCommon.h>
 
 #include <boost/shared_ptr.hpp>
@@ -23,6 +25,8 @@ private:
     boost::shared_ptr<btSequentialImpulseConstraintSolver> m_solver;
     boost::shared_ptr<btDiscreteDynamicsWorld> m_world;
 
+    std::map<btRigidBody *, boost::shared_ptr<PhysicalObject>> m_objectMap;
+    std::vector<boost::shared_ptr<PhysicalObject>> m_objects;
     std::vector<boost::shared_ptr<ObjectModifier>> m_modifiers;
 public:
     World(Math::Vector gravity);

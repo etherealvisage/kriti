@@ -3,6 +3,7 @@
 
 .vimrc
 .gdb_history
+.clang_complete
 
 # Executable
 /kriti

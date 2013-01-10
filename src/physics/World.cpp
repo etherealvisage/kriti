@@ -30,6 +30,8 @@ World::~World() {
 }
 
 void World::addObject(boost::shared_ptr<PhysicalObject> object) {
+    m_objects.push_back(object);
+    m_objectMap[object->body()] = object;
     m_world->addRigidBody(object->body());
 }
 

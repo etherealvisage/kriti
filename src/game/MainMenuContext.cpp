@@ -84,11 +84,13 @@ MainMenuContext::MainMenuContext() {
     m_playerObject->setRenderable(Render::RenderableFactory().fromModel(
         ResourceRegistry::instance()->get<Render::Model>("ball")));
 
-    m_playerObject->setPhysical(Physics::ObjectFactory().makeSphere(1.0, 1.0));
+    m_playerObject->setPhysical(
+        Physics::ObjectFactory().makeBox(1.0, 1.0, 0.3, 2.0));
     m_playerObject->physical()->moveTo(Math::Vector(0.0, 20.0, -20.0));
     m_world->addObject(m_playerObject->physical());
 
     m_pipeline->addRenderable(m_playerObject->renderable());
+
 
     // generate track
     Track::RandomGenerator rg(3);
@@ -104,7 +106,6 @@ MainMenuContext::MainMenuContext() {
     m_trackObject->setRenderable(trackRenderable);
     m_trackObject->setPhysical(Physics::ObjectFactory().makeIndexedTriMesh(0.0,
         trackExtrusion->vertices(), trackExtrusion->indices()));
-    //m_trackObject->setPhysical(Physics::ObjectFactory().makeSphere(1.0, 1.0));
     m_world->addObject(m_trackObject->physical());
 
     m_pipeline->addRenderable(m_trackObject->renderable());
