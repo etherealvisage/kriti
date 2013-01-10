@@ -25,7 +25,8 @@ private:
     boost::shared_ptr<btSequentialImpulseConstraintSolver> m_solver;
     boost::shared_ptr<btDiscreteDynamicsWorld> m_world;
 
-    std::map<btRigidBody *, boost::shared_ptr<PhysicalObject>> m_objectMap;
+    std::map<const btRigidBody *, boost::shared_ptr<PhysicalObject>>
+        m_objectMap;
     std::vector<boost::shared_ptr<PhysicalObject>> m_objects;
     std::vector<boost::shared_ptr<ObjectModifier>> m_modifiers;
 public:
@@ -39,6 +40,9 @@ public:
     void addModifier(boost::shared_ptr<ObjectModifier> modifier);
 
     void step(TimeValue interval);
+
+    boost::shared_ptr<PhysicalObject> rayCast(Math::Vector from,
+        Math::Vector to, double *distance);
 };
 
 }  // namespace Physics

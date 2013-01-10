@@ -29,7 +29,7 @@ boost::shared_ptr<ExtrusionResult> Generator::generate(Subdivider *subdivider,
 void Generator::seed() {
     m_root = boost::make_shared<Node>(Math::Vector());
     auto initial = boost::make_shared<Node>(
-        Math::Vector(0.0, 10.0, -50.0));
+        Math::Vector(0.0, 0.0, -50.0));
 
     m_root->addNext(initial);
     initial->addPrev(m_root);

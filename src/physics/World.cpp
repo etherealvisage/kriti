@@ -2,6 +2,8 @@
 
 #include "Util.h"
 
+#include "MessageSystem.h"
+
 namespace Kriti {
 namespace Physics {
 
@@ -43,6 +45,24 @@ void World::addModifier(boost::shared_ptr<ObjectModifier> modifier) {
 void World::step(TimeValue interval) {
     // step the requisite number of times @100Hz
     m_world->stepSimulation(interval.toUsec() / 1000.0, 10, 1 / 100.0);
+}
+
+boost::shared_ptr<PhysicalObject> World::rayCast(Math::Vector from,
+    Math::Vector to, double *distance) {
+
+    auto bfrom = toBullet(from), bto = toBullet(to);
+    btCollisionWorld::ClosestRayResultCallback callback(bfrom, bto);
+    m_world->rayTest(bfrom, bto, callback);
+
+    if(callback.hasHit()) {
+        *distance = toMath(callback.m_hitPointWorld
+            - callback.m_rayFromWorld).length();
+
+        return boost::shared_ptr<PhysicalObject>(
+            m_objectMap[dynamic_cast<const btRigidBody *>(
+                callback.m_collisionObject)]);
+    }
+    else return boost::shared_ptr<PhysicalObject>();
 }
 
 }  // namespace Physics

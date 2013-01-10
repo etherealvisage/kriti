@@ -6,6 +6,7 @@
 #include "context/AbstractContext.h"
 
 #include "Object.h"
+#include "VehicleModel.h"
 
 #include "render/Model.h"
 #include "render/Pipeline.h"
@@ -25,6 +26,8 @@ private:
     boost::shared_ptr<Physics::World> m_world;
     boost::shared_ptr<Physics::ObjectForceModifier> m_forceModifier;
     boost::shared_ptr<Object> m_playerObject, m_trackObject;
+    boost::shared_ptr<Vehicle> m_vehicle;
+    boost::shared_ptr<VehicleModel> m_vehicleModel;
     TimeValue m_lastTime;
 
     Math::Vector m_rotation;

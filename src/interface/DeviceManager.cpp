@@ -14,6 +14,7 @@ DeviceManager::~DeviceManager() {
     for(auto device : m_deviceList) {
         delete device;
     }
+    delete m_keyboardRouter;
 }
 
 void DeviceManager::registerDevices() {

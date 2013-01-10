@@ -22,10 +22,17 @@ public:
     PhysicalObject(btRigidBody *body);
 
     btRigidBody *body() const { return m_body; }
+    Math::Vector linearVelocity() const;
 
     void addFeedback(boost::shared_ptr<ObjectFeedback> feedback);
 
+    void applyForce(Math::Vector force);
+    void applyForce(Math::Vector from, Math::Vector force);
+    void applyTorque(Math::Vector torque);
     void moveTo(Math::Vector location);
+
+    void setLinearDamping(double damping);
+    void setAngularDamping(double damping);
 };
 
 }  // namespace Physics

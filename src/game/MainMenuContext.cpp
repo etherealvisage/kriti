@@ -71,8 +71,6 @@ MainMenuContext::MainMenuContext() {
         Math::Constants::Pi/3.0, Interface::Video::instance()->aspectRatio(),
         0.1, 1000.0
     ));
-    /*m_pipeline->camera()->setTarget(Math::Vector(-5.0, 5.0, 20.0),
-        Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), 1.0/8.0*Math::Constants::Pi));*/
     m_pipeline->camera()->step(0.0);
 
     m_world = Physics::WorldRegistry::instance()->makeWorld();
@@ -82,7 +80,7 @@ MainMenuContext::MainMenuContext() {
 
     m_playerObject = boost::make_shared<Object>();
     m_playerObject->setRenderable(Render::RenderableFactory().fromModel(
-        ResourceRegistry::instance()->get<Render::Model>("ball")));
+        ResourceRegistry::instance()->get<Render::Model>("block")));
 
     m_playerObject->setPhysical(
         Physics::ObjectFactory().makeBox(1.0, 1.0, 0.3, 2.0));
@@ -90,7 +88,6 @@ MainMenuContext::MainMenuContext() {
     m_world->addObject(m_playerObject->physical());
 
     m_pipeline->addRenderable(m_playerObject->renderable());
-
 
     // generate track
     Track::RandomGenerator rg(3);
@@ -111,6 +108,36 @@ MainMenuContext::MainMenuContext() {
     m_pipeline->addRenderable(m_trackObject->renderable());
 
     m_world->addModifier(m_forceModifier);
+
+    // set up vehicle model
+    m_vehicleModel = boost::make_shared<VehicleModel>();
+    m_vehicle = boost::make_shared<Vehicle>(m_playerObject->physical());
+    m_vehicleModel->addVehicle(m_vehicle);
+
+    m_vehicle->addSuspension(VehicleSuspension(
+        Math::Vector(-0.5, -0.15, -1.0),
+        Math::Vector(0.0, -1.0, 0.0),
+        0.3, 1.75
+    ));
+    m_vehicle->addSuspension(VehicleSuspension(
+        Math::Vector(0.5, -0.15, -1.0),
+        Math::Vector(0.0, -1.0, 0.0),
+        0.3, 1.75
+    ));
+    m_vehicle->addSuspension(VehicleSuspension(
+        Math::Vector(-0.5, -0.15, 1.0),
+        Math::Vector(0.0, -1.0, 0.0),
+        0.3, 1.75
+    ));
+    m_vehicle->addSuspension(VehicleSuspension(
+        Math::Vector(0.5, -0.15, 1.0),
+        Math::Vector(0.0, -1.0, 0.0),
+        0.3, 1.75
+    ));
+    m_playerObject->physical()->setLinearDamping(0.01);
+    m_playerObject->physical()->setAngularDamping(0.01);
+
+    m_world->addModifier(m_vehicleModel);
 }
 
 void MainMenuContext::run() {
@@ -130,7 +157,7 @@ void MainMenuContext::run() {
     m_world->step(sinceLast);
 
     m_pipeline->camera()->setTarget(m_playerObject->renderable()->location()
-        + q.conjugate() * Math::Vector(0.0, 2.0, 5.0), q);
+        + q.conjugate() * Math::Vector(0.0, 0.0, 7.5), q);
     m_pipeline->camera()->step(sinceLast.toUsec() / 1e3);
     m_pipeline->render();
 
