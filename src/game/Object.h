@@ -18,8 +18,8 @@ private:
     public:
         Updater(Object *object) : m_object(object) {}
         virtual ~Updater() {}
-    protected:
-        virtual void updateTransform(Math::Vector location,
+
+        virtual void transformUpdated(Math::Vector location,
             Math::Quaternion rotation);
     };
 private:

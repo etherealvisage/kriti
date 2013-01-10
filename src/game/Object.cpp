@@ -7,7 +7,7 @@
 namespace Kriti {
 namespace Game {
 
-void Object::Updater::updateTransform(Math::Vector location,
+void Object::Updater::transformUpdated(Math::Vector location,
     Math::Quaternion orientation) {
 
     //Message3(Game, Debug, "Moving renderable to " << location.toString());
@@ -24,7 +24,7 @@ Object::~Object() {
 
 void Object::setPhysical(boost::shared_ptr<Physics::PhysicalObject> phy) {
     m_physical = phy;
-    m_physical->setFeedback(boost::make_shared<Updater>(this));
+    m_physical->addFeedback(boost::make_shared<Updater>(this));
 }
 
 }  // namespace Game
