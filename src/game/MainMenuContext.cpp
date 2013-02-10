@@ -114,28 +114,30 @@ MainMenuContext::MainMenuContext() {
     m_vehicle = boost::make_shared<Vehicle>(m_playerObject->physical());
     m_vehicleModel->addVehicle(m_vehicle);
 
+    double springK = 0.5;
+    double restLength = 0.75;
     m_vehicle->addSuspension(VehicleSuspension(
         Math::Vector(-0.5, -0.15, -1.0),
         Math::Vector(0.0, -1.0, 0.0),
-        0.3, 1.75
+        springK, restLength
     ));
     m_vehicle->addSuspension(VehicleSuspension(
         Math::Vector(0.5, -0.15, -1.0),
         Math::Vector(0.0, -1.0, 0.0),
-        0.3, 1.75
+        springK, restLength
     ));
     m_vehicle->addSuspension(VehicleSuspension(
         Math::Vector(-0.5, -0.15, 1.0),
         Math::Vector(0.0, -1.0, 0.0),
-        0.3, 1.75
+        springK, restLength
     ));
     m_vehicle->addSuspension(VehicleSuspension(
         Math::Vector(0.5, -0.15, 1.0),
         Math::Vector(0.0, -1.0, 0.0),
-        0.3, 1.75
+        springK, restLength
     ));
-    m_playerObject->physical()->setLinearDamping(0.01);
-    m_playerObject->physical()->setAngularDamping(0.01);
+    m_playerObject->physical()->setLinearDamping(0.0);
+    m_playerObject->physical()->setAngularDamping(0.3);
 
     m_world->addModifier(m_vehicleModel);
 }
@@ -147,7 +149,11 @@ void MainMenuContext::run() {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    Math::Quaternion rotation =
+        m_playerObject->physical()->orientation().conjugate();
+
     Math::Quaternion q = m_pipeline->camera()->orientation()
+    //Math::Quaternion q = m_playerObject->physical()->orientation().conjugate()
         * Math::Quaternion(Math::Vector(1,0,0), m_rotation.x())
         * Math::Quaternion(Math::Vector(0,1,0), m_rotation.y());
 

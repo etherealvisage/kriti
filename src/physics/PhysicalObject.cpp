@@ -29,6 +29,14 @@ Math::Vector PhysicalObject::linearVelocity() const {
     return toMath(m_body->getLinearVelocity());
 }
 
+Math::Vector PhysicalObject::position() const {
+    return toMath(m_body->getCenterOfMassTransform().getOrigin());
+}
+
+Math::Quaternion PhysicalObject::orientation() const {
+    return toMath(m_body->getCenterOfMassTransform().getRotation());
+}
+
 void PhysicalObject::addFeedback(boost::shared_ptr<ObjectFeedback> feedback) {
     m_motionState->addFeedback(feedback);
 }

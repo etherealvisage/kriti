@@ -23,6 +23,9 @@ public:
 
     btRigidBody *body() const { return m_body; }
     Math::Vector linearVelocity() const;
+    // ObjectFeedback should be used instead of these.
+    Math::Vector position() const;
+    Math::Quaternion orientation() const;
 
     void addFeedback(boost::shared_ptr<ObjectFeedback> feedback);
 

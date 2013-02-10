@@ -37,8 +37,7 @@ void VehicleModel::simulate(boost::shared_ptr<Physics::World> world,
         if(delta > 0.0) {
             double f = delta*delta*suspension.springK();
             //Message3(Game, Debug, "f:" << f);
-            vehicle->object()->applyForce(direction*10,
-                -direction * f);
+            vehicle->object()->applyForce(direction*10, -direction * f * .75);
         }
     }
 
@@ -50,17 +49,21 @@ void VehicleModel::simulate(boost::shared_ptr<Physics::World> world,
     if(velocity.length2() > Math::Constants::Epsilon) {
         Math::Vector proj = velocity.projectOnto(forwards);
         Math::Vector vdiff = velocity - proj;
-        Message3(Game, Debug, "vdiff: " << vdiff.toString());
-        vehicle->object()->applyForce(-vdiff/2.0);
+        //Message3(Game, Debug, "vdiff: " << vdiff.toString());
+        //vehicle->object()->applyForce(-vdiff/2.0);
     }
 
+    // Vertical damping
     if(yvelocity > Math::Constants::Epsilon) {
-        vehicle->object()->applyForce(Math::Vector(0.0, -yvelocity/1.0));
+        //vehicle->object()->applyForce(Math::Vector(0.0, -yvelocity/4.0));
     }
 
     // try to level the vehicle.
-    /*Math::Vector up = (orientation * Math::Vector(0.0, 1.0, 0.0)).normalized();
-    vehicle->object()->applyTorque(Math::Vector(-up.z()/10.0, 0.0, up.x()/10.0));*/
+    Math::Vector up = (orientation * Math::Vector(0.0, 1.0, 0.0)).normalized();
+    //vehicle->object()->applyTorque(Math::Vector(-up.z()/5.0, 0.0, up.x()/5.0));
+    //vehicle->object()->applyTorque(Math::Vector(-up.z()/5.0, 0.0, up.x()/5.0));
+    Message3(Game, Debug, "Z-value: " << up.z());
+    vehicle->object()->applyTorque(Math::Vector(-up.z()/50.0, 0.0, up.x()/50.0));
 }
 
 }  // namespace Game
