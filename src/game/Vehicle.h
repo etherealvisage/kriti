@@ -46,6 +46,7 @@ public:
     Math::Quaternion orientation() const { return m_orientation; }
 
     double turning() const { return m_turning; }
+    void setTurning(double turning) { m_turning = turning; }
     double acceleration() const { return m_acceleration; }
 
     void addSuspension(VehicleSuspension suspension)

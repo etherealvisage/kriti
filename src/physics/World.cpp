@@ -44,11 +44,13 @@ void World::addModifier(boost::shared_ptr<ObjectModifier> modifier) {
 
 void World::step(TimeValue interval) {
     // step the requisite number of times @100Hz
-    m_world->stepSimulation(interval.toUsec() / 1000.0, 10, 1 / 100.0);
+    Message3(Physics, Debug, "Physics tick length: " << interval.toUsec() / 1e6);
+    m_world->stepSimulation(interval.toUsec() / 1e3, 2, 1 / 60.0);
 }
 
 boost::shared_ptr<PhysicalObject> World::rayCast(Math::Vector from,
-    Math::Vector to, double *distance) {
+    Math::Vector to, double *distance,
+    boost::shared_ptr<PhysicalObject> ignore) {
 
     auto bfrom = toBullet(from), bto = toBullet(to);
     btCollisionWorld::ClosestRayResultCallback callback(bfrom, bto);

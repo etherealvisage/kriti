@@ -33,6 +33,7 @@ public:
     void applyForce(Math::Vector from, Math::Vector force);
     void applyTorque(Math::Vector torque);
     void moveTo(Math::Vector location);
+    void setOrientation(Math::Quaternion orientation);
 
     void setLinearDamping(double damping);
     void setAngularDamping(double damping);

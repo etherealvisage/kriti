@@ -85,6 +85,9 @@ MainMenuContext::MainMenuContext() {
     m_playerObject->setPhysical(
         Physics::ObjectFactory().makeBox(1.0, 1.0, 0.3, 2.0));
     m_playerObject->physical()->moveTo(Math::Vector(0.0, 20.0, -20.0));
+    m_playerObject->physical()->setOrientation(
+        Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 1.0));
+
     m_world->addObject(m_playerObject->physical());
 
     m_pipeline->addRenderable(m_playerObject->renderable());
@@ -114,32 +117,34 @@ MainMenuContext::MainMenuContext() {
     m_vehicle = boost::make_shared<Vehicle>(m_playerObject->physical());
     m_vehicleModel->addVehicle(m_vehicle);
 
-    double springK = 0.5;
-    double restLength = 0.75;
+    double springK = 0.75;
+    double restLength = 1.00;
     m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(-0.5, -0.15, -1.0),
-        Math::Vector(0.0, -1.0, 0.0),
+        Math::Vector(-0.5, -0.30 + Math::Constants::Epsilon, -1.0),
+        Math::Vector(-4.0, -10.0, 0.0),
         springK, restLength
     ));
     m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(0.5, -0.15, -1.0),
-        Math::Vector(0.0, -1.0, 0.0),
+        Math::Vector(0.5, -0.30 + Math::Constants::Epsilon, -1.0),
+        Math::Vector(4.0, -10.0, 0.0),
         springK, restLength
     ));
     m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(-0.5, -0.15, 1.0),
-        Math::Vector(0.0, -1.0, 0.0),
+        Math::Vector(-0.5, -0.30 + Math::Constants::Epsilon, 1.0),
+        Math::Vector(-4.0, -10.0, 0.0),
         springK, restLength
     ));
     m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(0.5, -0.15, 1.0),
-        Math::Vector(0.0, -1.0, 0.0),
+        Math::Vector(0.5, -0.30 + Math::Constants::Epsilon, 1.0),
+        Math::Vector(4.0, -10.0, 0.0),
         springK, restLength
     ));
     m_playerObject->physical()->setLinearDamping(0.0);
     m_playerObject->physical()->setAngularDamping(0.3);
 
     m_world->addModifier(m_vehicleModel);
+    m_playerObject->physical()->setOrientation(
+        Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 1.0));
 }
 
 void MainMenuContext::run() {
@@ -152,8 +157,8 @@ void MainMenuContext::run() {
     Math::Quaternion rotation =
         m_playerObject->physical()->orientation().conjugate();
 
-    Math::Quaternion q = m_pipeline->camera()->orientation()
-    //Math::Quaternion q = m_playerObject->physical()->orientation().conjugate()
+    //Math::Quaternion q = m_pipeline->camera()->orientation()
+    Math::Quaternion q = m_playerObject->physical()->orientation().conjugate()
         * Math::Quaternion(Math::Vector(1,0,0), m_rotation.x())
         * Math::Quaternion(Math::Vector(0,1,0), m_rotation.y());
 
@@ -185,25 +190,25 @@ void MainMenuContext::quitMenu(bool pressed) {
 }
 
 void MainMenuContext::debugMoveForward(bool pressed) {
-    Math::Vector amount(0.0, 0.0, 2.0);
+    Math::Vector amount(0.0, 0.0, 5.0);
     if(!pressed) amount *= -1.0;
     m_translation = m_translation + amount;
 }
 
 void MainMenuContext::debugMoveBackward(bool pressed) {
-    Math::Vector amount(0.0, 0.0, -1.0);
+    Math::Vector amount(0.0, 0.0, -4.0);
     if(!pressed) amount *= -1.0;
     m_translation = m_translation + amount;
 }
 
 void MainMenuContext::debugMoveUp(bool pressed) {
-    Math::Vector amount(0.0, 2.5, 0.0);
+    Math::Vector amount(0.0, 25, 0.0);
     if(!pressed) amount *= -1.0;
     m_translation = m_translation + amount;
 }
 
 void MainMenuContext::debugMoveDown(bool pressed) {
-    Math::Vector amount(0.0, -0.8, 0.0);
+    Math::Vector amount(0.0, -15, 0.0);
     if(!pressed) amount *= -1.0;
     m_translation = m_translation + amount;
 }

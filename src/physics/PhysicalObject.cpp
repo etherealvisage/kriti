@@ -59,6 +59,13 @@ void PhysicalObject::moveTo(Math::Vector location) {
     m_body->translate(toBullet(location) - current.getOrigin());
 }
 
+void PhysicalObject::setOrientation(Math::Quaternion orientation) {
+    btTransform current;
+    m_body->getMotionState()->getWorldTransform(current);
+    current.setRotation(toBullet(orientation));
+    m_body->getMotionState()->setWorldTransform(current);
+}
+
 void PhysicalObject::setLinearDamping(double damping) {
     m_body->setDamping(damping, m_body->getAngularDamping());
 }

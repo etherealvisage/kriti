@@ -42,7 +42,9 @@ public:
     void step(TimeValue interval);
 
     boost::shared_ptr<PhysicalObject> rayCast(Math::Vector from,
-        Math::Vector to, double *distance);
+        Math::Vector to, double *distance,
+        boost::shared_ptr<PhysicalObject> ignore
+            = boost::shared_ptr<PhysicalObject>());
 };
 
 }  // namespace Physics
