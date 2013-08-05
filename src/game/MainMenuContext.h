@@ -29,9 +29,6 @@ private:
     boost::shared_ptr<Vehicle> m_vehicle;
     boost::shared_ptr<VehicleModel> m_vehicleModel;
     TimeValue m_lastTime;
-
-    Math::Vector m_rotation;
-    Math::Vector m_translation;
 public:
     MainMenuContext();
 
@@ -44,12 +41,8 @@ private:
 private:
     void quitMenu(bool pressed);
 
-    void debugMoveForward(bool pressed);
-    void debugMoveBackward(bool pressed);
-    void debugMoveUp(bool pressed);
-    void debugMoveDown(bool pressed);
-    void debugRotateLeft(bool pressed);
-    void debugRotateRight(bool pressed);
+    void playerPitchUp(bool pressed);
+    void playerPitchDown(bool pressed);
 };
 
 }  // namespace Game

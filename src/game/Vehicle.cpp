@@ -15,7 +15,7 @@ void Vehicle::VehicleFeedback::transformUpdated(Math::Vector location,
 }
 
 Vehicle::Vehicle(boost::shared_ptr<Physics::PhysicalObject> object)
-    : m_object(object), m_turning(0.0), m_acceleration(0.0) {
+    : m_object(object), m_yaw(0), m_pitch(0), m_roll(0), m_braking(0) {
 
     m_feedback = boost::make_shared<VehicleFeedback>(this);
     object->addFeedback(m_feedback);

@@ -3,12 +3,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "VehicleSuspension.h"
-
 #include "physics/PhysicalObject.h"
 #include "physics/ObjectFeedback.h"
 
 #include "math/Vector.h"
+
+#include "MessageSystem.h"
 
 namespace Kriti {
 namespace Game {
@@ -31,10 +31,10 @@ private:
     Math::Vector m_location;
     Math::Quaternion m_orientation;
 
-    double m_turning;
-    double m_acceleration;
-
-    std::vector<VehicleSuspension> m_suspensions;
+    double m_yaw;
+    double m_pitch;
+    double m_roll;
+    double m_braking;
 public:
     Vehicle(boost::shared_ptr<Physics::PhysicalObject> object);
     ~Vehicle();
@@ -45,16 +45,17 @@ public:
     Math::Vector location() const { return m_location; }
     Math::Quaternion orientation() const { return m_orientation; }
 
-    double turning() const { return m_turning; }
-    void setTurning(double turning) { m_turning = turning; }
-    double acceleration() const { return m_acceleration; }
+    double yaw() const { return m_yaw; }
+    void setYaw(double yaw) { m_yaw = yaw; }
 
-    void addSuspension(VehicleSuspension suspension)
-        { m_suspensions.push_back(suspension); }
-    const VehicleSuspension &suspension(int index) const
-        { return m_suspensions[index]; }
-    VehicleSuspension &suspension(int index) { return m_suspensions[index]; }
-    int suspensionCount() const { return m_suspensions.size(); }
+    double pitch() const { return m_pitch; }
+    void setPitch(double pitch) { Message("setting pitch to " << pitch); m_pitch = pitch; }
+
+    double roll() const { return m_roll; }
+    void setRoll(double roll) { m_roll = roll; }
+
+    double braking() const { return m_braking; }
+    void setBraking(double braking) { m_braking = braking; }
 };
 
 }  // namespace Game

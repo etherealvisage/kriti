@@ -2,10 +2,31 @@
 
 #include "physics/World.h"
 
+#include "track/Partitioner.h"
+
+#include "math/Geometry.h"
+
 #include "MessageSystem.h"
 
 namespace Kriti {
 namespace Game {
+
+void VehicleModel::setRoot(boost::shared_ptr<Track::Node> root) {
+    m_edges.clear();
+    m_root = root;
+
+    // TODO: make this use some sort of spatial data structure . . .
+    auto paths = Track::Partitioner().partition(root);
+
+    for(auto path : paths) {
+        for(unsigned i = 1; i < path.size(); i ++) {
+            m_edges.push_back(std::make_pair(
+                path[i-1]->position(), path[i]->position()));
+        }
+    }
+
+    Message3(Game, Debug, "There are " << m_edges.size() << " edges.");
+}
 
 void VehicleModel::addVehicle(boost::shared_ptr<Vehicle> vehicle) {
     m_vehicles.push_back(vehicle);
@@ -20,76 +41,23 @@ void VehicleModel::modify(boost::shared_ptr<Physics::World> world,
 void VehicleModel::simulate(boost::shared_ptr<Physics::World> world,
     boost::shared_ptr<Vehicle> vehicle) {
 
-#if 0
-    auto where = vehicle->location() + Math::Vector(0.0, -0.35, 0.0);
-    auto direction = Math::Vector(0.0, -1.0, 0.0);
-
-    double distance = -1.0;
-    auto result = world->rayCast(where, where + direction*100, &distance);
-
-    Message3(Physics, Debug, "Distance: " << distance);
-    if(result && distance < 5) {
-        double off = 5 - distance;
-        double force = off*off*1.5;
-        Message3(Physics, Debug, "Force: " << force);
-        vehicle->object()->applyForce(direction, -direction * force);
+    double closest = 1e100;
+    for(auto edge : m_edges) {
+        auto diff = vehicle->location() -
+            Math::Geometry::closestSegmentPoint(edge.first, edge.second,
+                vehicle->location());
+        closest = std::min(closest, diff.dot(diff));
     }
 
-    Math::Vector velocity = vehicle->object()->linearVelocity();
-    if(velocity.y() > Math::Constants::Epsilon) {
-        vehicle->object()->applyForce(Math::Vector(0.0, -velocity.y()/2.0));
-    }
+    // TODO: make maximum force, modifier, etc. configurable.
+    double force = 1 / (std::max(0.05, std::sqrt(closest)));
 
-#else
-    auto orientation = vehicle->orientation();
-    for(int i = 0; i < vehicle->suspensionCount(); i ++) {
-        auto suspension = vehicle->suspension(i);
-        double distance;
-        auto where = vehicle->location() + suspension.offset()*orientation;
-        auto direction = (suspension.direction()*orientation).normalized();
+    vehicle->object()->applyForce(Math::Vector(0.0, 0.0, -force));
 
-        auto result = world->rayCast(where, where + direction, &distance);
-
-        // no collision?
-        if(!result) continue;
-
-        double delta = suspension.restLength() - distance;
-        //Message3(Game, Debug, "Distance: " << distance << " Delta: " << delta);
-        if(delta > 0.0) {
-            double f = delta*delta*suspension.springK();
-            Message3(Game, Debug, "f:" << f);
-            vehicle->object()->applyForce(suspension.offset()*orientation,
-                (suspension.offset()*orientation) - (direction * f * .75));
-        }
-    }
-
-    Math::Vector forwards = orientation * Math::Vector(0.0, 0.0, -1.0);
-    Math::Vector velocity = vehicle->object()->linearVelocity();
-    double yvelocity = velocity.y();
-    velocity.setY(0.0);
-
-    if(velocity.length2() > Math::Constants::Epsilon) {
-        Math::Vector proj = velocity.projectOnto(forwards);
-        Math::Vector vdiff = velocity - proj;
-        //Message3(Game, Debug, "vdiff: " << vdiff.toString());
-        //vehicle->object()->applyForce(-vdiff/2.0);
-    }
-
-    // Vertical damping
-    if(yvelocity > Math::Constants::Epsilon) {
-        vehicle->object()->applyForce(Math::Vector(0.0, -yvelocity/4.0));
-    }
-
-    // try to level the vehicle.
-    Math::Vector up = (orientation * Math::Vector(0.0, 1.0, 0.0)).normalized();
-    //vehicle->object()->applyTorque(Math::Vector(-up.z()/5.0, 0.0, up.x()/5.0));
-    //vehicle->object()->applyTorque(Math::Vector(-up.z()/5.0, 0.0, up.x()/5.0));
-    Message3(Game, Debug, "Z-value: " << up.z());
-    //vehicle->object()->applyTorque(Math::Vector(-up.z()/50.0, 0.0, up.x()/50.0));
-    Message3(Game, Debug, "Rotation: (" << std::asin(up.z()) << ","
-        << std::asin(up.x()) << ")");
-    vehicle->object()->applyTorque(Math::Vector(-up.z()/50.0, 0.0, 0.0));
-#endif
+    // now for roll/yaw/pitch modifiers . . .
+    /*vehicle->object()->applyTorque(vehicle->orientation() *
+        (Math::Vector(1.0, 0.0, 0.0) * vehicle->pitch()));*/
+    vehicle->object()->applyTorque(Math::Vector(vehicle->pitch(), 0.0, 0.0));
 }
 
 }  // namespace Game

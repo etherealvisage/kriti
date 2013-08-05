@@ -10,3 +10,6 @@ KEYBOARD_SIGNAL(MM_debugUp, mm_debugUp)
 KEYBOARD_SIGNAL(MM_debugDown, mm_debugDown)
 KEYBOARD_SIGNAL(MM_debugRLeft, mm_debugRLeft)
 KEYBOARD_SIGNAL(MM_debugRRight, mm_debugRRight)
+
+KEYBOARD_SIGNAL(MM_playerPitchUp, mm_playerPitchUp)
+KEYBOARD_SIGNAL(MM_playerPitchDown, mm_playerPitchDown)

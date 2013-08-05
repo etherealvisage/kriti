@@ -36,34 +36,14 @@ MainMenuContext::MainMenuContext() {
             boost::bind(&MainMenuContext::quitMenu, this, _1)
         );
     Interface::DeviceManager::instance()->keyboardRouter()->signal(
-            Interface::KeyboardRouter::MM_debugForward
+            Interface::KeyboardRouter::MM_playerPitchUp
         ).connect(
-            boost::bind(&MainMenuContext::debugMoveForward, this, _1)
+            boost::bind(&MainMenuContext::playerPitchUp, this, _1)
         );
     Interface::DeviceManager::instance()->keyboardRouter()->signal(
-            Interface::KeyboardRouter::MM_debugBackward
+            Interface::KeyboardRouter::MM_playerPitchDown
         ).connect(
-            boost::bind(&MainMenuContext::debugMoveBackward, this, _1)
-        );
-    Interface::DeviceManager::instance()->keyboardRouter()->signal(
-            Interface::KeyboardRouter::MM_debugUp
-        ).connect(
-            boost::bind(&MainMenuContext::debugMoveUp, this, _1)
-        );
-    Interface::DeviceManager::instance()->keyboardRouter()->signal(
-            Interface::KeyboardRouter::MM_debugDown
-        ).connect(
-            boost::bind(&MainMenuContext::debugMoveDown, this, _1)
-        );
-    Interface::DeviceManager::instance()->keyboardRouter()->signal(
-            Interface::KeyboardRouter::MM_debugRLeft
-        ).connect(
-            boost::bind(&MainMenuContext::debugRotateLeft, this, _1)
-        );
-    Interface::DeviceManager::instance()->keyboardRouter()->signal(
-            Interface::KeyboardRouter::MM_debugRRight
-        ).connect(
-            boost::bind(&MainMenuContext::debugRotateRight, this, _1)
+            boost::bind(&MainMenuContext::playerPitchDown, this, _1)
         );
     m_pipeline = boost::make_shared<Render::Pipeline>();
 
@@ -115,35 +95,14 @@ MainMenuContext::MainMenuContext() {
 
     // set up vehicle model
     m_vehicleModel = boost::make_shared<VehicleModel>();
+    m_vehicleModel->setRoot(rg.generatedRoot());
     m_vehicle = boost::make_shared<Vehicle>(m_playerObject->physical());
     m_vehicleModel->addVehicle(m_vehicle);
 
-    double springK = 0.75;
-    double restLength = 1.00;
-    m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(-0.5, -0.30 + Math::Constants::Epsilon, -1.0),
-        Math::Vector(-4.0, -10.0, 0.0),
-        springK, restLength
-    ));
-    m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(0.5, -0.30 + Math::Constants::Epsilon, -1.0),
-        Math::Vector(4.0, -10.0, 0.0),
-        springK, restLength
-    ));
-    m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(-0.5, -0.30 + Math::Constants::Epsilon, 1.0),
-        Math::Vector(-4.0, -10.0, 0.0),
-        springK, restLength
-    ));
-    m_vehicle->addSuspension(VehicleSuspension(
-        Math::Vector(0.5, -0.30 + Math::Constants::Epsilon, 1.0),
-        Math::Vector(4.0, -10.0, 0.0),
-        springK, restLength
-    ));
     m_playerObject->physical()->setLinearDamping(0.0);
-    m_playerObject->physical()->setAngularDamping(0.3);
+    m_playerObject->physical()->setAngularDamping(0.0);
 
-    //m_world->addModifier(m_vehicleModel);
+    m_world->addModifier(m_vehicleModel);
     m_playerObject->physical()->setOrientation(
         Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 0.0));
 }
@@ -158,13 +117,7 @@ void MainMenuContext::run() {
     Math::Quaternion rotation =
         m_playerObject->physical()->orientation().conjugate();
 
-    //Math::Quaternion q = m_pipeline->camera()->orientation()
-    Math::Quaternion q = m_playerObject->physical()->orientation().conjugate()
-        * Math::Quaternion(Math::Vector(1,0,0), m_rotation.x())
-        * Math::Quaternion(Math::Vector(0,1,0), m_rotation.y());
-
-    m_forceModifier->setLinearForce(m_playerObject->physical(),
-        q.conjugate()*m_translation/10.0);
+    Math::Quaternion q = m_pipeline->camera()->orientation();
 
     m_world->step(sinceLast);
 
@@ -190,40 +143,18 @@ void MainMenuContext::quitMenu(bool pressed) {
     if(pressed) Context::ContextManager::instance()->popContext();
 }
 
-void MainMenuContext::debugMoveForward(bool pressed) {
-    Math::Vector amount(0.0, 0.0, 5.0);
-    if(!pressed) amount *= -1.0;
-    m_translation = m_translation + amount;
+void MainMenuContext::playerPitchUp(bool pressed) {
+    double amount = 1;
+    if(!pressed) amount = -amount;
+
+    m_vehicle->setPitch(m_vehicle->pitch() + amount);
 }
 
-void MainMenuContext::debugMoveBackward(bool pressed) {
-    Math::Vector amount(0.0, 0.0, -4.0);
-    if(!pressed) amount *= -1.0;
-    m_translation = m_translation + amount;
-}
+void MainMenuContext::playerPitchDown(bool pressed) {
+    double amount = -1;
+    if(!pressed) amount = -amount;
 
-void MainMenuContext::debugMoveUp(bool pressed) {
-    Math::Vector amount(0.0, 25, 0.0);
-    if(!pressed) amount *= -1.0;
-    m_translation = m_translation + amount;
-}
-
-void MainMenuContext::debugMoveDown(bool pressed) {
-    Math::Vector amount(0.0, -15, 0.0);
-    if(!pressed) amount *= -1.0;
-    m_translation = m_translation + amount;
-}
-
-void MainMenuContext::debugRotateLeft(bool pressed) {
-    Math::Vector amount(0.0, -0.05);
-    if(!pressed) amount *= -1.0;
-    m_rotation = m_rotation + amount;
-}
-
-void MainMenuContext::debugRotateRight(bool pressed) {
-    Math::Vector amount(0.0, 0.05);
-    if(!pressed) amount *= -1.0;
-    m_rotation = m_rotation + amount;
+    m_vehicle->setPitch(m_vehicle->pitch() + amount);
 }
 
 }  // namespace Game

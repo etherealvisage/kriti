@@ -22,6 +22,8 @@ public:
 
     boost::shared_ptr<ExtrusionResult> generate(Subdivider *subdivider,
         Extruder *extruder);
+
+    Node::Ptr generatedRoot() { return m_root; }
 protected:
     virtual void seed();
     virtual void build() = 0;
