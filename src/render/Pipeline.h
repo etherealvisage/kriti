@@ -1,25 +1,28 @@
 #ifndef KRITI_RENDER__PIPELINE_H
 #define KRITI_RENDER__PIPELINE_H
 
-#include <vector>
+#include <set>
 
 #include "Renderable.h"
 #include "SceneCamera.h"
+
+#include "Stage.h"
 
 namespace Kriti {
 namespace Render {
 
 class Pipeline {
 private:
-    std::vector<boost::shared_ptr<Renderable>> m_objects;
-    SceneCamera m_camera;
-public:
-    SceneCamera *camera() { return &m_camera; }
+    boost::shared_ptr<Stage> m_lastStage;
 
-    void addRenderable(boost::shared_ptr<Renderable> renderable);
-    void removeRenderable(boost::shared_ptr<Renderable> renderable);
+    std::set<boost::shared_ptr<Stage>> m_rendered;
+public:
+    void setLastStage(boost::shared_ptr<Stage> lastStage)
+        { m_lastStage = lastStage; }
 
     void render();
+private:
+    void render(boost::shared_ptr<Stage> stage);
 };
 
 }  // namespace Render

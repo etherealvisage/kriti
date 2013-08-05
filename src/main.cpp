@@ -28,7 +28,10 @@ int main() {
     /* Parse main configuration file. */
     parser.parseFile("kriti.config");
 
+    /* Parse secondary configuration files. */
     parser.parseFile(tree->getString("kriti.data_path") + "techniques.config");
+    parser.parseFile(tree->getString("kriti.data_path") + "gui.config");
+    parser.parseFile(tree->getString("kriti.data_path") + "fonts.config");
 
     /* Set the log file. */
     MessageSystem::setLogFile(
@@ -48,9 +51,6 @@ int main() {
 
     // initialize context manager
     Context::ContextManager::instance();
-
-    boost::shared_ptr<Render::Technique> simpleTechnique
-        = ResourceRegistry::instance()->get<Render::Technique>("simple");
 
     Context::ContextManager::instance()->addContext(
         new Game::MainMenuContext()

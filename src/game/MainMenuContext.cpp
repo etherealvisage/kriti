@@ -46,13 +46,16 @@ MainMenuContext::MainMenuContext() {
             boost::bind(&MainMenuContext::playerPitchDown, this, _1)
         );
     m_pipeline = boost::make_shared<Render::Pipeline>();
+    m_gameStage = boost::make_shared<Render::Stage>();
+
+    m_pipeline->setLastStage(m_gameStage);
 
     // camera setup
-    m_pipeline->camera()->setProjection(Math::ViewGenerator().perspective(
+    m_gameStage->camera()->setProjection(Math::ViewGenerator().perspective(
         Math::Constants::Pi/3.0, Interface::Video::instance()->aspectRatio(),
         0.1, 1000.0
     ));
-    m_pipeline->camera()->step(0.0);
+    m_gameStage->camera()->step(0.0);
 
     m_world = Physics::WorldRegistry::instance()->makeWorld();
 
@@ -71,7 +74,7 @@ MainMenuContext::MainMenuContext() {
 
     m_world->addObject(m_playerObject->physical());
 
-    m_pipeline->addRenderable(m_playerObject->renderable());
+    m_gameStage->addRenderable(m_playerObject->renderable());
 
     // generate track
     Track::RandomGenerator rg(3);
@@ -89,7 +92,7 @@ MainMenuContext::MainMenuContext() {
         trackExtrusion->vertices(), trackExtrusion->indices()));
     //m_world->addObject(m_trackObject->physical());
 
-    m_pipeline->addRenderable(m_trackObject->renderable());
+    m_gameStage->addRenderable(m_trackObject->renderable());
 
     m_world->addModifier(m_forceModifier);
 
@@ -117,13 +120,13 @@ void MainMenuContext::run() {
     Math::Quaternion rotation =
         m_playerObject->physical()->orientation().conjugate();
 
-    Math::Quaternion q = m_pipeline->camera()->orientation();
+    Math::Quaternion q = m_gameStage->camera()->orientation();
 
     m_world->step(sinceLast);
 
-    m_pipeline->camera()->setTarget(m_playerObject->renderable()->location()
+    m_gameStage->camera()->setTarget(m_playerObject->renderable()->location()
         + q.conjugate() * Math::Vector(0.0, 0.0, 7.5), q);
-    m_pipeline->camera()->step(sinceLast.toUsec() / 1e3);
+    m_gameStage->camera()->step(sinceLast.toUsec() / 1e3);
     m_pipeline->render();
 
     GLint err = glGetError();

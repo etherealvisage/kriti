@@ -117,6 +117,14 @@ void Video::initializeGL() {
         Message3(Interface, Fatal,
             "GL_ARB_explicit_attrib_location OpenGL extension required.");
     }
+
+    GLint maxColourAttachments;
+    glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxColourAttachments);
+    Message3(Interface, Log, "Maximum number of colour attachments: " << maxColourAttachments);
+
+    GLint maxSamples;
+    glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+    Message3(Interface, Log, "Maximum number of samples: " << maxSamples);
 }
 
 }  // namespace Interface

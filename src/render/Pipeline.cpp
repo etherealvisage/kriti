@@ -9,30 +9,31 @@
 namespace Kriti {
 namespace Render {
 
-void Pipeline::addRenderable(boost::shared_ptr<Renderable> renderable) {
-    m_objects.push_back(renderable);
-}
-
-void Pipeline::removeRenderable(boost::shared_ptr<Renderable> renderable) {
-    for(unsigned i = 0; i < m_objects.size(); i ++) {
-        if(m_objects[i] == renderable) {
-            m_objects[i] = m_objects.back();
-            m_objects.pop_back();
-            return;
-        }
-    }
-}
-
 void Pipeline::render() {
-    auto cameraMatrix = m_camera.matrix();
+    m_rendered.clear();
+    render(m_lastStage);
 
-    for(auto renderable : m_objects) {
-        auto error = glGetError();
-        if(error != GL_NO_ERROR) {
-            Message3(Render, Error, "GL error: " << gluErrorString(error));
-        }
-        renderable->draw(cameraMatrix);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glDrawBuffer(GL_BACK);
+
+    //m_lastStage->framebuffer()->bindRead();
+
+    //glBlitFramebuffer(0, 0, 1023, 767, 0, 0, 1023, 767,
+        //GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+}
+
+void Pipeline::render(boost::shared_ptr<Stage> stage) {
+    // check if it's already been rendered.
+    if(m_rendered.find(stage) != m_rendered.end()) return;
+
+    // render all previous
+    for(int i = 0; i < stage->previousCount(); i ++) {
+        render(stage->previous(i));
     }
+
+    stage->render(stage == m_lastStage);
+
+    m_rendered.insert(stage);
 }
 
 }  // namespace Render
