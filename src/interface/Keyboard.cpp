@@ -3,6 +3,7 @@
 #include "Keyboard.h"
 #include "config/Tree.h"
 
+
 namespace Kriti {
 namespace Interface {
 
@@ -10,8 +11,8 @@ Keyboard::Keyboard(Event::EventQueue *queue, KeyboardRouter *router)
     : m_queue(queue), m_router(router) {
 
     // lowercase/digits/punctuation
-    for(int i = 0; i <= SDLK_LAST; i ++) {
-        if(std::islower(i) || std::isdigit(i) || std::ispunct(i)) {
+    for(int i = 0; i <= 255; i ++) {
+        if((std::islower(i) || std::isdigit(i) || std::ispunct(i))) {
             m_mappings[StreamAsString() << (char)i] = i;
         }
     }

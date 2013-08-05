@@ -3,6 +3,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <SDL.h>
+
 namespace Kriti {
 namespace Interface {
 
@@ -20,11 +22,16 @@ public:
         s_singleton.reset();
     }
 private:
+    SDL_Window *m_window;
+    SDL_GLContext m_context;
+private:
     Video();
 public:
     ~Video();
 
     double aspectRatio() const;
+
+    void swapBuffers();
 private:
     void initializeSDL();
     void setVideoMode();

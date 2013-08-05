@@ -34,8 +34,8 @@ include_directories(${Boost_INCLUDE_DIR})
 find_package(Bullet)
 include_directories(${BULLET_INCLUDE_DIRS})
 
-find_package(SDL)
-include_directories(${SDL_INCLUDE_DIR})
+find_package(SDL2)
+include_directories(${SDL2_INCLUDE_DIR})
 
 find_package(SDL_image)
 include_directories(${SDLIMAGE_INCLUDE_DIR})
@@ -51,7 +51,7 @@ add_executable(kriti ${sources})
 target_link_libraries(kriti
     ${Boost_LIBRARIES}
     ${BULLET_LIBRARIES}
-    ${SDL_LIBRARY}
+    ${SDL2_LIBRARY}
     ${SDLIMAGE_LIBRARY}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARY}

@@ -1,8 +1,8 @@
 #include <GL/glew.h>
 
-#include "MainMenuContext.h"
+#include <SDL.h>
 
-#include "SDL.h"
+#include "MainMenuContext.h"
 
 #include "ResourceRegistry.h"
 
@@ -178,7 +178,7 @@ void MainMenuContext::run() {
         err = glGetError();
     }
 
-    SDL_GL_SwapBuffers();
+    Interface::Video::instance()->swapBuffers();
     // artificially slow down frame rate
     //SDL_Delay(30);
 }

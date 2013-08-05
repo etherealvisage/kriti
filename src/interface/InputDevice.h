@@ -1,7 +1,7 @@
 #ifndef KRITI_INTERFACE__INPUT_DEVICE_H
 #define KRITI_INTERFACE__INPUT_DEVICE_H
 
-#include "SDL.h"
+#include <SDL.h>
 
 namespace Kriti {
 namespace Interface {

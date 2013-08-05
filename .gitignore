@@ -2,6 +2,7 @@
 *.swp
 
 .vimrc
+.ycm*
 .gdb_history
 .clang_complete
 

@@ -1,6 +1,8 @@
 #include <GL/glew.h>
 
-#include "SDL.h"
+#include <SDL.h>
+#include <SDL_video.h>
+#include <SDL_opengl.h>
 
 #include "Video.h"
 #include "config/Tree.h"
@@ -28,6 +30,10 @@ double Video::aspectRatio() const {
     return (double)width/height;
 }
 
+void Video::swapBuffers() {
+    SDL_GL_SwapWindow(m_window);
+}
+
 void Video::initializeSDL() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         Message3(Interface, Fatal, "Failed to initialize SDL: "
@@ -42,8 +48,9 @@ void Video::setVideoMode() {
     bool fullscreen = Config::Tree::instance()->getBool("video.fullscreen",
         false);
 
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    // Need OpenGL 3.1 for vertex attribute locations etc.
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -51,19 +58,26 @@ void Video::setVideoMode() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    int flags = SDL_OPENGL;
-    if(fullscreen) flags |= SDL_FULLSCREEN;
-    SDL_Surface *screen = SDL_SetVideoMode(width, height, bpp, flags);
+    int flags = SDL_WINDOW_OPENGL;
+    if(fullscreen) flags |= SDL_WINDOW_FULLSCREEN;
+    //SDL_Surface *screen = SDL_SetVideoMode(width, height, bpp, flags);
+    m_window = SDL_CreateWindow("kriti",
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+        width, height, flags);
 
-    if(screen == NULL) {
+    if(m_window == NULL) {
         Message3(Interface, Fatal, "Failed to set video mode "
             << width << "x" << height << "x" << bpp << ": " << SDL_GetError());
     }
+
+    m_context = SDL_GL_CreateContext(m_window);
 }
 
 void Video::initializeGL() {
-    if(glewInit() != GLEW_OK) {
-        Message3(Interface, Fatal, "Failed to initialize GLEW.");
+    GLenum status = glewInit();
+    if(status != GLEW_OK) {
+        Message3(Interface, Fatal, "Failed to initialize GLEW: "
+            << glewGetErrorString(status));
     }
 
     /* Basic OpenGL setup. */

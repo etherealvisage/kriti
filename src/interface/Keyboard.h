@@ -4,7 +4,7 @@
 #include <string>
 #include <boost/signals2.hpp>
 
-#include "SDL.h"
+#include <SDL.h>
 
 #include "InputDevice.h"
 #include "KeyboardRouter.h"
