@@ -81,7 +81,7 @@ MainMenuContext::MainMenuContext() {
 
     m_playerObject = boost::make_shared<Object>();
     m_playerObject->setRenderable(Render::RenderableFactory().fromModel(
-        ResourceRegistry::instance()->get<Render::Model>("block")));
+        ResourceRegistry::instance()->get<Render::Model>("vehicle4")));
 
     m_playerObject->setPhysical(
         Physics::ObjectFactory().makeBox(1.0, 1.0, 0.3, 2.0));
@@ -107,7 +107,7 @@ MainMenuContext::MainMenuContext() {
     m_trackObject->setRenderable(trackRenderable);
     m_trackObject->setPhysical(Physics::ObjectFactory().makeIndexedTriMesh(0.0,
         trackExtrusion->vertices(), trackExtrusion->indices()));
-    m_world->addObject(m_trackObject->physical());
+    //m_world->addObject(m_trackObject->physical());
 
     m_pipeline->addRenderable(m_trackObject->renderable());
 
@@ -145,7 +145,7 @@ MainMenuContext::MainMenuContext() {
 
     //m_world->addModifier(m_vehicleModel);
     m_playerObject->physical()->setOrientation(
-        Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 1.0));
+        Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 0.0));
 }
 
 void MainMenuContext::run() {

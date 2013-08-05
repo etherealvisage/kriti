@@ -87,7 +87,7 @@ void Video::initializeGL() {
     glDepthFunc(GL_LESS);
 
     glFrontFace(GL_CCW);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

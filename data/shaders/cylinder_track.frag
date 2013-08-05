@@ -71,8 +71,6 @@ float snoise(vec4 v) {
              + i.y + vec4(i1.y, i2.y, i3.y, 1.0 ))
              + i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));
 
-
-
     vec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0) ;
 
     vec4 p0 = grad4(j0,   ip);
@@ -87,7 +85,6 @@ float snoise(vec4 v) {
     p2 *= norm.z;
     p3 *= norm.w;
     p4 *= taylorInvSqrt(dot(p4,p4));
-
 
     vec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);
     vec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);
@@ -115,4 +112,5 @@ void main() {
 
     fragColour = clamp(fragColour,
         vec4(0.0f, 0.0f, 0.0f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f));
+    if(fragColour.b < 0.01f) discard;
 }
