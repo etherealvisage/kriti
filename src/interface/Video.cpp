@@ -48,9 +48,12 @@ void Video::setVideoMode() {
     bool fullscreen = Config::Tree::instance()->getBool("video.fullscreen",
         false);
 
-    // Need OpenGL 3.1 for vertex attribute locations etc.
+    // Need OpenGL 3.1 (well, GLSL 1.40) for easy
+    // GL_ARB_explicit_attrib_location support in shaders on NVidia GPUs.
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+        SDL_GL_CONTEXT_PROFILE_CORE);
 
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -60,7 +63,6 @@ void Video::setVideoMode() {
 
     int flags = SDL_WINDOW_OPENGL;
     if(fullscreen) flags |= SDL_WINDOW_FULLSCREEN;
-    //SDL_Surface *screen = SDL_SetVideoMode(width, height, bpp, flags);
     m_window = SDL_CreateWindow("kriti",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
         width, height, flags);
@@ -98,9 +100,9 @@ void Video::initializeGL() {
         << ", with shading language "
         << glGetString(GL_SHADING_LANGUAGE_VERSION) << ")");
 
-    if(!GLEW_VERSION_3_0) {
-        Message3(Interface, Error, "No OpenGL 3.0 support available.");
-        Message3(Interface, Fatal, "Kriti uses some OpenGL 3.0 features. "
+    if(!GLEW_VERSION_3_1) {
+        Message3(Interface, Error, "No OpenGL 3.1 support available.");
+        Message3(Interface, Fatal, "Kriti uses some OpenGL 3.1 features. "
             "Please upgrade your video drivers and try again.");
     }
 
