@@ -49,7 +49,7 @@ public:
     void setYaw(double yaw) { m_yaw = yaw; }
 
     double pitch() const { return m_pitch; }
-    void setPitch(double pitch) { Message("setting pitch to " << pitch); m_pitch = pitch; }
+    void setPitch(double pitch) { m_pitch = pitch; }
 
     double roll() const { return m_roll; }
     void setRoll(double roll) { m_roll = roll; }

@@ -58,6 +58,20 @@ void VehicleModel::simulate(boost::shared_ptr<Physics::World> world,
     /*vehicle->object()->applyTorque(vehicle->orientation() *
         (Math::Vector(1.0, 0.0, 0.0) * vehicle->pitch()));*/
     vehicle->object()->applyTorque(Math::Vector(vehicle->pitch(), 0.0, 0.0));
+
+    auto orientation = vehicle->orientation();
+    auto velocity = vehicle->object()->linearVelocity();
+
+    Math::Vector forwards = velocity.projectOnto(
+        orientation * Math::Vector(0.0, 0.0, -1.0));
+    Math::Vector up = velocity.projectOnto(
+        orientation * Math::Vector(0.0, 1.0, 0.0));
+    Math::Vector right = velocity.projectOnto(
+        orientation * Math::Vector(1.0, 0.0, 0.0));
+    
+    // apply lift
+    vehicle->object()->applyForce(
+        orientation * Math::Vector(0.0, forwards.length(), 0.0));
 }
 
 }  // namespace Game

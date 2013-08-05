@@ -144,14 +144,14 @@ void MainMenuContext::quitMenu(bool pressed) {
 }
 
 void MainMenuContext::playerPitchUp(bool pressed) {
-    double amount = 1;
+    double amount = 0.5;
     if(!pressed) amount = -amount;
 
     m_vehicle->setPitch(m_vehicle->pitch() + amount);
 }
 
 void MainMenuContext::playerPitchDown(bool pressed) {
-    double amount = -1;
+    double amount = -0.5;
     if(!pressed) amount = -amount;
 
     m_vehicle->setPitch(m_vehicle->pitch() + amount);
