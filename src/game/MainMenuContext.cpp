@@ -22,6 +22,7 @@
 #include "track/RandomGenerator.h"
 #include "track/ClosedSubdivider.h"
 #include "track/PlanarExtruder.h"
+#include "track/CylindricExtruder.h"
 
 namespace Kriti {
 namespace Game {
@@ -96,11 +97,11 @@ MainMenuContext::MainMenuContext() {
     Track::RandomGenerator rg(3);
 
     auto trackExtrusion = rg.generate(new Track::ClosedSubdivider(4),
-        new Track::PlanarExtruder(8));
+        new Track::CylindricExtruder(1, 32));
 
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
         trackExtrusion->vertices(), trackExtrusion->normals(), 
-        trackExtrusion->texs(), trackExtrusion->indices(), "track");
+        trackExtrusion->texs(), trackExtrusion->indices(), "track2");
 
     m_trackObject = boost::make_shared<Object>();
     m_trackObject->setRenderable(trackRenderable);
@@ -142,7 +143,7 @@ MainMenuContext::MainMenuContext() {
     m_playerObject->physical()->setLinearDamping(0.0);
     m_playerObject->physical()->setAngularDamping(0.3);
 
-    m_world->addModifier(m_vehicleModel);
+    //m_world->addModifier(m_vehicleModel);
     m_playerObject->physical()->setOrientation(
         Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 1.0));
 }
