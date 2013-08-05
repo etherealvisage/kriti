@@ -16,11 +16,11 @@ public:
     };
 private:
     static const char *s_configNames[];
-    boost::signal<void (bool)> m_keySignals[SIGNAL_NAMES];
+    boost::signals2::signal<void (bool)> m_keySignals[SIGNAL_NAMES];
 public:
     const char *configName(SignalName signal) const
         { return s_configNames[signal]; }
-    boost::signal<void (bool)> &signal(SignalName signal) {
+    boost::signals2::signal<void (bool)> &signal(SignalName signal) {
         return m_keySignals[signal];
     }
 };

@@ -2,7 +2,7 @@
 #define KRITI_INTERFACE__KEYBOARD_H
 
 #include <string>
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 #include "SDL.h"
 
@@ -19,7 +19,7 @@ private:
     Event::EventQueue *m_queue;
     std::queue<SDL_Event> m_eventQueue;
 
-    std::multimap<int, boost::signal<void (bool)> *> m_keyMapping;
+    std::multimap<int, boost::signals2::signal<void (bool)> *> m_keyMapping;
 
     KeyboardRouter *m_router;
 public:

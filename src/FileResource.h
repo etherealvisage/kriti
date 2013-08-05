@@ -18,6 +18,7 @@ public:
 
     std::string filename() const { return m_filename; }
     std::string fileContent();
+    std::vector<std::string> fileLines();
 private:
     void loadFile();
 };

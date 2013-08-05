@@ -2,6 +2,8 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
+#include <boost/algorithm/string.hpp>
+
 #include "FileResource.h"
 #include "config/Tree.h"
 
@@ -28,6 +30,22 @@ std::string FileResource::fileContent() {
     if(!m_contentLoaded) loadFile();
 
     return m_content;
+}
+
+std::vector<std::string> FileResource::fileLines() {
+    if(!m_contentLoaded) loadFile();
+
+    std::vector<std::string> lines;
+
+    boost::split(lines, m_content, boost::algorithm::is_any_of("\n\r"),
+        boost::algorithm::token_compress_off);
+
+    for(auto line : lines) {
+        Message3(General, Debug, "line: " << line);
+        line += "\n";
+    }
+
+    return lines;
 }
 
 void FileResource::loadFile() {
