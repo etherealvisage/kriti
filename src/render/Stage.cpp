@@ -4,23 +4,29 @@
 
 #include "Stage.h"
 #include "TechniqueParams.h"
+#include "interface/Video.h"
 
 #include "MessageSystem.h"
 
 namespace Kriti {
 namespace Render {
 
-Stage::Stage() {
-    m_framebuffer = boost::make_shared<Framebuffer>();
-    /*m_colourOutput =
-        boost::make_shared<Renderbuffer>(Renderbuffer::Colour, 1024, 768);*/
-    m_colourOutput =
-        boost::make_shared<Texture>(Texture::Colour, 1024, 768);
-    m_depthOutput =
-        boost::make_shared<Renderbuffer>(Renderbuffer::Depth, 1024, 768);
+Stage::Stage(int outputs, int width, int height) {
+    if(width == -1) width = Interface::Video::instance()->width();
+    if(height == -1) height = Interface::Video::instance()->height();
+    m_width = width, m_height = height;
 
-    m_framebuffer->attach(Framebuffer::ColourBuffer0, m_colourOutput);
-    m_framebuffer->attach(Framebuffer::DepthBuffer, m_depthOutput);
+    m_framebuffer = boost::make_shared<Framebuffer>();
+
+    for(int i = 0; i < outputs; i ++) {
+        m_framebuffer->attach(
+            Framebuffer::Attachment(Framebuffer::ColourBuffer0 + i),
+            boost::make_shared<Texture>(Texture::Colour, m_width,
+                m_height));
+    }
+    m_framebuffer->attach(Framebuffer::DepthBuffer, 
+        boost::make_shared<Renderbuffer>(Renderbuffer::Depth, m_width,
+            m_height));
 }
 
 void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,

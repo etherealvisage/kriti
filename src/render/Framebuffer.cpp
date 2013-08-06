@@ -30,7 +30,6 @@ void Framebuffer::attach(Attachment where,
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
     // TODO: support levels other than zero.
-    Message3(Render, Debug, "texture ID: " << texture->id());
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, convert(where), GL_TEXTURE_2D,
         texture->id(), 0);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

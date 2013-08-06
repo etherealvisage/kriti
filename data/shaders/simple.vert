@@ -16,7 +16,6 @@ out vec2 v_tex;
 void main() {
     gl_Position = camera * model * vec4(i_position, 1.0);
     v_position = vec4(i_position, 1.0);
-    v_normal = model * vec4(i_normal, 0.0);
-    v_normal /= length(v_normal);
+    v_normal = normalize(model * vec4(i_normal, 0.0));
     v_tex = i_tex;
 }

@@ -15,6 +15,7 @@ class Framebuffer {
 public:
     enum Attachment {
         DepthBuffer,
+        // the following need to be contiguously numbered
         ColourBuffer0,
         ColourBuffer1,
         ColourBuffer2,

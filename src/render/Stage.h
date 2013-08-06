@@ -19,15 +19,15 @@ private:
     SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
-    boost::shared_ptr<Texture> m_colourOutput;
-    boost::shared_ptr<Renderbuffer> m_depthOutput;
 
     // what stage is it from, what attachment on that stage's framebuffer,
     // and what uniform to fill with the sampler2D.
     std::vector<std::tuple<boost::shared_ptr<Stage>, Framebuffer::Attachment,
         std::string>> m_attachments;
+
+    int m_width, m_height;
 public:
-    Stage();
+    Stage(int outputs=1, int width=-1, int height=-1);
 
     SceneCamera *camera() { return &m_camera; }
 
