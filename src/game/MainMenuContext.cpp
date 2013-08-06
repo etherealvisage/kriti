@@ -46,7 +46,7 @@ MainMenuContext::MainMenuContext() {
             boost::bind(&MainMenuContext::playerPitchDown, this, _1)
         );
     m_pipeline = boost::make_shared<Render::Pipeline>();
-    m_gameStage = boost::make_shared<Render::Stage>(1, 2048, 1536);
+    m_gameStage = boost::make_shared<Render::Stage>(1, 1024, 768);
 
     m_pipeline->setLastStage(m_gameStage);
 
