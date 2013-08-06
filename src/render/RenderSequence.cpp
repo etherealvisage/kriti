@@ -8,15 +8,13 @@
 namespace Kriti {
 namespace Render {
 
-void RenderSequence::draw(const Math::Matrix &projection,
+void RenderSequence::draw(const TechniqueParams &params,
     const Math::Matrix &modelTransformation) {
 
     m_vao->bind();
     m_technique->activate();
-    m_technique->setUniform("camera", projection);
     m_technique->setUniform("model", modelTransformation);
-    static TimeValue start = TimeValue::current();
-    m_technique->setUniform("g_time", (TimeValue::current() - start).toMsec());
+    params.set(m_technique);
 
     //Message3(Render, Debug, "Drawing " << m_end-m_start+1 << " vertices!");
     GLenum type;

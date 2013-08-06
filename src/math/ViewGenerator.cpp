@@ -47,5 +47,19 @@ Matrix ViewGenerator::perspective(double fov, double ratio, double near,
     return result;*/
 }
 
+Matrix ViewGenerator::orthogonal(double width, double height, double near,
+    double far) {
+
+    Matrix result;
+
+    result(0,0) = 2/width;
+    result(1,1) = 2/height;
+    result(2,2) = -2/(far-near);
+    result(3,2) = -near/(far-near);
+    result(3,3) = 1.0;
+
+    return result;
+}
+
 }  // namespace Math
 }  // namespace Kriti

@@ -133,5 +133,49 @@ boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
     return renderable;
 }
 
+boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
+    Math::Vector p2, Math::Vector p3, Math::Vector p4, std::string technique) {
+
+    auto renderable = boost::make_shared<Renderable>();
+    auto vao = boost::make_shared<VAO>();
+
+    auto vertexVBO = boost::make_shared<VBO>();
+    std::vector<Math::Vector> vertices;
+    vertices.push_back(p1);
+    vertices.push_back(p2);
+    vertices.push_back(p3);
+    vertices.push_back(p4);
+    vertexVBO->setData(vertices);
+    vao->addVBO(vertexVBO, VAO::Vertex);
+
+    // TODO: make these actual normals...
+    std::vector<Math::Vector> normals;
+    for(auto v : vertices) normals.push_back(Math::Vector());
+    auto normalVBO = boost::make_shared<VBO>();
+    normalVBO->setData(normals);
+    vao->addVBO(normalVBO, VAO::Normal);
+
+    auto textureVBO = boost::make_shared<VBO>();
+    std::vector<Math::Vector> texs;
+    texs.push_back(Math::Vector(0,0));
+    texs.push_back(Math::Vector(0,1));
+    texs.push_back(Math::Vector(1,1));
+    texs.push_back(Math::Vector(1,0));
+    textureVBO->setData(texs);
+    vao->addVBO(textureVBO, VAO::Texture);
+
+    std::vector<unsigned int> indices;
+    for(unsigned i = 0; i < vertices.size(); i ++) indices.push_back(i);
+    auto indexVBO = boost::make_shared<VBO>(VBO::Element);
+    indexVBO->setData(indices);
+    vao->addVBO(indexVBO, VAO::Element);
+
+    renderable->addRenderSequence(boost::make_shared<RenderSequence>(
+        ResourceRegistry::instance()->get<Technique>(technique), vao, 0,
+        vertices.size()-1, RenderSequence::Quads));
+
+    return renderable;
+}
+    
 }  // namespace Render
 }  // namespace Kriti

@@ -17,6 +17,11 @@ Texture::~Texture() {
     glDeleteTextures(1, &m_id);
 }
 
+void Texture::bindToUnit(int which) {
+    glActiveTexture(GL_TEXTURE0 + which);
+    glBindTexture(GL_TEXTURE_2D, m_id);
+}
+
 void Texture::makeTexture() {
     glGenTextures(1, &m_id);
 
@@ -34,10 +39,10 @@ void Texture::makeBlank() {
     GLenum iformat;
     GLenum format = GL_RGBA;
     switch(m_type) {
-    case ColourTexture:
+    case Colour:
         iformat = GL_RGBA32F;
         break;
-    case DepthTexture:
+    case Depth:
         iformat = GL_DEPTH_COMPONENT32F;
         break;
     default:

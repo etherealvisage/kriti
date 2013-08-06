@@ -32,6 +32,12 @@ public:
     void attach(Attachment where, boost::shared_ptr<Texture> texture); 
     void attach(Attachment where, boost::shared_ptr<Renderbuffer> rbuffer); 
 
+    boost::shared_ptr<Texture> getTextureAttachment(Attachment where);
+
+    bool isTexture(Attachment where);
+    bool isRenderBuffer(Attachment where);
+    bool isAttached(Attachment where);
+
     void bindRead();
     void bindWrite();
 private:

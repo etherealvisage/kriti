@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "RenderSequence.h"
+#include "TechniqueParams.h"
 
 #include "math/Vector.h"
 #include "math/Quaternion.h"
@@ -24,7 +25,7 @@ public:
     int renderSequenceCount() const { return m_sequences.size(); }
     void clearRenderSequences() { m_sequences.clear(); }
 
-    void draw(const Math::Matrix &projection);
+    void draw(const TechniqueParams &params);
 
     Math::Vector &location() { return m_location; }
     Math::Quaternion &orientation() { return m_orientation; }

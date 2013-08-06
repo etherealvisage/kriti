@@ -15,6 +15,7 @@ namespace Render {
 
 class Technique : public Resource {
 private:
+    std::string m_name;
     std::string m_vertexShaderName;
     boost::shared_ptr<Shader> m_vertexShader;
     std::string m_fragShaderName;

@@ -13,6 +13,7 @@ Technique::Technique() {
 
 bool Technique::loadFrom(std::string identifier) {
     if(identifier == "") return false;
+    m_name = identifier;
     boost::shared_ptr<Config::Tree> tree = Config::Tree::instance();
 
     std::string tbase = "techniques." + identifier;
@@ -101,6 +102,9 @@ GLint Technique::getUniformLocation(const std::string &name) {
 
     GLint location = glGetUniformLocation(m_programID, name.c_str());
     m_uniformLocations[name] = location;
+
+    if(location == -1) Message3(Render, Debug, "Unknown uniform " << name
+        << " in technique " << m_name);
 
     return location;
 }

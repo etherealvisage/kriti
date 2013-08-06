@@ -7,8 +7,8 @@ namespace Render {
 class Texture {
 public:
     enum Type {
-        ColourTexture,
-        DepthTexture
+        Colour,
+        Depth
     };
 private:
     Type m_type;
@@ -17,6 +17,10 @@ private:
 public:
     Texture(Type type, int width, int height);
     ~Texture();
+
+    GLuint id() const { return m_id; }
+
+    void bindToUnit(int which);
 private:
     void makeTexture();
     void makeBlank();

@@ -2,6 +2,7 @@
 #define KRITI_RENDER__STAGE_H
 
 #include <vector>
+#include <tuple>
 
 #include "Renderable.h"
 #include "SceneCamera.h"
@@ -18,7 +19,13 @@ private:
     SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
-    boost::shared_ptr<Renderbuffer> m_colourOutput, m_depthOutput;
+    boost::shared_ptr<Texture> m_colourOutput;
+    boost::shared_ptr<Renderbuffer> m_depthOutput;
+
+    // what stage is it from, what attachment on that stage's framebuffer,
+    // and what uniform to fill with the sampler2D.
+    std::vector<std::tuple<boost::shared_ptr<Stage>, Framebuffer::Attachment,
+        std::string>> m_attachments;
 public:
     Stage();
 
@@ -31,7 +38,11 @@ public:
         { return m_previous[which]; }
     int previousCount() const { return m_previous.size(); }
 
-    boost::shared_ptr<Framebuffer> framebuffer() const { return m_framebuffer; }
+    void addMapping(int previousIndex, Framebuffer::Attachment attachment,
+        std::string uniformName);
+
+    boost::shared_ptr<Framebuffer> framebuffer() const
+        { return m_framebuffer; }
 
     void addRenderable(boost::shared_ptr<Renderable> renderable);
     void removeRenderable(boost::shared_ptr<Renderable> renderable);

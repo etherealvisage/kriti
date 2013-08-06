@@ -24,11 +24,14 @@ public:
 private:
     SDL_Window *m_window;
     SDL_GLContext m_context;
+    int m_width, m_height;
 private:
     Video();
 public:
     ~Video();
 
+    int width() const { return m_width; }
+    int height() const { return m_height; }
     double aspectRatio() const;
 
     void swapBuffers();

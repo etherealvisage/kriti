@@ -2,6 +2,7 @@
 #define KRITI_RENDER__RENDER_SEQUENCE_H
 
 #include "Technique.h"
+#include "TechniqueParams.h"
 #include "VAO.h"
 
 #include "math/Matrix.h"
@@ -39,7 +40,7 @@ public:
 
     void updateRange(int start, int end) { m_start = start, m_end = end; }
 
-    void draw(const Math::Matrix &projection,
+    void draw(const TechniqueParams &params,
         const Math::Matrix &modelTransformation);
 };
 

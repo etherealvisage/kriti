@@ -108,6 +108,24 @@ MainMenuContext::MainMenuContext() {
     m_world->addModifier(m_vehicleModel);
     m_playerObject->physical()->setOrientation(
         Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 0.0));
+
+    m_blendStage = boost::make_shared<Render::Stage>();
+    m_blendStage->addPrevious(m_gameStage);
+
+    m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "lastStage");
+
+    m_blendStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
+        Interface::Video::instance()->aspectRatio(), 1.0, 0.1, 1000.0
+    ));
+    m_blendStage->camera()->step(0.0);
+
+    m_blendStage->addRenderable(Render::RenderableFactory().fromQuad(
+        Math::Vector(-0.1, -0.1),
+        Math::Vector(-0.1, 0.1),
+        Math::Vector(0.1, 0.1),
+        Math::Vector(0.1, -0.1), "test"));
+
+    m_pipeline->setLastStage(m_blendStage);
 }
 
 void MainMenuContext::run() {

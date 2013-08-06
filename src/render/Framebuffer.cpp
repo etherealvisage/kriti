@@ -27,6 +27,13 @@ void Framebuffer::attach(Attachment where,
 
     m_rbuffers[where].first = false;
     m_rbuffers[where].second = boost::shared_ptr<Renderbuffer>();
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
+    // TODO: support levels other than zero.
+    Message3(Render, Debug, "texture ID: " << texture->id());
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, convert(where), GL_TEXTURE_2D,
+        texture->id(), 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 void Framebuffer::attach(Attachment where,
@@ -42,6 +49,24 @@ void Framebuffer::attach(Attachment where,
     glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, convert(where),
         GL_RENDERBUFFER, rbuffer->id());
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
+boost::shared_ptr<Texture> Framebuffer::getTextureAttachment(
+    Attachment where) {
+
+    return m_textures[where].second;
+}
+
+bool Framebuffer::isTexture(Attachment where) {
+    return m_textures[where].first;
+}
+
+bool Framebuffer::isRenderBuffer(Attachment where) {
+    return m_rbuffers[where].first;
+}
+
+bool Framebuffer::isAttached(Attachment where) {
+    return m_textures[where].first || m_rbuffers[where].first;
 }
 
 void Framebuffer::bindRead() {

@@ -24,10 +24,7 @@ Video::~Video() {
 }
 
 double Video::aspectRatio() const {
-    int width = Config::Tree::instance()->getInt("video.width", 800);
-    int height = Config::Tree::instance()->getInt("video.height", 600);
-    
-    return (double)width/height;
+    return (double)m_width/m_height;
 }
 
 void Video::swapBuffers() {
@@ -42,8 +39,8 @@ void Video::initializeSDL() {
 }
 
 void Video::setVideoMode() {
-    int width = Config::Tree::instance()->getInt("video.width", 800);
-    int height = Config::Tree::instance()->getInt("video.height", 600);
+    m_width = Config::Tree::instance()->getInt("video.width", 800);
+    m_height = Config::Tree::instance()->getInt("video.height", 600);
     int bpp = Config::Tree::instance()->getInt("video.bpp", 24);
     bool fullscreen = Config::Tree::instance()->getBool("video.fullscreen",
         false);
@@ -65,11 +62,11 @@ void Video::setVideoMode() {
     if(fullscreen) flags |= SDL_WINDOW_FULLSCREEN;
     m_window = SDL_CreateWindow("kriti",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
-        width, height, flags);
+        m_width, m_height, flags);
 
     if(m_window == NULL) {
         Message3(Interface, Fatal, "Failed to set video mode "
-            << width << "x" << height << "x" << bpp << ": " << SDL_GetError());
+            << m_width << "x" << m_height << "x" << bpp << ": " << SDL_GetError());
     }
 
     m_context = SDL_GL_CreateContext(m_window);

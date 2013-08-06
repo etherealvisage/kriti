@@ -21,6 +21,12 @@ public:
         const std::vector<unsigned int> &tris, std::string technique);
     boost::shared_ptr<Renderable> fromLineGeometry(
         const std::vector<Math::Vector> &vertices, std::string technique);
+
+    // winding order is CCW, so p1/p2/p3/p4 get texture coordinates
+    // (0,0), (0,1), (1,1), and (1,0) respectively.
+    boost::shared_ptr<Renderable> fromQuad(
+        Math::Vector p1, Math::Vector p2, Math::Vector p3, Math::Vector p4,
+        std::string technique);
 };
 
 }  // namespace Render
