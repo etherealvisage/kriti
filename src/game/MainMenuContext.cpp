@@ -23,6 +23,7 @@
 #include "physics/ObjectFactory.h"
 
 #include "gui/Font.h"
+#include "gui/TextRenderer.h"
 
 #include "track/RandomGenerator.h"
 #include "track/ClosedSubdivider.h"
@@ -124,7 +125,21 @@ MainMenuContext::MainMenuContext() {
     ));
     m_textStage->camera()->step(0.0);
 
-    //auto font = ResourceRegistry::instance()->get<GUI::Font>("ubuntu");
+    auto font = ResourceRegistry::instance()->get<GUI::Font>("ubuntu");
+    auto text = GUI::TextRenderer().render(font, "Hello, World!");
+
+    m_textStage->addRenderable(text);
+    /*{
+        Math::Vector base(-aratio/2, -1.0), x(aratio,0), y(0,2.0);
+        m_textStage->addRenderable(Render::RenderableFactory().fromQuad(
+            base, base+y, base+x+y, base+x, "ubuntu"));
+    }*/
+    
+    /*m_textStage->addRenderable(Render::RenderableFactory().fromQuad(
+        Math::Vector(0.0113516,0.11792,0),
+        Math::Vector(0.132445,0.11792,0),
+        Math::Vector(0.228148,0.11792,0),
+        Math::Vector(0.107055,0.11792,0), "red"));*/
 
     m_blendStage = boost::make_shared<Render::Stage>();
     m_blendStage->addPrevious(m_gameStage);

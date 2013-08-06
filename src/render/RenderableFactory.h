@@ -27,6 +27,11 @@ public:
     boost::shared_ptr<Renderable> fromQuad(
         Math::Vector p1, Math::Vector p2, Math::Vector p3, Math::Vector p4,
         std::string material);
+    boost::shared_ptr<Renderable> fromQuadGeometry(
+        const std::vector<Math::Vector> &vertices,
+        const std::vector<Math::Vector> &normals,
+        const std::vector<Math::Vector> &texs,
+        const std::vector<unsigned int> &quads, std::string material);
 };
 
 }  // namespace Render

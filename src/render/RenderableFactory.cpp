@@ -176,6 +176,42 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
 
     return renderable;
 }
+
+boost::shared_ptr<Renderable> RenderableFactory::fromQuadGeometry(
+    const std::vector<Math::Vector> &vertices,
+    const std::vector<Math::Vector> &normals,
+    const std::vector<Math::Vector> &texs,
+    const std::vector<unsigned int> &quads, std::string material) {
+    
+    auto renderable = boost::make_shared<Renderable>();
+    auto vao = boost::make_shared<VAO>();
+
+    auto vertexVBO = boost::make_shared<VBO>();
+    vertexVBO->setData(vertices);
+    vao->addVBO(vertexVBO, VAO::Vertex);
+
+    auto normalVBO = boost::make_shared<VBO>();
+    normalVBO->setData(normals);
+    vao->addVBO(normalVBO, VAO::Normal);
+
+    auto textureVBO = boost::make_shared<VBO>();
+    textureVBO->setData(texs);
+    vao->addVBO(textureVBO, VAO::Texture);
+
+    auto indexVBO = boost::make_shared<VBO>(VBO::Element);
+    indexVBO->setData(quads);
+    vao->addVBO(indexVBO, VAO::Element);
+
+    renderable->addRenderSequence(boost::make_shared<RenderSequence>(
+        ResourceRegistry::instance()->get<Material>(material), vao, 0,
+        quads.size()-1, RenderSequence::Quads));
+
+    Message3(Render, Debug, "Created Renderable from quad geom: "
+        << renderable);
+    Message3(Render, Debug, "Quads: " << quads.size()/4);
+
+    return renderable;
+}
     
 }  // namespace Render
 }  // namespace Kriti

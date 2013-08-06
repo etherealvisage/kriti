@@ -12,17 +12,21 @@ bool Material::loadFrom(std::string identifier) {
     Message3(Render, Debug, "Loading material " << identifier);
     auto ctree = Config::Tree::instance();
 
-    m_techniqueName = ctree->getString("materials." + identifier + ".technique");
+    m_techniqueName
+        = ctree->getString("materials." + identifier + ".technique");
     if(m_techniqueName == "") {
         Message3(Render, Debug, "Technique name is empty.");
         return false;
     }
 
-    m_technique = ResourceRegistry::instance()->get<Technique>(m_techniqueName);
+    m_technique
+        = ResourceRegistry::instance()->get<Technique>(m_techniqueName);
 
     auto cnode = ctree->node("materials." + identifier + ".params");
     // if there's no uniforms, we're done.
-    if(!cnode.lock()) return true;
+    if(!cnode.lock()) {
+        return true;
+    }
 
     auto list = cnode.lock()->childList();
 

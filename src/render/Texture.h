@@ -23,6 +23,9 @@ public:
 
     GLuint id() const { return m_id; }
 
+    int width() const { return m_width; }
+    int height() const { return m_height; }
+
     virtual bool loadFrom(std::string identifier);
 
     void bindToUnit(int which);
