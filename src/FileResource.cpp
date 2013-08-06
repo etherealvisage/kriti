@@ -51,11 +51,14 @@ std::vector<std::string> FileResource::fileLines() {
 void FileResource::loadFile() {
     std::ifstream f(m_filename.c_str());
 
-    m_content = "";
-    std::string l;
-    while(std::getline(f, l)) {
-        m_content += l + "\n";
-    }
+    f.seekg (0, f.end);
+    int length = f.tellg();
+    f.seekg (0, f.beg);
+
+    char *buffer = new char[length];
+    f.read(buffer, length);
+    m_content = std::string(buffer, length);
+    delete[] buffer;
 
     m_contentLoaded = true;
 }

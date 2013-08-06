@@ -38,9 +38,9 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
 
     /* Create RenderSequence objects. */
     for(auto ms : model->sequences()) {
-        auto technique = ResourceRegistry::instance()->get<Technique>(
-            ms.techniqueName());
-        boost::shared_ptr<RenderSequence> rs(new RenderSequence(technique, vao,
+        auto material = ResourceRegistry::instance()->get<Material>(
+            ms.materialName());
+        boost::shared_ptr<RenderSequence> rs(new RenderSequence(material, vao,
             ms.start(), ms.end()));
 
         renderable->addRenderSequence(rs);
@@ -52,20 +52,20 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
 boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     const std::vector<Math::Vector> &vertices,
     const std::vector<Math::Vector> &normals,
-    const std::vector<unsigned int> &tris, std::string technique) {
+    const std::vector<unsigned int> &tris, std::string material) {
 
     std::vector<Math::Vector> texs;
     for(unsigned i = 0; i < tris.size(); i ++) {
         texs.push_back(Math::Vector());
     }
-    return fromTriangleGeometry(vertices, normals, texs, tris, technique);
+    return fromTriangleGeometry(vertices, normals, texs, tris, material);
 }
 
 boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     const std::vector<Math::Vector> &vertices,
     const std::vector<Math::Vector> &normals,
     const std::vector<Math::Vector> &texs,
-    const std::vector<unsigned int> &tris, std::string technique) {
+    const std::vector<unsigned int> &tris, std::string material) {
     
     auto renderable = boost::make_shared<Renderable>();
     auto vao = boost::make_shared<VAO>();
@@ -87,7 +87,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
-        ResourceRegistry::instance()->get<Technique>(technique), vao, 0,
+        ResourceRegistry::instance()->get<Material>(material), vao, 0,
         tris.size()-1));
 
     Message3(Render, Debug, "Created Renderable from tri geom: "
@@ -98,7 +98,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
 }
 
 boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
-    const std::vector<Math::Vector> &vertices, std::string technique) {
+    const std::vector<Math::Vector> &vertices, std::string material) {
     
     auto renderable = boost::make_shared<Renderable>();
     auto vao = boost::make_shared<VAO>();
@@ -127,14 +127,14 @@ boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
     vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
-        ResourceRegistry::instance()->get<Technique>(technique), vao, 0,
+        ResourceRegistry::instance()->get<Material>(material), vao, 0,
         vertices.size()-1, RenderSequence::Lines));
 
     return renderable;
 }
 
 boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
-    Math::Vector p2, Math::Vector p3, Math::Vector p4, std::string technique) {
+    Math::Vector p2, Math::Vector p3, Math::Vector p4, std::string material) {
 
     auto renderable = boost::make_shared<Renderable>();
     auto vao = boost::make_shared<VAO>();
@@ -171,7 +171,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
-        ResourceRegistry::instance()->get<Technique>(technique), vao, 0,
+        ResourceRegistry::instance()->get<Material>(material), vao, 0,
         vertices.size()-1, RenderSequence::Quads));
 
     return renderable;

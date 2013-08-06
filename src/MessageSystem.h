@@ -13,7 +13,8 @@
     MS_Subsystem(Render), \
     MS_Subsystem(Physics), \
     MS_Subsystem(Game), \
-    MS_Subsystem(Track)
+    MS_Subsystem(Track), \
+    MS_Subsystem(GUI)
 
 #define MS_Types \
     MS_Type(Debug), \

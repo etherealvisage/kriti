@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_video.h>
 #include <SDL_opengl.h>
+#include <SDL_image.h>
 
 #include "Video.h"
 #include "config/Tree.h"
@@ -20,6 +21,7 @@ Video::Video() {
 }
 
 Video::~Video() {
+    IMG_Quit();
     SDL_Quit();
 }
 
@@ -35,6 +37,11 @@ void Video::initializeSDL() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         Message3(Interface, Fatal, "Failed to initialize SDL: "
             << SDL_GetError());
+    }
+
+    if(IMG_Init(IMG_INIT_PNG) < 0) {
+        Message3(Interface, Fatal, "Failed to initialize SDL_image: "
+            << IMG_GetError());
     }
 }
 
@@ -89,7 +96,7 @@ void Video::initializeGL() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     Message3(Interface, Log, "Created OpenGL context (vendor:"
         << glGetString(GL_VENDOR) << ", renderer: " << glGetString(GL_RENDERER)

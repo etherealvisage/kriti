@@ -1,6 +1,7 @@
 #ifndef KRITI_RENDER__RENDER_SEQUENCE_H
 #define KRITI_RENDER__RENDER_SEQUENCE_H
 
+#include "Material.h"
 #include "Technique.h"
 #include "TechniqueParams.h"
 #include "VAO.h"
@@ -22,16 +23,16 @@ public:
         Indexed
     };
 private:
-    boost::shared_ptr<Technique> m_technique;
+    boost::shared_ptr<Material> m_material;
     int m_start, m_end;
     boost::shared_ptr<VAO> m_vao;
     RenderType m_type;
     RenderMode m_mode;
 public:
-    RenderSequence(boost::shared_ptr<Technique> technique,
+    RenderSequence(boost::shared_ptr<Material> material,
         boost::shared_ptr<VAO> vao, int start, int end,
         RenderType type = Triangles, RenderMode mode = Indexed)
-        : m_technique(technique), m_start(start), m_end(end), m_vao(vao),
+        : m_material(material), m_start(start), m_end(end), m_vao(vao),
             m_type(type), m_mode(mode) {}
 
     boost::shared_ptr<VAO> vao() const { return m_vao; }

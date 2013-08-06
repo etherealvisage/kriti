@@ -14,9 +14,11 @@ void RenderSequence::draw(const TechniqueParams &params,
     const Math::Matrix &modelTransformation) {
 
     m_vao->bind();
-    m_technique->activate(textureContext);
-    m_technique->setUniform("model", modelTransformation);
-    params.set(m_technique);
+    auto technique = m_material->technique();
+    technique->activate(textureContext);
+    m_material->params().set(technique);
+    technique->setUniform("model", modelTransformation);
+    params.set(technique);
 
     //Message3(Render, Debug, "Drawing " << m_end-m_start+1 << " vertices!");
     GLenum type;

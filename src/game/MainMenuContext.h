@@ -23,7 +23,7 @@ namespace Game {
 class MainMenuContext : public Context::AbstractContext {
 private:
     boost::shared_ptr<Render::Pipeline> m_pipeline;
-    boost::shared_ptr<Render::Stage> m_gameStage, m_blendStage;
+    boost::shared_ptr<Render::Stage> m_gameStage, m_textStage, m_blendStage;
     boost::shared_ptr<Physics::World> m_world;
     boost::shared_ptr<Physics::ObjectForceModifier> m_forceModifier;
     boost::shared_ptr<Object> m_playerObject, m_trackObject;

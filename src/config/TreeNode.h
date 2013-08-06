@@ -37,6 +37,7 @@ private:
 public:
     TreeNode(std::string path);
 
+    Type type() const { return m_type; }
     void set(bool value) { m_valueBool = value, m_type = Boolean; }
     void set(int value) { m_valueInt = value, m_type = Integer; }
     void set(double value) { m_valueDouble = value, m_type = Double; }

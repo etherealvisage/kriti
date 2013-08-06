@@ -3,26 +3,33 @@
 #include <SDL.h>
 
 #include "MainMenuContext.h"
+#include "Object.h"
 
-#include "ResourceRegistry.h"
 
 #include "context/ContextManager.h"
+
 #include "interface/DeviceManager.h"
 #include "interface/Video.h"
+
 #include "render/Model.h"
 #include "render/RenderableFactory.h"
+
 #include "math/ViewGenerator.h"
 #include "math/Constants.h"
 #include "math/AffineTransformation.h"
+
 #include "physics/PhysicalObject.h"
 #include "physics/WorldRegistry.h"
 #include "physics/ObjectFactory.h"
-#include "Object.h"
+
+#include "gui/Font.h"
 
 #include "track/RandomGenerator.h"
 #include "track/ClosedSubdivider.h"
 #include "track/PlanarExtruder.h"
 #include "track/CylindricExtruder.h"
+
+#include "ResourceRegistry.h"
 
 namespace Kriti {
 namespace Game {
@@ -84,7 +91,7 @@ MainMenuContext::MainMenuContext() {
 
     auto trackRenderable = Render::RenderableFactory().fromTriangleGeometry(
         trackExtrusion->vertices(), trackExtrusion->normals(), 
-        trackExtrusion->texs(), trackExtrusion->indices(), "track2");
+        trackExtrusion->texs(), trackExtrusion->indices(), "track");
 
     m_trackObject = boost::make_shared<Object>();
     m_trackObject->setRenderable(trackRenderable);
@@ -109,13 +116,23 @@ MainMenuContext::MainMenuContext() {
     m_playerObject->physical()->setOrientation(
         Math::Quaternion(Math::Vector(1.0, 0.0, 0.0), 0.0));
 
+    /* set up text/blending pipeline stages. */
+    m_textStage = boost::make_shared<Render::Stage>();
+    double aratio = Interface::Video::instance()->aspectRatio();
+    m_textStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
+        aratio, 2.0, 0.1, 1000.0
+    ));
+    m_textStage->camera()->step(0.0);
+
+    //auto font = ResourceRegistry::instance()->get<GUI::Font>("ubuntu");
+
     m_blendStage = boost::make_shared<Render::Stage>();
     m_blendStage->addPrevious(m_gameStage);
+    m_blendStage->addPrevious(m_textStage);
 
     m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "baseStage");
-    m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "overlayStage");
+    m_blendStage->addMapping(1, Render::Framebuffer::ColourBuffer0, "overlayStage");
 
-    double aratio = Interface::Video::instance()->aspectRatio();
     m_blendStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
         aratio, 2.0, 0.1, 1000.0
     ));

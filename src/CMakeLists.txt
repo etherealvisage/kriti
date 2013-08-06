@@ -9,6 +9,7 @@ aux_source_directory(interface interfaceSources)
 aux_source_directory(event eventSources)
 aux_source_directory(context contextSources)
 aux_source_directory(game gameSources)
+aux_source_directory(gui guiSources)
 aux_source_directory(render renderSources)
 aux_source_directory(physics physicsSources)
 aux_source_directory(track trackSources)
@@ -23,6 +24,7 @@ set(sources
     ${eventSources}
     ${contextSources}
     ${gameSources}
+    ${guiSources}
     ${renderSources}
     ${physicsSources}
     ${trackSources}
@@ -37,8 +39,8 @@ include_directories(${BULLET_INCLUDE_DIRS})
 find_package(SDL2)
 include_directories(${SDL2_INCLUDE_DIR})
 
-find_package(SDL_image)
-include_directories(${SDLIMAGE_INCLUDE_DIR})
+find_package(SDL2_image)
+include_directories(${SDL2IMAGE_INCLUDE_DIR})
 
 find_package(OpenGL)
 include_directories(${OPENGL_INCLUDE_DIR})
@@ -52,7 +54,7 @@ target_link_libraries(kriti
     ${Boost_LIBRARIES}
     ${BULLET_LIBRARIES}
     ${SDL2_LIBRARY}
-    ${SDLIMAGE_LIBRARY}
+    ${SDL2IMAGE_LIBRARY}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARY}
     # for clock_gettime().

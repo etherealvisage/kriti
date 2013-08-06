@@ -30,6 +30,7 @@ int main() {
 
     /* Parse secondary configuration files. */
     parser.parseFile(tree->getString("kriti.data_path") + "techniques.config");
+    parser.parseFile(tree->getString("kriti.data_path") + "materials.config");
     parser.parseFile(tree->getString("kriti.data_path") + "gui.config");
     parser.parseFile(tree->getString("kriti.data_path") + "fonts.config");
 
