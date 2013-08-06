@@ -13,8 +13,13 @@
 namespace Kriti {
 namespace Render {
 
+class Texture;
+class TextureContext;
+
 class Technique : public Resource {
 private:
+    boost::shared_ptr<TextureContext> m_textureContext;
+
     std::string m_name;
     std::string m_vertexShaderName;
     boost::shared_ptr<Shader> m_vertexShader;
@@ -25,14 +30,16 @@ private:
 
     std::map<std::string, GLint> m_uniformLocations;
 public:
-    Technique();
+    Technique() {}
     
     virtual bool loadFrom(std::string identifier);
 
     void setUniform(const std::string &name, const Math::Matrix &matrix);
     void setUniform(const std::string &name, int value);
+    void setUniform(const std::string &name,
+        boost::shared_ptr<Texture> texture);
 
-    void activate();
+    void activate(boost::shared_ptr<TextureContext> textureContext);
 private:
     GLint getUniformLocation(const std::string &name);
 };

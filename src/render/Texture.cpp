@@ -7,6 +7,10 @@
 namespace Kriti {
 namespace Render {
 
+Texture::Texture() {
+    makeTexture();
+}
+
 Texture::Texture(Type type, int width, int height) : m_type(type),
     m_width(width), m_height(height) {
 
@@ -15,6 +19,10 @@ Texture::Texture(Type type, int width, int height) : m_type(type),
 
 Texture::~Texture() {
     glDeleteTextures(1, &m_id);
+}
+
+bool Texture::loadFrom(std::string identifier) {
+    return false;
 }
 
 void Texture::bindToUnit(int which) {

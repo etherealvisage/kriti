@@ -1,15 +1,14 @@
 #include <GL/glew.h>
 
 #include "Technique.h"
+#include "TextureContext.h"
+
 #include "config/Tree.h"
+
 #include "ResourceRegistry.h"
 
 namespace Kriti {
 namespace Render {
-
-Technique::Technique() {
-
-}
 
 bool Technique::loadFrom(std::string identifier) {
     if(identifier == "") return false;
@@ -83,11 +82,23 @@ void Technique::setUniform(const std::string &name, int value) {
     }
 }
 
-void Technique::activate() {
+void Technique::setUniform(const std::string &name,
+    boost::shared_ptr<Texture> texture) {
+
+    GLint location = getUniformLocation(name);
+    if(location != -1) {
+        int index = m_textureContext->bind(texture);
+        glUniform1i(location, index);
+    }
+}
+
+void Technique::activate(boost::shared_ptr<TextureContext> textureContext) {
     if(m_programID == 0) {
         Message3(Render, Error, "Activating non-loaded Technique . . .");
     }
     glUseProgram(m_programID);
+    m_textureContext = textureContext;
+    m_textureContext->nextTechnique();
 }
 
 GLint Technique::getUniformLocation(const std::string &name) {

@@ -112,7 +112,8 @@ MainMenuContext::MainMenuContext() {
     m_blendStage = boost::make_shared<Render::Stage>();
     m_blendStage->addPrevious(m_gameStage);
 
-    m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "lastStage");
+    m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "baseStage");
+    m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "overlayStage");
 
     double aratio = Interface::Video::instance()->aspectRatio();
     m_blendStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
@@ -122,7 +123,7 @@ MainMenuContext::MainMenuContext() {
 
     Math::Vector base(-aratio/2, -1.0), x(aratio,0), y(0,2.0);
     m_blendStage->addRenderable(Render::RenderableFactory().fromQuad(
-        base, base+y, base+x+y, base+x, "test"));
+        base, base+y, base+x+y, base+x, "overlay"));
 
     m_pipeline->setLastStage(m_blendStage);
 }
@@ -131,11 +132,6 @@ void MainMenuContext::run() {
     TimeValue current = TimeValue::current();
     TimeValue sinceLast = current - m_lastTime;
     m_lastTime = current;
-
-    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    /*Math::Quaternion rotation =
-        m_playerObject->physical()->orientation().conjugate();*/
 
     Math::Quaternion q = m_gameStage->camera()->orientation();
 

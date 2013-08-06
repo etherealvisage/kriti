@@ -41,6 +41,7 @@ public:
     void updateRange(int start, int end) { m_start = start, m_end = end; }
 
     void draw(const TechniqueParams &params,
+        boost::shared_ptr<TextureContext> textureContext,
         const Math::Matrix &modelTransformation);
 };
 

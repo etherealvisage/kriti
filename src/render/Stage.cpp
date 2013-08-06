@@ -4,6 +4,8 @@
 
 #include "Stage.h"
 #include "TechniqueParams.h"
+#include "TextureContext.h"
+
 #include "interface/Video.h"
 
 #include "MessageSystem.h"
@@ -27,6 +29,8 @@ Stage::Stage(int outputs, int width, int height) {
     m_framebuffer->attach(Framebuffer::DepthBuffer, 
         boost::make_shared<Renderbuffer>(Renderbuffer::Depth, m_width,
             m_height));
+
+    m_textureContext = boost::make_shared<TextureContext>();
 }
 
 void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
@@ -69,8 +73,7 @@ void Stage::render(bool isLast) {
     for(auto mapping : m_attachments) {
         auto fb = std::get<0>(mapping)->framebuffer();
         auto texture = fb->getTextureAttachment(std::get<1>(mapping));
-        texture->bindToUnit(1);
-        tp.addParam(std::get<2>(mapping), 1);
+        tp.addParam(std::get<2>(mapping), texture);
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -80,8 +83,9 @@ void Stage::render(bool isLast) {
         if(error != GL_NO_ERROR) {
             Message3(Render, Error, "GL error: " << gluErrorString(error));
         }
-        renderable->draw(tp);
+        renderable->draw(tp, m_textureContext);
     }
+    m_textureContext->clearBindings();
 }
 
 }  // namespace Render

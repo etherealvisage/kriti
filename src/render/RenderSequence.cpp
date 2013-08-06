@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 
 #include "RenderSequence.h"
+#include "TextureContext.h"
 
 #include "MessageSystem.h"
 #include "TimeValue.h"
@@ -9,10 +10,11 @@ namespace Kriti {
 namespace Render {
 
 void RenderSequence::draw(const TechniqueParams &params,
+    boost::shared_ptr<TextureContext> textureContext,
     const Math::Matrix &modelTransformation) {
 
     m_vao->bind();
-    m_technique->activate();
+    m_technique->activate(textureContext);
     m_technique->setUniform("model", modelTransformation);
     params.set(m_technique);
 

@@ -12,6 +12,8 @@
 namespace Kriti {
 namespace Render {
 
+class TextureContext;
+
 class Stage {
 private:
     std::vector<boost::shared_ptr<Stage>> m_previous;
@@ -19,6 +21,7 @@ private:
     SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
+    boost::shared_ptr<TextureContext> m_textureContext;
 
     // what stage is it from, what attachment on that stage's framebuffer,
     // and what uniform to fill with the sampler2D.

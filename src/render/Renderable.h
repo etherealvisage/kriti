@@ -25,7 +25,8 @@ public:
     int renderSequenceCount() const { return m_sequences.size(); }
     void clearRenderSequences() { m_sequences.clear(); }
 
-    void draw(const TechniqueParams &params);
+    void draw(const TechniqueParams &params,
+        boost::shared_ptr<TextureContext> textureContext);
 
     Math::Vector &location() { return m_location; }
     Math::Quaternion &orientation() { return m_orientation; }
