@@ -2,7 +2,7 @@
 
 const float pi = 3.14159265;
 
-uniform int g_time;
+uniform int time;
 
 in vec4 v_position;
 in vec4 v_normal;
@@ -36,7 +36,6 @@ float snoise(vec4 v) {
                         0.414589803375032,
                        -0.447213595499958);
 
-
     vec4 i  = floor(v + dot(v, vec4(F4)) );
     vec4 x0 = v -   i + dot(i, C.xxxx);
 
@@ -52,7 +51,6 @@ float snoise(vec4 v) {
     i0.z += isYZ.z;
     i0.w += 1.0 - isYZ.z;
 
-
     vec4 i3 = clamp( i0, 0.0, 1.0 );
     vec4 i2 = clamp( i0-1.0, 0.0, 1.0 );
     vec4 i1 = clamp( i0-2.0, 0.0, 1.0 );
@@ -61,7 +59,6 @@ float snoise(vec4 v) {
     vec4 x2 = x0 - i2 + C.yyyy;
     vec4 x3 = x0 - i3 + C.zzzz;
     vec4 x4 = x0 + C.wwww;
-
 
     i = mod289(i); 
     float j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);
@@ -96,8 +93,9 @@ float snoise(vec4 v) {
 
 void main() {
     const float internal_speed = 1000.0f;
-    float ivalue = snoise(vec4(v_position.xyz, g_time / internal_speed));
+    float ivalue = snoise(vec4(v_position.xyz, time / internal_speed));
 
+    if(ivalue < 0) ivalue = 0;
     ivalue = pow(ivalue, 0.5f);
 
     fragColour.r = 0.0;
@@ -105,10 +103,10 @@ void main() {
     fragColour.b = ivalue;
     fragColour.a = 1.0;
 
-    float multiplier =
-        clamp(sin(pi * (g_time + v_position.z) / internal_speed), 0.0f, 1.0f);
+    //float multiplier =
+        //clamp(sin(pi * (time + v_position.z) / internal_speed), 0.0f, 1.0f);
 
-    fragColour *= 1.0f+multiplier;
+    //fragColour *= 1.0f+multiplier;
 
     fragColour = clamp(fragColour,
         vec4(0.0f, 0.0f, 0.0f, 1.0f), vec4(1.0f, 1.0f, 1.0f, 1.0f));

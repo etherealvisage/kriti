@@ -75,6 +75,8 @@ void Stage::render(bool isLast) {
     TechniqueParams tp;
 
     tp.addParam("camera", cameraMatrix);
+    // HACK: use current time, should be set elsewhere?
+    tp.addParam("time", TimeValue::current().toMsec());
     
     // HACK: use texture unit 1 for everything...
     for(auto mapping : m_attachments) {

@@ -96,6 +96,13 @@ void Video::initializeGL() {
             << glewGetErrorString(status));
     }
 
+    GLint err = glGetError();
+    while(err != GL_NO_ERROR) {
+        Message3(Interface, Log, "GL error after GLEW initialization: "
+            << gluErrorString(err));
+        err = glGetError();
+    }
+
     /* Basic OpenGL setup. */
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
