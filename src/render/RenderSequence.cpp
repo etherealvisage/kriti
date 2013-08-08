@@ -29,8 +29,8 @@ void RenderSequence::draw(const TechniqueParams &params,
     case Triangles:
         type = GL_TRIANGLES;
         break;
-    case Quads:
-        type = GL_QUADS;
+    default:
+        Message3(Render, Fatal, "Unknown type in RenderSequence");
         break;
     }
     if(m_mode == Indexed) {

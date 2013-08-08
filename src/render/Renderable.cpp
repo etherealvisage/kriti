@@ -1,3 +1,5 @@
+#include <GL/glew.h>
+
 #include "Renderable.h"
 #include "math/AffineTransformation.h"
 

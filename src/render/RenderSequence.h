@@ -15,8 +15,7 @@ class RenderSequence {
 public:
     enum RenderType {
         Lines,
-        Triangles,
-        Quads
+        Triangles
     };
     enum RenderMode {
         Sequential,

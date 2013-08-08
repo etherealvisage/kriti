@@ -16,8 +16,8 @@ Texture::Texture() {
     makeTexture();
 }
 
-Texture::Texture(Type type, int width, int height) : m_type(type),
-    m_width(width), m_height(height) {
+Texture::Texture(Type type, int width, int height, int samples) : m_type(type),
+    m_width(width), m_height(height), m_samples(samples) {
 
     makeBlank();
 }

@@ -161,6 +161,7 @@ MainMenuContext::MainMenuContext() {
         base, base+y, base+x+y, base+x, "overlay"));
 
     m_pipeline->setLastStage(m_blendStage);
+    //m_pipeline->setLastStage(m_gameStage);
 
     Profile::Tracker::instance()->addTimer("Total");
     Profile::Tracker::instance()->addTimer("Physics");

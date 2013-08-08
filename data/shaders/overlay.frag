@@ -1,4 +1,4 @@
-#version 130
+#version 140
 
 in vec4 v_normal;
 in vec2 v_tex;

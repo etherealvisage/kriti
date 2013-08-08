@@ -52,10 +52,11 @@ void Video::setVideoMode() {
     bool fullscreen = Config::Tree::instance()->getBool("video.fullscreen",
         false);
 
-    // Need OpenGL 3.1 (well, GLSL 1.40) for easy
-    // GL_ARB_explicit_attrib_location support in shaders on NVidia GPUs.
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    // Want a core profile instead of a compatability context.
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
+        SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
         SDL_GL_CONTEXT_PROFILE_CORE);
 
@@ -65,6 +66,12 @@ void Video::setVideoMode() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+    if(Config::Tree::instance()->getBool("video.msaa.enabled", false)) {
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 
+            Config::Tree::instance()->getInt("video.msaa.samples", 4));
+    }
+
     int flags = SDL_WINDOW_OPENGL;
     if(fullscreen) flags |= SDL_WINDOW_FULLSCREEN;
     m_window = SDL_CreateWindow("kriti",
@@ -73,13 +80,16 @@ void Video::setVideoMode() {
 
     if(m_window == NULL) {
         Message3(Interface, Fatal, "Failed to set video mode "
-            << m_width << "x" << m_height << "x" << bpp << ": " << SDL_GetError());
+            << m_width << "x" << m_height << "x" << bpp << ": "
+            << SDL_GetError());
     }
 
     m_context = SDL_GL_CreateContext(m_window);
 }
 
 void Video::initializeGL() {
+    // Make GLEW play nicely with core contexts
+    glewExperimental = GL_TRUE;
     GLenum status = glewInit();
     if(status != GLEW_OK) {
         Message3(Interface, Fatal, "Failed to initialize GLEW: "
@@ -111,24 +121,18 @@ void Video::initializeGL() {
     }
 
     /* If video profiling is enabled . . . */
-    if(Config::Tree::instance()->getBool("kriti.profile")) {
-        if(!GLEW_ARB_timer_query) {
-            Message3(Interface, Fatal, "Profiling enabled, but "
-                "GLEW_ARB_timer_query GL extension not supported.");
-        }
+    if(Config::Tree::instance()->getBool("kriti.profile")
+        && !GLEW_ARB_timer_query) {
+
+        Message3(Interface, Fatal, "Profiling enabled, but "
+            "GL_ARB_timer_query extension not present.");
     }
+
+    /* Need GL_ARB_explicit_attrib_location for shaders. */
     if(!GL_ARB_explicit_attrib_location) {
         Message3(Interface, Fatal,
             "GL_ARB_explicit_attrib_location OpenGL extension required.");
     }
-
-    GLint maxColourAttachments;
-    glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &maxColourAttachments);
-    Message3(Interface, Log, "Maximum number of colour attachments: " << maxColourAttachments);
-
-    GLint maxSamples;
-    glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
-    Message3(Interface, Log, "Maximum number of samples: " << maxSamples);
 }
 
 }  // namespace Interface

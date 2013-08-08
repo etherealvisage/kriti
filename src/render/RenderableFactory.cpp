@@ -144,6 +144,8 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     vertices.push_back(p1);
     vertices.push_back(p2);
     vertices.push_back(p3);
+    vertices.push_back(p1);
+    vertices.push_back(p3);
     vertices.push_back(p4);
     vertexVBO->setData(vertices);
     vao->addVBO(vertexVBO, VAO::Vertex);
@@ -160,19 +162,27 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     texs.push_back(Math::Vector(0,0));
     texs.push_back(Math::Vector(0,1));
     texs.push_back(Math::Vector(1,1));
+
+    texs.push_back(Math::Vector(0,0));
+    texs.push_back(Math::Vector(1,1));
     texs.push_back(Math::Vector(1,0));
     textureVBO->setData(texs);
     vao->addVBO(textureVBO, VAO::Texture);
 
     std::vector<unsigned int> indices;
-    for(unsigned i = 0; i < vertices.size(); i ++) indices.push_back(i);
+    indices.push_back(0);
+    indices.push_back(1);
+    indices.push_back(2);
+    indices.push_back(3);
+    indices.push_back(4);
+    indices.push_back(5);
     auto indexVBO = boost::make_shared<VBO>(VBO::Element);
     indexVBO->setData(indices);
     vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
         ResourceRegistry::instance()->get<Material>(material), vao, 0,
-        vertices.size()-1, RenderSequence::Quads));
+        indices.size()-1));
 
     return renderable;
 }
@@ -199,12 +209,23 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuadGeometry(
     vao->addVBO(textureVBO, VAO::Texture);
 
     auto indexVBO = boost::make_shared<VBO>(VBO::Element);
-    indexVBO->setData(quads);
+    std::vector<unsigned int> tris;
+    for(int i = 0; i < quads.size(); i += 4) {
+        tris.push_back(quads[i]);
+        tris.push_back(quads[i+1]);
+        tris.push_back(quads[i+2]);
+
+        tris.push_back(quads[i+2]);
+        tris.push_back(quads[i+3]);
+        tris.push_back(quads[i]);
+    }
+    indexVBO->setData(tris);
     vao->addVBO(indexVBO, VAO::Element);
+
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
         ResourceRegistry::instance()->get<Material>(material), vao, 0,
-        quads.size()-1, RenderSequence::Quads));
+        tris.size()-1));
 
     /*Message3(Render, Debug, "Created Renderable from quad geom: "
         << renderable);

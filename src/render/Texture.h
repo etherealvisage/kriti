@@ -15,10 +15,11 @@ public:
 private:
     Type m_type;
     int m_width, m_height;
+    int m_samples;
     GLuint m_id;
 public:
     Texture();
-    Texture(Type type, int width, int height);
+    Texture(Type type, int width, int height, int samples=0);
     ~Texture();
 
     GLuint id() const { return m_id; }
