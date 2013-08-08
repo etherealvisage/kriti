@@ -3,6 +3,8 @@
 #include "RenderSequence.h"
 #include "TextureContext.h"
 
+#include "profile/Tracker.h"
+
 #include "MessageSystem.h"
 #include "TimeValue.h"
 
@@ -20,7 +22,9 @@ void RenderSequence::draw(const TechniqueParams &params,
     technique->setUniform("model", modelTransformation);
     params.set(technique);
 
-    //Message3(Render, Debug, "Drawing " << m_end-m_start+1 << " vertices!");
+    Profile::Tracker::instance()->addToCounter("Triangles",
+        (m_end-m_start+1)/3);
+
     GLenum type;
     switch(m_type) {
     case Lines:

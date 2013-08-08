@@ -25,24 +25,31 @@ Tracker::Tracker() {
 
 void Tracker::nextFrame() {
     if(!enabled()) return;
-    // go through old results, and process them.
-    Message3(Profile, Log, "Frame #" << m_frameCount << " results:");
-    for(auto it : m_timers[m_currentFrame]) {
-        if(it.second.first) {
-            Message3(Profile, Log, "    - " << it.first << ": "
-                << (it.second.second.second - it.second.second.first).toUsec()
-                << "us");
+    // go through old results, and process them, unless it's the first frame,
+    // in which case there is no previous frame.
+    if(m_frameCount > 0) {
+        Message3(Profile, Log, "Frame #" << m_frameCount << " results:");
+        for(auto it : m_timers[m_currentFrame]) {
+            if(it.second.first) {
+                Message3(Profile, Log, "    - " << it.first << ": " <<
+                    (it.second.second.second - it.second.second.first).toUsec()
+                    << "us");
+            }
+            else Message3(Profile, Log, "    - " << it.first << ": N/A");
+            it.second.first = false;
         }
-        else Message3(Profile, Log, "    - " << it.first << ": N/A");
-        it.second.first = false;
-    }
-    for(auto it : m_glTimers[m_currentFrame]) {
-        if(it.second.first) {
-            Message3(Profile, Log, "    - " << it.first << ": "
-                << it.second.second->delta().toUsec() << "us");
+        for(auto it : m_glTimers[m_currentFrame]) {
+            if(it.second.first) {
+                Message3(Profile, Log, "    - " << it.first << ": "
+                    << it.second.second->delta().toUsec() << "us");
+            }
+            else Message3(Profile, Log, "    - " << it.first << ": N/A");
+            it.second.first = false;
         }
-        else Message3(Profile, Log, "    - " << it.first << ": N/A");
-        it.second.first = false;
+        for(auto it : m_counters[m_currentFrame]) {
+            Message3(Profile, Log, "    - " << it.first << ": " << it.second);
+            m_counters[1-m_currentFrame][it.first] = 0;
+        }
     }
 
     m_currentFrame = 1-m_currentFrame;
@@ -61,6 +68,12 @@ void Tracker::addGLTimer(std::string name) {
     m_glTimers[0][name].second = boost::make_shared<Render::Timer>();
     m_glTimers[1][name].first = false;
     m_glTimers[1][name].second = boost::make_shared<Render::Timer>();
+}
+
+void Tracker::addCounter(std::string name) {
+    if(!enabled()) return;
+    m_counters[0][name] = 0;
+    m_counters[1][name] = 0;
 }
 
 void Tracker::beginTimer(std::string name) {
@@ -83,6 +96,10 @@ void Tracker::endGLTimer(std::string name) {
     if(!enabled()) return;
     m_glTimers[m_currentFrame][name].first = true;
     m_glTimers[m_currentFrame][name].second->end();
+}
+
+void Tracker::addToCounter(std::string name, int count) {
+    m_counters[m_currentFrame][name] += count;
 }
 
 }  // namespace Profile

@@ -37,6 +37,7 @@ private:
         std::pair<bool, std::pair<TimeValue, TimeValue>>> m_timers[2];
     std::map<std::string,
         std::pair<bool, boost::shared_ptr<Render::Timer>>> m_glTimers[2];
+    std::map<std::string, int> m_counters[2];
 
     int m_currentFrame, m_frameCount;
 public:
@@ -46,11 +47,14 @@ public:
 
     void addTimer(std::string name);
     void addGLTimer(std::string name);
+    void addCounter(std::string name);
 
     void beginTimer(std::string name);
     void endTimer(std::string name);
     void beginGLTimer(std::string name);
     void endGLTimer(std::string name);
+
+    void addToCounter(std::string name, int count);
 };
 
 }  // namespace Profile

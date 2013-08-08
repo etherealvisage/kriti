@@ -111,7 +111,7 @@ MainMenuContext::MainMenuContext() {
     m_vehicleModel = boost::make_shared<VehicleModel>();
     m_vehicleModel->setRoot(rg.generatedRoot());
     m_vehicle = boost::make_shared<Vehicle>(m_playerObject->physical());
-    //m_vehicleModel->addVehicle(m_vehicle);
+    m_vehicleModel->addVehicle(m_vehicle);
 
     m_playerObject->physical()->setLinearDamping(0.0);
     m_playerObject->physical()->setAngularDamping(0.0);
@@ -129,20 +129,6 @@ MainMenuContext::MainMenuContext() {
     m_textStage->camera()->step(0.0);
 
     auto font = ResourceRegistry::instance()->get<GUI::Font>("ubuntu");
-    //auto text = GUI::TextRenderer().render(font, "Hello, World!");
-
-    //m_textStage->addRenderable(text);
-    /*{
-        Math::Vector base(-aratio/2, -1.0), x(aratio,0), y(0,2.0);
-        m_textStage->addRenderable(Render::RenderableFactory().fromQuad(
-            base, base+y, base+x+y, base+x, "ubuntu"));
-    }*/
-    
-    /*m_textStage->addRenderable(Render::RenderableFactory().fromQuad(
-        Math::Vector(0.0113516,0.11792,0),
-        Math::Vector(0.132445,0.11792,0),
-        Math::Vector(0.228148,0.11792,0),
-        Math::Vector(0.107055,0.11792,0), "red"));*/
 
     m_blendStage = boost::make_shared<Render::Stage>("Blending stage");
     m_blendStage->addPrevious(m_gameStage);
@@ -161,10 +147,10 @@ MainMenuContext::MainMenuContext() {
         base, base+y, base+x+y, base+x, "overlay"));
 
     m_pipeline->setLastStage(m_blendStage);
-    //m_pipeline->setLastStage(m_gameStage);
 
     Profile::Tracker::instance()->addTimer("Total");
     Profile::Tracker::instance()->addTimer("Physics");
+    Profile::Tracker::instance()->addCounter("Triangles");
 }
 
 void MainMenuContext::run() {
