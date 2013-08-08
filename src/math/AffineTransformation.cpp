@@ -19,6 +19,7 @@ void AffineTransformation::scale(Point around, double factor) {
     translate(-around);
     m_transformation *= factor;
     translate(around);
+    m_transformation(3,3) = 1.0;
 }
 
 }  // namespace Math

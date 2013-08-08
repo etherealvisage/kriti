@@ -10,5 +10,6 @@ void main() {
     vec4 base = texture(baseStage, v_tex);
     vec4 overlay = texture(overlayStage, v_tex);
     fragColour = mix(base, overlay, overlay.a);
+    fragColour.b += 0.1f;
     fragColour.a = 1.0f;
 }

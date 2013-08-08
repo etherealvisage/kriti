@@ -16,8 +16,9 @@ void Renderable::draw(const TechniqueParams &params,
     boost::shared_ptr<TextureContext> textureContext) {
 
     Math::AffineTransformation at;
-    at.translate(m_location);
+    at.scale(Math::Point(), m_scale);
     at.rotate(Math::Point(), m_orientation);
+    at.translate(m_location);
     Math::Matrix modelTransform = at.matrix();
 
     for(auto sequence : m_sequences) {

@@ -14,6 +14,7 @@ public:
     TimeValue() : m_timeValue(0) {}
 
     static TimeValue current();
+    static TimeValue fromNsec(int64_t ns) { return TimeValue(ns); }
     static TimeValue fromUsec(int64_t us) { return TimeValue(us*1000); }
     static TimeValue fromMsec(int64_t ms) { return TimeValue(ms*1000000); }
 

@@ -17,8 +17,11 @@ class Renderable {
 private:
     std::vector<boost::shared_ptr<RenderSequence>> m_sequences;
     Math::Vector m_location;
+    double m_scale;
     Math::Quaternion m_orientation;
 public:
+    Renderable() : m_scale(1.0) {}
+
     void addRenderSequence(boost::shared_ptr<RenderSequence> sequence);
     boost::shared_ptr<RenderSequence> renderSequence(int which) const
         { return m_sequences[which]; }
@@ -29,6 +32,7 @@ public:
         boost::shared_ptr<TextureContext> textureContext);
 
     Math::Vector &location() { return m_location; }
+    double &scale() { return m_scale; }
     Math::Quaternion &orientation() { return m_orientation; }
 };
 

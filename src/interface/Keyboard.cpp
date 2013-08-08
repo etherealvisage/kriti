@@ -33,9 +33,6 @@ void Keyboard::poll() {
         // ignore repeat events
         if(event.key.repeat != 0) continue;
 
-        Message3(Interface, Debug, "Key event: " << event.key.keysym.sym
-            << " (press: " << (event.type == SDL_KEYDOWN?"yes":"no") << ")");
-
         auto iterator = m_keyMapping.find(event.key.keysym.sym);
         while(iterator != m_keyMapping.end() &&
             iterator->first == event.key.keysym.sym) {

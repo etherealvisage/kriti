@@ -12,6 +12,7 @@ aux_source_directory(game gameSources)
 aux_source_directory(gui guiSources)
 aux_source_directory(render renderSources)
 aux_source_directory(physics physicsSources)
+aux_source_directory(profile profileSources)
 aux_source_directory(track trackSources)
 
 include_directories(.)
@@ -27,6 +28,7 @@ set(sources
     ${guiSources}
     ${renderSources}
     ${physicsSources}
+    ${profileSources}
     ${trackSources}
 )
 

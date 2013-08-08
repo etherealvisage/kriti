@@ -206,9 +206,9 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuadGeometry(
         ResourceRegistry::instance()->get<Material>(material), vao, 0,
         quads.size()-1, RenderSequence::Quads));
 
-    Message3(Render, Debug, "Created Renderable from quad geom: "
+    /*Message3(Render, Debug, "Created Renderable from quad geom: "
         << renderable);
-    Message3(Render, Debug, "Quads: " << quads.size()/4);
+    Message3(Render, Debug, "Quads: " << quads.size()/4);*/
 
     return renderable;
 }

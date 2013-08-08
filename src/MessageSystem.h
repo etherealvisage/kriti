@@ -14,7 +14,8 @@
     MS_Subsystem(Physics), \
     MS_Subsystem(Game), \
     MS_Subsystem(Track), \
-    MS_Subsystem(GUI)
+    MS_Subsystem(GUI), \
+    MS_Subsystem(Profile)
 
 #define MS_Types \
     MS_Type(Debug), \

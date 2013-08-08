@@ -5,6 +5,7 @@
 
 #include "Renderable.h"
 #include "SceneCamera.h"
+#include "Timer.h"
 
 #include "Stage.h"
 
@@ -16,7 +17,12 @@ private:
     boost::shared_ptr<Stage> m_lastStage;
 
     std::set<boost::shared_ptr<Stage>> m_rendered;
+
+    bool m_profile;
+    Timer m_timer;
 public:
+    Pipeline();
+
     void setLastStage(boost::shared_ptr<Stage> lastStage)
         { m_lastStage = lastStage; }
 

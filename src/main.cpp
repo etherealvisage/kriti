@@ -16,6 +16,7 @@
 #include "context/ContextManager.h"
 #include "game/MainMenuContext.h"
 #include "render/Technique.h"
+#include "profile/Tracker.h"
 
 int main() {
     using namespace Kriti;
@@ -33,6 +34,9 @@ int main() {
     parser.parseFile(tree->getString("kriti.data_path") + "materials.config");
     parser.parseFile(tree->getString("kriti.data_path") + "gui.config");
     parser.parseFile(tree->getString("kriti.data_path") + "fonts.config");
+
+    /* Initialize profiling infrastructure. */
+    Profile::Tracker::instance();
 
     /* Set the log file. */
     MessageSystem::setLogFile(
@@ -69,6 +73,8 @@ int main() {
     Interface::DeviceManager::destroy();
 
     ResourceRegistry::destroy();
+
+    Profile::Tracker::destroy();
 
     MessageSystem::closeLogFile();
 

@@ -8,12 +8,16 @@
 
 #include "interface/Video.h"
 
+#include "profile/Tracker.h"
+
 #include "MessageSystem.h"
 
 namespace Kriti {
 namespace Render {
 
-Stage::Stage(int outputs, int width, int height) {
+Stage::Stage(int outputs, int width, int height, std::string name)
+    : m_name(name) {
+
     if(width == -1) width = Interface::Video::instance()->width();
     if(height == -1) height = Interface::Video::instance()->height();
     m_width = width, m_height = height;
@@ -31,6 +35,8 @@ Stage::Stage(int outputs, int width, int height) {
             m_height));
 
     m_textureContext = boost::make_shared<TextureContext>();
+
+    Profile::Tracker::instance()->addGLTimer(name);
 }
 
 void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
@@ -57,6 +63,7 @@ void Stage::removeRenderable(boost::shared_ptr<Renderable> renderable) {
 }
 
 void Stage::render(bool isLast) {
+    Profile::Tracker::instance()->beginGLTimer(m_name);
     auto cameraMatrix = m_camera.matrix();
 
     if(!isLast) m_framebuffer->bindWrite();
@@ -86,6 +93,7 @@ void Stage::render(bool isLast) {
         renderable->draw(tp, m_textureContext);
     }
     m_textureContext->clearBindings();
+    Profile::Tracker::instance()->endGLTimer(m_name);
 }
 
 }  // namespace Render

@@ -1,6 +1,8 @@
 #ifndef KRITI_GAME__MAIN_MENU_CONTEXT_H
 #define KRITI_GAME__MAIN_MENU_CONTEXT_H
 
+#include <queue>
+
 #include <boost/shared_ptr.hpp>
 
 #include "context/AbstractContext.h"
@@ -30,6 +32,9 @@ private:
     boost::shared_ptr<Vehicle> m_vehicle;
     boost::shared_ptr<VehicleModel> m_vehicleModel;
     TimeValue m_lastTime;
+
+    boost::shared_ptr<Render::Renderable> m_fpsDisplay;
+    std::queue<TimeValue> m_frames;
 public:
     MainMenuContext();
 

@@ -111,10 +111,10 @@ void Video::initializeGL() {
     }
 
     /* If video profiling is enabled . . . */
-    if(Config::Tree::instance()->getBool("video.profile")) {
+    if(Config::Tree::instance()->getBool("kriti.profile")) {
         if(!GLEW_ARB_timer_query) {
-            Message3(Interface, Fatal, "Video profiling enabled, but "
-                "GLEW_ARB_timer_query not supported.");
+            Message3(Interface, Fatal, "Profiling enabled, but "
+                "GLEW_ARB_timer_query GL extension not supported.");
         }
     }
     if(!GL_ARB_explicit_attrib_location) {

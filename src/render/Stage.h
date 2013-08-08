@@ -29,8 +29,10 @@ private:
         std::string>> m_attachments;
 
     int m_width, m_height;
+    std::string m_name;
 public:
-    Stage(int outputs=1, int width=-1, int height=-1);
+    Stage(int outputs, int width, int height, std::string name);
+    Stage(std::string name) : Stage(1, -1, -1, name) {}
 
     SceneCamera *camera() { return &m_camera; }
 
