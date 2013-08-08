@@ -163,6 +163,7 @@ MainMenuContext::MainMenuContext() {
     m_pipeline->setLastStage(m_blendStage);
 
     Profile::Tracker::instance()->addTimer("Total");
+    Profile::Tracker::instance()->addTimer("Physics");
 }
 
 void MainMenuContext::run() {
@@ -192,7 +193,9 @@ void MainMenuContext::run() {
 
     Math::Quaternion q = m_gameStage->camera()->orientation();
 
+    Profile::Tracker::instance()->beginTimer("Physics");
     m_world->step(sinceLast);
+    Profile::Tracker::instance()->endTimer("Physics");
 
     m_gameStage->camera()->setTarget(m_playerObject->renderable()->location()
         + q.conjugate() * Math::Vector(0.0, 0.0, 7.5), q);
