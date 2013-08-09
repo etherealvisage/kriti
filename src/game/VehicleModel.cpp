@@ -50,28 +50,33 @@ void VehicleModel::simulate(boost::shared_ptr<Physics::World> world,
     }
 
     // TODO: make maximum force, modifier, etc. configurable.
-    double force = 1 / (std::max(0.05, std::sqrt(closest)));
+    double force = 20 / (std::max(0.05, std::sqrt(closest)));
 
+    force = std::pow(2, force);
+    // ensure the force doesn't go too overboard...
+    force = std::min(force, 1000.0);
+
+    //Message3(Game, Debug, "force: " << force);
     vehicle->object()->applyForce(Math::Vector(0.0, 0.0, -force));
 
     // now for roll/yaw/pitch modifiers . . .
     /*vehicle->object()->applyTorque(vehicle->orientation() *
         (Math::Vector(1.0, 0.0, 0.0) * vehicle->pitch()));*/
-    vehicle->object()->applyTorque(Math::Vector(vehicle->pitch(), 0.0, 0.0));
+    //vehicle->object()->applyTorque(Math::Vector(vehicle->pitch(), 0.0, 0.0));
 
-    auto orientation = vehicle->orientation();
-    auto velocity = vehicle->object()->linearVelocity();
+    //auto orientation = vehicle->orientation();
+    //auto velocity = vehicle->object()->linearVelocity();
 
-    Math::Vector forwards = velocity.projectOnto(
+    /*Math::Vector forwards = velocity.projectOnto(
         orientation * Math::Vector(0.0, 0.0, -1.0));
     Math::Vector up = velocity.projectOnto(
         orientation * Math::Vector(0.0, 1.0, 0.0));
     Math::Vector right = velocity.projectOnto(
-        orientation * Math::Vector(1.0, 0.0, 0.0));
+        orientation * Math::Vector(1.0, 0.0, 0.0));*/
     
     // apply lift
-    vehicle->object()->applyForce(
-        orientation * Math::Vector(0.0, forwards.length(), 0.0));
+    /*vehicle->object()->applyForce(
+        orientation * Math::Vector(0.0, forwards.length(), 0.0));*/
 }
 
 }  // namespace Game
