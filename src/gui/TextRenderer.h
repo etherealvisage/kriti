@@ -11,7 +11,7 @@ namespace GUI {
 class TextRenderer {
 public:
     boost::shared_ptr<Render::Renderable> render(boost::shared_ptr<Font> font,
-        std::string s);
+        std::string s, Math::Vector scale = Math::Vector(1.0, 1.0));
 
     void size(boost::shared_ptr<Font> font, std::string s, Math::Vector &ul,
         Math::Vector &lr);

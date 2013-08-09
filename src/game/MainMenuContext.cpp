@@ -154,7 +154,7 @@ MainMenuContext::MainMenuContext() {
     Profile::Tracker::instance()->addCounter("Triangles");
 
     m_fpsLabel = boost::make_shared<GUI::Label>(
-        Math::Vector(), m_textStage, font, "Text!");
+        Math::Vector(), m_textStage, font, "This is a much longer label");
     m_testPanel = boost::make_shared<GUI::Panel>(
         Math::Vector(), Math::Vector(), m_textStage,
         boost::shared_ptr<GUI::Layout>());
@@ -184,10 +184,15 @@ void MainMenuContext::run() {
             "gui_panel")->params();
     tp.setParam("gui_xscale", GUI::Scale().xscale());
     tp.setParam("gui_yscale", GUI::Scale().yscale());
-    m_testPanel->update(
-        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, 0),
+
+    m_fpsLabel->update(
+        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5, -0.5),
         Math::Vector(1.0, 0.5, 0.0),
-        Math::Vector(3.0, 3.0, 1.0));
+        Math::Vector(1.0, 1.0, 1.0));
+    m_testPanel->update(
+        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5),
+        Math::Vector(1.0, 0.5, 0.0),
+        Math::Vector(1.0, 1.0, 1.0));
     /*if(m_frames.size() > 1) {
         m_fpsDisplay = GUI::TextRenderer().render(
             ResourceRegistry::instance()->get<GUI::Font>("ubuntu"),

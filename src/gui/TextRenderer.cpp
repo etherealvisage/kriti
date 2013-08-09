@@ -10,7 +10,7 @@ namespace Kriti {
 namespace GUI {
 
 boost::shared_ptr<Render::Renderable> TextRenderer::render(
-    boost::shared_ptr<Font> font, std::string s) {
+    boost::shared_ptr<Font> font, std::string s, Math::Vector scale) {
 
     std::vector<Math::Vector> vertices;
     std::vector<Math::Vector> normals;
@@ -27,13 +27,13 @@ boost::shared_ptr<Render::Renderable> TextRenderer::render(
         Math::Vector h(0,cs.h);
 
         indices.push_back(vertices.size());
-        vertices.push_back(cursor + off);
+        vertices.push_back((cursor + off) * scale);
         indices.push_back(vertices.size());
-        vertices.push_back(cursor + off - h);
+        vertices.push_back((cursor + off - h) * scale);
         indices.push_back(vertices.size());
-        vertices.push_back(cursor + off + w - h);
+        vertices.push_back((cursor + off + w - h) * scale);
         indices.push_back(vertices.size());
-        vertices.push_back(cursor + off + w);
+        vertices.push_back((cursor + off + w) * scale);
 
         Math::Vector tc(cs.x, cs.y);
         texCoords.push_back(tc);
@@ -56,9 +56,7 @@ void TextRenderer::size(boost::shared_ptr<Font> font, std::string s,
     double width = 0.0;
     double minY = 0.0, maxY = 0.0;
 
-    double prevspace = 0.0;
     for(char c : s) {
-        width += prevspace;
         Font::CharSpec cs;
         if(!font->getCharSpec((int)c, cs)) continue;
 
@@ -66,13 +64,10 @@ void TextRenderer::size(boost::shared_ptr<Font> font, std::string s,
         Math::Vector w(cs.w);
         Math::Vector h(0,cs.h);
 
-        width += cs.xoff;
-        width += cs.w;
-
         minY = std::min(minY, cs.yoff - cs.h);
         maxY = std::max(maxY, cs.yoff);
 
-        prevspace = cs.xadv;
+        width += cs.xadv;
     }
 
     ul = Math::Vector(0.0, minY);

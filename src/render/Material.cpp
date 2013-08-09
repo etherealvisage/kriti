@@ -47,7 +47,6 @@ bool Material::loadFrom(std::string identifier) {
             break;
         }
         case Config::TreeNode::String: {
-            Message3(Render, Debug, "string");
             m_params.setParam(name,
                 ResourceRegistry::instance()->get<Texture>(unode->asString()));
             break;

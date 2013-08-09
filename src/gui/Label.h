@@ -11,13 +11,28 @@ namespace GUI {
 class Font;
 
 class Label : public Widget {
+public:
+    enum HorizontalAlignment {
+        Left,
+        HCentre,
+        Right
+    };
+    enum VerticalAlignment {
+        Top,
+        VCentre,
+        Bottom 
+    };
 private:
     boost::shared_ptr<Font> m_font;
     std::string m_text;
+    HorizontalAlignment m_halign;
+    VerticalAlignment m_valign;
+    double m_textScale;
 public:
     Label(Math::Vector stretch, boost::shared_ptr<Render::Stage> stage,
-        boost::shared_ptr<Font> font, std::string text)
-        : Widget(stretch, stage), m_font(font), m_text(text) {}
+        boost::shared_ptr<Font> font, std::string text,
+        HorizontalAlignment halign = HCentre,
+        VerticalAlignment valign = VCentre);
 
     virtual Math::Vector minSize();
 protected:
