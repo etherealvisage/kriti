@@ -34,6 +34,9 @@ public:
         HorizontalAlignment halign = HCentre,
         VerticalAlignment valign = VCentre);
 
+    std::string text() const { return m_text; }
+    void setText(std::string text) { m_text = text; }
+
     virtual Math::Vector minSize();
 protected:
     virtual void updated();
