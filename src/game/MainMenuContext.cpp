@@ -186,7 +186,7 @@ void MainMenuContext::run() {
     tp.setParam("gui_yscale", GUI::Scale().yscale());
 
     m_fpsLabel->update(
-        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5, -0.5),
+        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5, 0.5),
         Math::Vector(1.0, 0.5, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
     m_testPanel->update(
