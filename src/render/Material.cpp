@@ -34,7 +34,7 @@ bool Material::loadFrom(std::string identifier) {
         auto unode = cnode.lock()->child(name).lock();
         switch(unode->type()) {
         case Config::TreeNode::Integer: {
-            m_params.addParam(name, unode->asInt());
+            m_params.setParam(name, unode->asInt());
             break;
         }
         case Config::TreeNode::Vector: {
@@ -43,7 +43,7 @@ bool Material::loadFrom(std::string identifier) {
             break;
         }
         case Config::TreeNode::String: {
-            m_params.addParam(name,
+            m_params.setParam(name,
                 ResourceRegistry::instance()->get<Texture>(unode->asString()));
             break;
         }

@@ -62,7 +62,7 @@ void Stage::removeRenderable(boost::shared_ptr<Renderable> renderable) {
     }
 }
 
-void Stage::render(bool isLast) {
+void Stage::render(TechniqueParams &globalParams, bool isLast) {
     Profile::Tracker::instance()->beginGLTimer(m_name);
     auto cameraMatrix = m_camera.matrix();
 
@@ -72,17 +72,14 @@ void Stage::render(bool isLast) {
         glDrawBuffer(GL_BACK);
     }
 
-    TechniqueParams tp;
-
-    tp.addParam("camera", cameraMatrix);
+    globalParams.setParam("camera", cameraMatrix);
     // HACK: use current time, should be set elsewhere?
-    tp.addParam("time", TimeValue::current().toMsec());
     
     // HACK: use texture unit 1 for everything...
     for(auto mapping : m_attachments) {
         auto fb = std::get<0>(mapping)->framebuffer();
         auto texture = fb->getTextureAttachment(std::get<1>(mapping));
-        tp.addParam(std::get<2>(mapping), texture);
+        globalParams.setParam(std::get<2>(mapping), texture);
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -92,7 +89,7 @@ void Stage::render(bool isLast) {
         if(error != GL_NO_ERROR) {
             Message3(Render, Error, "GL error: " << gluErrorString(error));
         }
-        renderable->draw(tp, m_textureContext);
+        renderable->draw(globalParams, m_textureContext);
     }
     m_textureContext->clearBindings();
     Profile::Tracker::instance()->endGLTimer(m_name);

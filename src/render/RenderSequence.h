@@ -27,6 +27,7 @@ private:
     boost::shared_ptr<VAO> m_vao;
     RenderType m_type;
     RenderMode m_mode;
+    TechniqueParams m_materialParams;
 public:
     RenderSequence(boost::shared_ptr<Material> material,
         boost::shared_ptr<VAO> vao, int start, int end,
@@ -39,6 +40,9 @@ public:
     int end() const { return m_end; }
 
     void updateRange(int start, int end) { m_start = start, m_end = end; }
+
+    TechniqueParams &materialParams() { return m_materialParams; }
+    const TechniqueParams &materialParams() const { return m_materialParams; }
 
     void draw(const TechniqueParams &params,
         boost::shared_ptr<TextureContext> textureContext,

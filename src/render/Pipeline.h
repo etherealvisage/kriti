@@ -25,7 +25,7 @@ public:
 
     void render();
 private:
-    void render(boost::shared_ptr<Stage> stage);
+    void render(TechniqueParams &tp, boost::shared_ptr<Stage> stage);
 };
 
 }  // namespace Render

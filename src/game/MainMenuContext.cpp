@@ -24,6 +24,7 @@
 
 #include "gui/Font.h"
 #include "gui/TextRenderer.h"
+#include "gui/Scale.h"
 
 #include "track/RandomGenerator.h"
 #include "track/ClosedSubdivider.h"
@@ -61,7 +62,6 @@ MainMenuContext::MainMenuContext() {
     m_pipeline->setLastStage(m_gameStage);
 
     // camera setup
-    Message3(Game, Debug, "Aspect ratio: " << Interface::Video::instance()->aspectRatio());
     m_gameStage->camera()->setProjection(Math::ViewGenerator().perspective(
         Math::Constants::Pi/3.0, Interface::Video::instance()->aspectRatio(),
         0.1, 1000.0
@@ -124,7 +124,7 @@ MainMenuContext::MainMenuContext() {
     m_textStage = boost::make_shared<Render::Stage>("Text stage");
     double aratio = Interface::Video::instance()->aspectRatio();
     m_textStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
-        aratio, 2.0, 0.1, 1000.0
+        aratio*2, 2.0, 0.1, 1000.0
     ));
     m_textStage->camera()->step(0.0);
 
@@ -138,19 +138,26 @@ MainMenuContext::MainMenuContext() {
     m_blendStage->addMapping(1, Render::Framebuffer::ColourBuffer0, "overlayStage");
 
     m_blendStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
-        aratio, 2.0, 0.1, 1000.0
+        aratio*2, 2.0, 0.1, 1000.0
     ));
     m_blendStage->camera()->step(0.0);
 
-    Math::Vector base(-aratio/2, -1.0), x(aratio,0), y(0,2.0);
+    Math::Vector base(-aratio, -1.0), x(aratio*2,0), y(0,2.0);
     m_blendStage->addRenderable(Render::RenderableFactory().fromQuad(
         base, base+y, base+x+y, base+x, "overlay"));
 
     m_pipeline->setLastStage(m_blendStage);
 
     Profile::Tracker::instance()->addTimer("Total");
+    Profile::Tracker::instance()->addTimer("Rendering");
     Profile::Tracker::instance()->addTimer("Physics");
     Profile::Tracker::instance()->addCounter("Triangles");
+
+    m_fpsLabel = boost::make_shared<GUI::Label>(
+        Math::Vector(), m_textStage, font, "Text!");
+    m_testPanel = boost::make_shared<GUI::Panel>(
+        Math::Vector(), Math::Vector(), m_textStage,
+        boost::shared_ptr<GUI::Layout>());
 }
 
 void MainMenuContext::run() {
@@ -161,33 +168,50 @@ void MainMenuContext::run() {
     TimeValue sinceLast = current - m_lastTime;
     m_lastTime = current;
 
-    TimeValue fiveAgo = current - TimeValue::fromMsec(5000);
+    TimeValue interval = TimeValue::fromMsec(1000);
+    TimeValue earliest = current - interval;
 
     m_frames.push(current);
-    while(m_frames.size() > 0 && m_frames.front() <= fiveAgo) m_frames.pop();
+    while(m_frames.size() > 0 && m_frames.front() <= earliest) m_frames.pop();
     if(m_fpsDisplay) m_textStage->removeRenderable(m_fpsDisplay);
-    if(m_frames.size() > 1) {
+
+    /*m_fpsLabel->update(
+        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, 0),
+        Math::Vector(1.0, 1.0, 0.0),
+        Math::Vector(1.0, 1.0, 1.0));*/
+    Render::TechniqueParams &tp =
+        ResourceRegistry::instance()->get<Render::Material>(
+            "gui_panel")->params();
+    tp.setParam("gui_xscale", GUI::Scale().xscale());
+    tp.setParam("gui_yscale", GUI::Scale().yscale());
+    m_testPanel->update(
+        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, 0),
+        Math::Vector(1.0, 0.5, 0.0),
+        Math::Vector(1.0, 1.0, 1.0));
+    /*if(m_frames.size() > 1) {
         m_fpsDisplay = GUI::TextRenderer().render(
             ResourceRegistry::instance()->get<GUI::Font>("ubuntu"),
-            StreamAsString() << "FPS: " <<
-                m_frames.size()/((current - m_frames.front()).toMsec()/1000.0)
+            StreamAsString() << "FPSygq_: " <<
+                m_frames.size()/(interval.toMsec()/1000.0)
         );
         m_fpsDisplay->scale() = 0.25;
         m_fpsDisplay->location() = Math::Vector(
             -Interface::Video::instance()->aspectRatio()/2.0, -1.0);
         m_textStage->addRenderable(m_fpsDisplay);
-    }
-
-    Math::Quaternion q = m_gameStage->camera()->orientation();
+    }*/
 
     Profile::Tracker::instance()->beginTimer("Physics");
     m_world->step(sinceLast);
     Profile::Tracker::instance()->endTimer("Physics");
 
+    Math::Quaternion q = m_gameStage->camera()->orientation();
     m_gameStage->camera()->setTarget(m_playerObject->renderable()->location()
         + q.conjugate() * Math::Vector(0.0, 0.0, 7.5), q);
     m_gameStage->camera()->step(sinceLast.toUsec() / 1e3);
+
+    Profile::Tracker::instance()->beginTimer("Rendering");
     m_pipeline->render();
+    Profile::Tracker::instance()->endTimer("Rendering");
 
     GLint err = glGetError();
     while(err != GL_NO_ERROR) {

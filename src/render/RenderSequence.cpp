@@ -20,10 +20,8 @@ void RenderSequence::draw(const TechniqueParams &params,
     technique->activate(textureContext);
     m_material->params().set(technique);
     technique->setUniform("model", modelTransformation);
+    m_materialParams.set(technique);
     params.set(technique);
-
-    Profile::Tracker::instance()->addToCounter("Triangles",
-        (m_end-m_start+1)/3);
 
     GLenum type;
     switch(m_type) {
@@ -31,6 +29,8 @@ void RenderSequence::draw(const TechniqueParams &params,
         type = GL_LINES;
         break;
     case Triangles:
+        Profile::Tracker::instance()->addToCounter("Triangles",
+            (m_end-m_start+1)/3);
         type = GL_TRIANGLES;
         break;
     default:

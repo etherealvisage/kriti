@@ -23,6 +23,7 @@ public:
 
     std::string techniqueName() const { return m_techniqueName; }
     boost::shared_ptr<Technique> technique() const { return m_technique; }
+    TechniqueParams &params() { return m_params; }
     const TechniqueParams &params() const { return m_params; }
 };
 

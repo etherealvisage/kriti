@@ -82,6 +82,13 @@ void Technique::setUniform(const std::string &name, int value) {
     }
 }
 
+void Technique::setUniform(const std::string &name, float value) {
+    GLint location = getUniformLocation(name);
+    if(location != -1) {
+        glUniform1f(location, value);
+    }
+}
+
 void Technique::setUniform(const std::string &name,
     boost::shared_ptr<Texture> texture) {
 

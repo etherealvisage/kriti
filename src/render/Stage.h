@@ -52,7 +52,7 @@ public:
     void addRenderable(boost::shared_ptr<Renderable> renderable);
     void removeRenderable(boost::shared_ptr<Renderable> renderable);
 
-    void render(bool isLast = false);
+    void render(TechniqueParams &globalParams, bool isLast = false);
 };
 
 }  // namespace Render

@@ -36,6 +36,7 @@ public:
 
     void setUniform(const std::string &name, const Math::Matrix &matrix);
     void setUniform(const std::string &name, int value);
+    void setUniform(const std::string &name, float value);
     void setUniform(const std::string &name,
         boost::shared_ptr<Texture> texture);
 

@@ -8,14 +8,38 @@ namespace Kriti {
 namespace GUI {
 
 double Scale::defaultWidth() {
-    return Interface::Video::instance()->aspectRatio()
-        / Interface::Video::instance()->width()
-        * Config::Tree::instance()->getDouble("gui.scale", 100.0);
+    return xscale() * Config::Tree::instance()->getDouble("gui.scale", 100.0);
 }
 
 double Scale::defaultHeight() {
-    return 2.0 / Interface::Video::instance()->height()
-        * Config::Tree::instance()->getDouble("gui.scale", 100.0);
+    return yscale() * Config::Tree::instance()->getDouble("gui.scale", 100.0);
+}
+
+Math::Vector Scale::padding() {
+    return Math::Vector(defaultWidth() / 10.0, defaultHeight() / 10.0);
+}
+
+Math::Vector Scale::perLayer() {
+    return Math::Vector(0.0, 0.0, 0.1);
+}
+
+double Scale::xscale() {
+    /*return (2*Interface::Video::instance()->aspectRatio())
+        / Interface::Video::instance()->width();*/
+    return 1.0 / Interface::Video::instance()->width();
+}
+
+double Scale::yscale() {
+    /*return 2.0 / Interface::Video::instance()->height();*/
+    return 1.0 / Interface::Video::instance()->height();
+}
+
+double Scale::xtotal() {
+    return 2*Interface::Video::instance()->aspectRatio();
+}
+
+double Scale::ytotal() {
+    return 2.0;
 }
 
 }  // namespace GUI

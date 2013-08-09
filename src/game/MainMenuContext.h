@@ -17,6 +17,9 @@
 #include "physics/World.h"
 #include "physics/ObjectForceModifier.h"
 
+#include "gui/Label.h"
+#include "gui/Panel.h"
+
 #include "TimeValue.h"
 
 namespace Kriti {
@@ -31,9 +34,12 @@ private:
     boost::shared_ptr<Object> m_playerObject, m_trackObject;
     boost::shared_ptr<Vehicle> m_vehicle;
     boost::shared_ptr<VehicleModel> m_vehicleModel;
+
     TimeValue m_lastTime;
 
     boost::shared_ptr<Render::Renderable> m_fpsDisplay;
+    boost::shared_ptr<GUI::Label> m_fpsLabel;
+    boost::shared_ptr<GUI::Panel> m_testPanel;
     std::queue<TimeValue> m_frames;
 public:
     MainMenuContext();

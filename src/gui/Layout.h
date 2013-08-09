@@ -18,7 +18,7 @@ public:
     Layout(Math::Vector stretch) : m_stretch(stretch) {}
     virtual ~Layout() {}
 
-    virtual Math::Vector stretch() const { return m_stretch; }
+    virtual Math::Vector stretch() { return m_stretch; }
 
     void addItem(boost::shared_ptr<LayoutItem> item)
         { m_items.push_back(item); }
