@@ -23,6 +23,9 @@ Math::Vector Label::minSize() {
     Math::Vector ul, lr;
     TextRenderer().size(m_font, m_text, ul, lr);
 
+    ul = ul * m_textScale;
+    lr = lr * m_textScale;
+
     return lr-ul;
 }
 

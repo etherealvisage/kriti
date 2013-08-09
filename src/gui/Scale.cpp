@@ -16,7 +16,7 @@ double Scale::defaultHeight() {
 }
 
 Math::Vector Scale::padding() {
-    return Math::Vector(defaultWidth() / 10.0, defaultHeight() / 10.0);
+    return Math::Vector(xscale() * 3, yscale() * 3);
 }
 
 Math::Vector Scale::perLayer() {

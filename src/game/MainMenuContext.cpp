@@ -25,6 +25,7 @@
 #include "gui/Font.h"
 #include "gui/TextRenderer.h"
 #include "gui/Scale.h"
+#include "gui/PackedLayout.h"
 
 #include "track/RandomGenerator.h"
 #include "track/ClosedSubdivider.h"
@@ -154,10 +155,21 @@ MainMenuContext::MainMenuContext() {
     Profile::Tracker::instance()->addCounter("Triangles");
 
     m_fpsLabel = boost::make_shared<GUI::Label>(
-        Math::Vector(), m_textStage, font, "This is a much longer label");
-    m_testPanel = boost::make_shared<GUI::Panel>(
-        Math::Vector(), Math::Vector(), m_textStage,
-        boost::shared_ptr<GUI::Layout>());
+        Math::Vector(1.0, 1.0), m_textStage, font, "This is a much longer label");
+    {
+        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_fpsLabel);
+        m_testPanel = boost::make_shared<GUI::Panel>(
+            Math::Vector(), Math::Vector(1,1), m_textStage,
+            layout);
+    }
+    {
+        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_testPanel);
+        m_testPanel = boost::make_shared<GUI::Panel>(
+            Math::Vector(), Math::Vector(1,1), m_textStage,
+            layout);
+    }
 }
 
 void MainMenuContext::run() {
@@ -185,14 +197,14 @@ void MainMenuContext::run() {
     tp.setParam("gui_xscale", GUI::Scale().xscale());
     tp.setParam("gui_yscale", GUI::Scale().yscale());
 
-    m_fpsLabel->update(
-        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5, 0.5),
-        Math::Vector(1.0, 0.5, 0.0),
-        Math::Vector(1.0, 1.0, 1.0));
     m_testPanel->update(
         Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5),
         Math::Vector(1.0, 0.5, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
+    /*m_fpsLabel->update(
+        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5, 0.5),
+        Math::Vector(1.0, 0.5, 0.0),
+        Math::Vector(1.0, 1.0, 1.0));*/
     /*if(m_frames.size() > 1) {
         m_fpsDisplay = GUI::TextRenderer().render(
             ResourceRegistry::instance()->get<GUI::Font>("ubuntu"),

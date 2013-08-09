@@ -11,7 +11,7 @@ namespace Kriti {
 namespace GUI {
 
 Math::Vector Panel::minSize() {
-    return m_minSize + Scale().padding()*2;
+    return m_minSize; // + Scale().padding()*2;
 }
 
 void Panel::updated() {
@@ -32,6 +32,7 @@ void Panel::updated() {
     
     /*m_layout->update(pos() + Scale().padding() + Scale().perLayer(),
         size() - Scale().padding()*2, scale());*/
+    m_layout->update(pos() + Scale().perLayer(), size(), scale());
 }
 
 }  // namespace GUI

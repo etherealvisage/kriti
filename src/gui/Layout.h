@@ -13,6 +13,7 @@ namespace GUI {
 class Layout : public LayoutItem {
 private:
     Math::Vector m_stretch;
+protected:
     std::vector<boost::shared_ptr<LayoutItem>> m_items;
 public:
     Layout(Math::Vector stretch) : m_stretch(stretch) {}
