@@ -24,9 +24,9 @@ void Panel::updated() {
         pos() + Math::Vector(size().x()),
         "gui_panel");
     m_renderable->renderSequence(0)->materialParams().setParam("panel_xscale",
-        scale().x() * (size().x() / Scale().xtotal()));
+        (size().x() / Scale().xtotal()) / scale().x());
     m_renderable->renderSequence(0)->materialParams().setParam("panel_yscale",
-        scale().y() * (size().y() / Scale().ytotal()));
+        (size().y() / Scale().ytotal()) / scale().y());
 
     m_stage->addRenderable(m_renderable);
     

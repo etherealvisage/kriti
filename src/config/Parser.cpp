@@ -65,7 +65,7 @@ void Parser::parseFile(const std::string &filename) {
         int iv;
         double dv;
         std::string sv;
-        if(ssv >> iv) {
+        if(value.back() != 'f' && ssv >> iv) {
             node.lock()->set(iv);
         }
         else if(ssv >> dv) {

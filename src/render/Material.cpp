@@ -37,12 +37,17 @@ bool Material::loadFrom(std::string identifier) {
             m_params.setParam(name, unode->asInt());
             break;
         }
+        case Config::TreeNode::Double: {
+            m_params.setParam(name, unode->asDouble());
+            break;
+        }
         case Config::TreeNode::Vector: {
             //m_params.addParam(name, unode->asInt());
             Message3(Render, Fatal, "vector uniforms in material spec NYI.");
             break;
         }
         case Config::TreeNode::String: {
+            Message3(Render, Debug, "string");
             m_params.setParam(name,
                 ResourceRegistry::instance()->get<Texture>(unode->asString()));
             break;

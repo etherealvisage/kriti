@@ -187,7 +187,7 @@ void MainMenuContext::run() {
     m_testPanel->update(
         Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, 0),
         Math::Vector(1.0, 0.5, 0.0),
-        Math::Vector(1.0, 1.0, 1.0));
+        Math::Vector(3.0, 3.0, 1.0));
     /*if(m_frames.size() > 1) {
         m_fpsDisplay = GUI::TextRenderer().render(
             ResourceRegistry::instance()->get<GUI::Font>("ubuntu"),
