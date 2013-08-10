@@ -147,7 +147,8 @@ MainMenuContext::MainMenuContext() {
     m_blendStage->addRenderable(Render::RenderableFactory().fromQuad(
         base, base+y, base+x+y, base+x, "overlay"));
 
-    m_pipeline->setLastStage(m_blendStage);
+    //m_pipeline->setLastStage(m_blendStage);
+    m_pipeline->setLastStage(m_textStage);
 
     Profile::Tracker::instance()->addTimer("Total");
     Profile::Tracker::instance()->addTimer("Rendering");
@@ -156,6 +157,10 @@ MainMenuContext::MainMenuContext() {
 
     m_fpsLabel = boost::make_shared<GUI::Label>(
         Math::Vector(1.0, 1.0), m_textStage, font, "This is a much longer label");
+    m_fpsLabel2 = boost::make_shared<GUI::Label>(
+        Math::Vector(1.0, 1.0), m_textStage, font, "This is a much longer label");
+    m_fpsLabel3 = boost::make_shared<GUI::Label>(
+        Math::Vector(1.0, 1.0), m_textStage, font, "This is yet another label...");
     {
         auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
         layout->addItem(m_fpsLabel);
@@ -167,6 +172,34 @@ MainMenuContext::MainMenuContext() {
         auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
         layout->addItem(m_testPanel);
         m_testPanel = boost::make_shared<GUI::Panel>(
+            Math::Vector(), Math::Vector(1,1), m_textStage,
+            layout);
+    }
+    {
+        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_testPanel);
+        m_testPanel = boost::make_shared<GUI::Panel>(
+            Math::Vector(), Math::Vector(1,1), m_textStage,
+            layout);
+    }
+    {
+        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_testPanel);
+        m_testPanel = boost::make_shared<GUI::Panel>(
+            Math::Vector(), Math::Vector(1,1), m_textStage,
+            layout);
+    }
+    {
+        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_fpsLabel2);
+        m_testPanel2 = boost::make_shared<GUI::Panel>(
+            Math::Vector(), Math::Vector(1,1), m_textStage,
+            layout);
+    }
+    {
+        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_fpsLabel3);
+        m_testPanel3 = boost::make_shared<GUI::Panel>(
             Math::Vector(), Math::Vector(1,1), m_textStage,
             layout);
     }
@@ -197,28 +230,25 @@ void MainMenuContext::run() {
     tp.setParam("gui_xscale", GUI::Scale().xscale());
     tp.setParam("gui_yscale", GUI::Scale().yscale());
 
-    m_fpsLabel->setText(
-            StreamAsString() << "FPS: " <<
-                m_frames.size()/(interval.toMsec()/1000.0));
+    m_fpsLabel->setText(StreamAsString() << "FPS: " <<
+        m_frames.size()/(interval.toMsec()/1000.0));
+
+    //Message3(Game, Debug, "Main update");
+
     m_testPanel->update(
-        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5),
+        Math::Vector(-2*Interface::Video::instance()->aspectRatio()/3.0, -0.5),
         Math::Vector(1.0, 0.5, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
-    /*m_fpsLabel->update(
-        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, -0.5, 0.5),
+
+    m_testPanel2->update(
+        Math::Vector(0.0, 0.5),
         Math::Vector(1.0, 0.5, 0.0),
-        Math::Vector(1.0, 1.0, 1.0));*/
-    /*if(m_frames.size() > 1) {
-        m_fpsDisplay = GUI::TextRenderer().render(
-            ResourceRegistry::instance()->get<GUI::Font>("ubuntu"),
-            StreamAsString() << "FPSygq_: " <<
-                m_frames.size()/(interval.toMsec()/1000.0)
-        );
-        m_fpsDisplay->scale() = 0.25;
-        m_fpsDisplay->location() = Math::Vector(
-            -Interface::Video::instance()->aspectRatio()/2.0, -1.0);
-        m_textStage->addRenderable(m_fpsDisplay);
-    }*/
+        Math::Vector(1.0, 1.0, 1.0));
+
+    m_testPanel3->update(
+        Math::Vector(-1.5, 0.5),
+        Math::Vector(1.0, 0.5, 0.0),
+        Math::Vector(1.0, 1.0, 1.0));
 
     Profile::Tracker::instance()->beginTimer("Physics");
     m_world->step(sinceLast);

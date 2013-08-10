@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <GL/glew.h>
 
 #include <boost/make_shared.hpp>
@@ -53,12 +55,9 @@ void Stage::addRenderable(boost::shared_ptr<Renderable> renderable) {
 }
 
 void Stage::removeRenderable(boost::shared_ptr<Renderable> renderable) {
-    for(unsigned i = 0; i < m_objects.size(); i ++) {
-        if(m_objects[i] == renderable) {
-            m_objects[i] = m_objects.back();
-            m_objects.pop_back();
-            return;
-        }
+    auto it = std::find(m_objects.begin(), m_objects.end(), renderable);
+    if(it != m_objects.end()) {
+        m_objects.erase(it);
     }
 }
 

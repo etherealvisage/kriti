@@ -2,6 +2,7 @@
 #define KRITI_RENDER__STAGE_H
 
 #include <vector>
+#include <list>
 #include <tuple>
 
 #include "Renderable.h"
@@ -17,7 +18,8 @@ class TextureContext;
 class Stage {
 private:
     std::vector<boost::shared_ptr<Stage>> m_previous;
-    std::vector<boost::shared_ptr<Renderable>> m_objects;
+    std::list<boost::shared_ptr<Renderable>> m_objects;
+    //std::vector<boost::shared_ptr<Renderable>> m_objects;
     SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
