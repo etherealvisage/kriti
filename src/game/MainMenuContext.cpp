@@ -147,8 +147,8 @@ MainMenuContext::MainMenuContext() {
     m_blendStage->addRenderable(Render::RenderableFactory().fromQuad(
         base, base+y, base+x+y, base+x, "overlay"));
 
-    //m_pipeline->setLastStage(m_blendStage);
-    m_pipeline->setLastStage(m_textStage);
+    m_pipeline->setLastStage(m_blendStage);
+    //m_pipeline->setLastStage(m_textStage);
 
     Profile::Tracker::instance()->addTimer("Total");
     Profile::Tracker::instance()->addTimer("Rendering");
@@ -164,27 +164,7 @@ MainMenuContext::MainMenuContext() {
     {
         auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
         layout->addItem(m_fpsLabel);
-        m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1), m_textStage,
-            layout);
-    }
-    {
-        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
-        layout->addItem(m_testPanel);
-        m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1), m_textStage,
-            layout);
-    }
-    {
-        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
-        layout->addItem(m_testPanel);
-        m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1), m_textStage,
-            layout);
-    }
-    {
-        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
-        layout->addItem(m_testPanel);
+        layout->addItem(m_fpsLabel2);
         m_testPanel = boost::make_shared<GUI::Panel>(
             Math::Vector(), Math::Vector(1,1), m_textStage,
             layout);
@@ -198,8 +178,17 @@ MainMenuContext::MainMenuContext() {
     }
     {
         auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_testPanel);
         layout->addItem(m_fpsLabel3);
-        m_testPanel3 = boost::make_shared<GUI::Panel>(
+        m_testPanel = boost::make_shared<GUI::Panel>(
+            Math::Vector(), Math::Vector(1,1), m_textStage,
+            layout);
+    }
+    {
+        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
+        layout->addItem(m_testPanel);
+        layout->addItem(m_testPanel2);
+        m_testPanel = boost::make_shared<GUI::Panel>(
             Math::Vector(), Math::Vector(1,1), m_textStage,
             layout);
     }
@@ -240,15 +229,10 @@ void MainMenuContext::run() {
         Math::Vector(1.0, 0.5, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
 
-    m_testPanel2->update(
+    /*m_testPanel2->update(
         Math::Vector(0.0, 0.5),
         Math::Vector(1.0, 0.5, 0.0),
-        Math::Vector(1.0, 1.0, 1.0));
-
-    m_testPanel3->update(
-        Math::Vector(-1.5, 0.5),
-        Math::Vector(1.0, 0.5, 0.0),
-        Math::Vector(1.0, 1.0, 1.0));
+        Math::Vector(1.0, 1.0, 1.0));*/
 
     Profile::Tracker::instance()->beginTimer("Physics");
     m_world->step(sinceLast);

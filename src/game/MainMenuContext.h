@@ -39,7 +39,7 @@ private:
 
     boost::shared_ptr<Render::Renderable> m_fpsDisplay;
     boost::shared_ptr<GUI::Label> m_fpsLabel, m_fpsLabel2, m_fpsLabel3;
-    boost::shared_ptr<GUI::Panel> m_testPanel, m_testPanel2, m_testPanel3;
+    boost::shared_ptr<GUI::Panel> m_testPanel, m_testPanel2;
     std::queue<TimeValue> m_frames;
 public:
     MainMenuContext();
