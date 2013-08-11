@@ -29,7 +29,7 @@ Math::Vector Label::minSize() {
     return lr-ul;
 }
 
-void Label::updated() {
+void Label::updated(boost::shared_ptr<OutlineRegistry> registry) {
     // TODO: re-use old renderable . . . this is expensive.
     if(m_renderable) m_stage->removeRenderable(m_renderable);
 

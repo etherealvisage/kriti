@@ -193,6 +193,15 @@ MainMenuContext::MainMenuContext() {
             Math::Vector(), Math::Vector(1,1), m_textStage,
             layout);
     }
+
+    m_outlineRegistry = boost::make_shared<GUI::OutlineRegistry>();
+    m_mouseInteractor = boost::make_shared<GUI::MouseInteractor>();
+
+    Interface::DeviceManager::instance()->mouseRouter()->motionSignal(
+        ).connect(
+            boost::bind(&GUI::MouseInteractor::updateMouseCoordinates,
+                m_mouseInteractor.get(), _1, _2)
+        );
 }
 
 void MainMenuContext::run() {
@@ -208,12 +217,8 @@ void MainMenuContext::run() {
 
     m_frames.push(current);
     while(m_frames.size() > 0 && m_frames.front() <= earliest) m_frames.pop();
-    if(m_fpsDisplay) m_textStage->removeRenderable(m_fpsDisplay);
+    //if(m_fpsDisplay) m_textStage->removeRenderable(m_fpsDisplay);
 
-    /*m_fpsLabel->update(
-        Math::Vector(-Interface::Video::instance()->aspectRatio()/2.0, 0),
-        Math::Vector(1.0, 1.0, 0.0),
-        Math::Vector(1.0, 1.0, 1.0));*/
     Render::TechniqueParams &tp =
         ResourceRegistry::instance()->get<Render::Material>(
             "gui_panel")->params();
@@ -226,10 +231,11 @@ void MainMenuContext::run() {
     //Message3(Game, Debug, "Main update");
 
     Profile::Tracker::instance()->beginTimer("GUI updating");
-    m_testPanel->update(
+    m_testPanel->update(m_outlineRegistry,
         Math::Vector(-2*Interface::Video::instance()->aspectRatio()/3.0, -0.5),
-        Math::Vector(1.0, 0.5, 0.0),
+        Math::Vector(1.0, 0.75, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
+    m_mouseInteractor->updateMouseActivation(m_outlineRegistry);
     Profile::Tracker::instance()->endTimer("GUI updating");
 
     Profile::Tracker::instance()->beginTimer("Physics");

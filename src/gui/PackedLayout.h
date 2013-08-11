@@ -20,7 +20,7 @@ public:
 
     virtual Math::Vector minSize();
 protected:
-    virtual void updated();
+    virtual void updated(boost::shared_ptr<OutlineRegistry> registry);
 };
 
 }  // namespace GUI

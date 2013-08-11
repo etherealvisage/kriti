@@ -8,7 +8,7 @@ namespace Kriti {
 namespace Render {
 
 VBO::VBO(BindType btype, UseType utype) : m_useType(utype), m_bindType(btype),
-    m_bufferID(0) {
+    m_bufferID(0), m_set(false) {
 }
 
 VBO::~VBO() {
@@ -18,8 +18,16 @@ VBO::~VBO() {
 }
 
 void VBO::setData2(const std::vector<Math::Vector> &data) {
-    m_dataType = GL_FLOAT;
-    m_dataWidth = 2;
+    if(!m_set) {
+        m_dataType = GL_FLOAT;
+        m_dataWidth = 2;
+        m_set = true;
+    }
+    else if(m_dataType != GL_FLOAT || m_dataWidth != 2) {
+        Message3(Render, Error,
+            "Attempting to update VBO with different data type");
+        return;
+    }
 
     float *memory = new float[data.size()*2];
     for(unsigned i = 0; i < data.size(); i ++) {
@@ -33,15 +41,33 @@ void VBO::setData2(const std::vector<Math::Vector> &data) {
 }
 
 void VBO::setData(const std::vector<unsigned int> &data) {
+    if(!m_set) {
+        m_dataType = GL_UNSIGNED_INT;
+        m_dataWidth = 1;
+        m_set = true;
+    }
+    else if(m_dataType != GL_UNSIGNED_INT || m_dataWidth != 1) {
+        Message3(Render, Error,
+            "Attempting to update VBO with different data type");
+        return;
+    }
     m_dataType = GL_UNSIGNED_INT;
     m_dataWidth = 1;
 
     makeVBO(&data[0], sizeof(unsigned int)*data.size());
 }
 
-void VBO::setData(const std::vector<Math::Vector> &data) {
-    m_dataType = GL_FLOAT;
-    m_dataWidth = 3;
+void VBO::setData3(const std::vector<Math::Vector> &data) {
+    if(!m_set) {
+        m_dataType = GL_FLOAT;
+        m_dataWidth = 3;
+        m_set = true;
+    }
+    else if(m_dataType != GL_FLOAT || m_dataWidth != 3) {
+        Message3(Render, Error,
+            "Attempting to update VBO with different data type");
+        return;
+    }
 
     float *memory = new float[data.size()*3];
     for(unsigned i = 0; i < data.size(); i ++) {
@@ -55,9 +81,17 @@ void VBO::setData(const std::vector<Math::Vector> &data) {
     delete[] memory;
 }
 
-void VBO::setData(const std::vector<Math::Vector> &data, float padding) {
-    m_dataType = GL_FLOAT;
-    m_dataWidth = 4;
+void VBO::setData4(const std::vector<Math::Vector> &data, float padding) {
+    if(!m_set) {
+        m_dataType = GL_FLOAT;
+        m_dataWidth = 4;
+        m_set = true;
+    }
+    else if(m_dataType != GL_FLOAT || m_dataWidth != 4) {
+        Message3(Render, Error,
+            "Attempting to update VBO with different data type");
+        return;
+    }
 
     float *memory = new float[data.size()*4];
     for(unsigned i = 0; i < data.size(); i ++) {
@@ -114,6 +148,9 @@ void VBO::makeVBO(const void *data, int byteSize) {
     }
     else if(m_useType == Streaming) {
         utype = GL_STREAM_DRAW;
+    }
+    else {
+        Message3(Render, Fatal, "Unknown VBO use type");
     }
 
     glBindBuffer(btype, m_bufferID);

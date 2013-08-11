@@ -21,15 +21,15 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
     boost::shared_ptr<VAO> vao(new VAO());
 
     boost::shared_ptr<VBO> vertexVBO(new VBO());
-    vertexVBO->setData(model->vertices());
+    vertexVBO->setData3(model->vertices());
     vao->addVBO(vertexVBO, VAO::Vertex);
 
     boost::shared_ptr<VBO> normalVBO(new VBO());
-    normalVBO->setData(model->normals());
+    normalVBO->setData3(model->normals());
     vao->addVBO(normalVBO, VAO::Normal);
 
     boost::shared_ptr<VBO> textureVBO(new VBO());
-    textureVBO->setData(model->texCoords());
+    textureVBO->setData2(model->texCoords());
     vao->addVBO(textureVBO, VAO::Texture);
 
     boost::shared_ptr<VBO> indexVBO(new VBO(VBO::Element));
@@ -71,15 +71,15 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     auto vao = boost::make_shared<VAO>();
 
     auto vertexVBO = boost::make_shared<VBO>();
-    vertexVBO->setData(vertices);
+    vertexVBO->setData3(vertices);
     vao->addVBO(vertexVBO, VAO::Vertex);
 
     auto normalVBO = boost::make_shared<VBO>();
-    normalVBO->setData(normals);
+    normalVBO->setData3(normals);
     vao->addVBO(normalVBO, VAO::Normal);
 
     auto textureVBO = boost::make_shared<VBO>();
-    textureVBO->setData(texs);
+    textureVBO->setData2(texs);
     vao->addVBO(textureVBO, VAO::Texture);
 
     auto indexVBO = boost::make_shared<VBO>(VBO::Element);
@@ -104,20 +104,20 @@ boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
     auto vao = boost::make_shared<VAO>();
 
     auto vertexVBO = boost::make_shared<VBO>();
-    vertexVBO->setData(vertices);
+    vertexVBO->setData3(vertices);
     vao->addVBO(vertexVBO, VAO::Vertex);
 
     // zero normals.
     std::vector<Math::Vector> normals;
     for(auto v : vertices) normals.push_back(Math::Vector());
     auto normalVBO = boost::make_shared<VBO>();
-    normalVBO->setData(normals);
+    normalVBO->setData3(normals);
     vao->addVBO(normalVBO, VAO::Normal);
 
     auto textureVBO = boost::make_shared<VBO>();
     std::vector<Math::Vector> texs;
     for(auto v : vertices) texs.push_back(Math::Vector());
-    textureVBO->setData(texs);
+    textureVBO->setData2(texs);
     vao->addVBO(textureVBO, VAO::Texture);
 
     std::vector<unsigned int> indices;
@@ -147,14 +147,14 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     vertices.push_back(p1);
     vertices.push_back(p3);
     vertices.push_back(p4);
-    vertexVBO->setData(vertices);
+    vertexVBO->setData3(vertices);
     vao->addVBO(vertexVBO, VAO::Vertex);
 
     // TODO: make these actual normals...
     std::vector<Math::Vector> normals;
     for(auto v : vertices) normals.push_back(Math::Vector());
     auto normalVBO = boost::make_shared<VBO>();
-    normalVBO->setData(normals);
+    normalVBO->setData3(normals);
     vao->addVBO(normalVBO, VAO::Normal);
 
     auto textureVBO = boost::make_shared<VBO>();
@@ -166,7 +166,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     texs.push_back(Math::Vector(0,0));
     texs.push_back(Math::Vector(1,1));
     texs.push_back(Math::Vector(1,0));
-    textureVBO->setData(texs);
+    textureVBO->setData2(texs);
     vao->addVBO(textureVBO, VAO::Texture);
 
     std::vector<unsigned int> indices;
@@ -197,15 +197,15 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuadGeometry(
     auto vao = boost::make_shared<VAO>();
 
     auto vertexVBO = boost::make_shared<VBO>();
-    vertexVBO->setData(vertices);
+    vertexVBO->setData3(vertices);
     vao->addVBO(vertexVBO, VAO::Vertex);
 
     auto normalVBO = boost::make_shared<VBO>();
-    normalVBO->setData(normals);
+    normalVBO->setData3(normals);
     vao->addVBO(normalVBO, VAO::Normal);
 
     auto textureVBO = boost::make_shared<VBO>();
-    textureVBO->setData(texs);
+    textureVBO->setData2(texs);
     vao->addVBO(textureVBO, VAO::Texture);
 
     auto indexVBO = boost::make_shared<VBO>(VBO::Element);

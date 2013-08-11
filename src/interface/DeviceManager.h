@@ -4,8 +4,10 @@
 #include <vector>
 
 #include "InputDevice.h"
-#include "event/EventQueue.h"
 #include "KeyboardRouter.h"
+#include "MouseRouter.h"
+
+#include "event/EventQueue.h"
 
 namespace Kriti {
 namespace Interface {
@@ -26,6 +28,7 @@ public:
     }
 private:
     KeyboardRouter *m_keyboardRouter;
+    MouseRouter *m_mouseRouter;
     std::vector<InputDevice *> m_deviceList;
     Event::EventQueue *m_queue;
 private:
@@ -34,6 +37,7 @@ public:
     ~DeviceManager();
 public:
     KeyboardRouter *keyboardRouter() const { return m_keyboardRouter; }
+    MouseRouter *mouseRouter() const { return m_mouseRouter; }
 
     void registerDevices();
 private:

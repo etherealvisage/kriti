@@ -1,5 +1,6 @@
 #include "DeviceManager.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 
 namespace Kriti {
 namespace Interface {
@@ -22,6 +23,11 @@ void DeviceManager::registerDevices() {
     Keyboard *keyboard = new Keyboard(m_queue, m_keyboardRouter);
     registerDevice(keyboard);
     keyboard->reloadMapping();
+
+    m_mouseRouter = new MouseRouter();
+    Mouse *mouse = new Mouse(m_queue, m_mouseRouter);
+    registerDevice(mouse);
+    mouse->reloadMapping();
 }
 
 void DeviceManager::registerDevice(InputDevice *device) {

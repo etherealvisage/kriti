@@ -12,11 +12,11 @@ public:
 #define KEYBOARD_SIGNAL(e, s) e,
 #include "KeyboardSignals.h"
 #undef KEYBOARD_SIGNAL
-        SIGNAL_NAMES
+        SignalNames
     };
 private:
     static const char *s_configNames[];
-    boost::signals2::signal<void (bool)> m_keySignals[SIGNAL_NAMES];
+    boost::signals2::signal<void (bool)> m_keySignals[SignalNames];
 public:
     const char *configName(SignalName signal) const
         { return s_configNames[signal]; }
