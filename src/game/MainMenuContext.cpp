@@ -89,7 +89,7 @@ MainMenuContext::MainMenuContext() {
     m_gameStage->addRenderable(m_playerObject->renderable());
 
     // generate track
-    Track::RandomGenerator rg(3);
+    Track::RandomGenerator rg(0);
 
     auto trackExtrusion = rg.generate(new Track::ClosedSubdivider(4),
         new Track::CylindricExtruder(1, 32));
@@ -153,6 +153,7 @@ MainMenuContext::MainMenuContext() {
     Profile::Tracker::instance()->addTimer("Total");
     Profile::Tracker::instance()->addTimer("Rendering");
     Profile::Tracker::instance()->addTimer("Physics");
+    Profile::Tracker::instance()->addTimer("GUI updating");
     Profile::Tracker::instance()->addCounter("Triangles");
 
     m_fpsLabel = boost::make_shared<GUI::Label>(
@@ -224,15 +225,12 @@ void MainMenuContext::run() {
 
     //Message3(Game, Debug, "Main update");
 
+    Profile::Tracker::instance()->beginTimer("GUI updating");
     m_testPanel->update(
         Math::Vector(-2*Interface::Video::instance()->aspectRatio()/3.0, -0.5),
         Math::Vector(1.0, 0.5, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
-
-    /*m_testPanel2->update(
-        Math::Vector(0.0, 0.5),
-        Math::Vector(1.0, 0.5, 0.0),
-        Math::Vector(1.0, 1.0, 1.0));*/
+    Profile::Tracker::instance()->endTimer("GUI updating");
 
     Profile::Tracker::instance()->beginTimer("Physics");
     m_world->step(sinceLast);

@@ -27,7 +27,8 @@ void Panel::updated() {
         (size().x() / Scale().xtotal()) / scale().x());
     m_renderable->renderSequence(0)->materialParams().setParam("panel_yscale",
         (size().y() / Scale().ytotal()) / scale().y());
-
+    m_renderable->renderSequence(0)->materialParams().setParam("panel_activation",
+        0.0);
 
     m_stage->addRenderable(m_renderable);
 
