@@ -26,6 +26,11 @@ public:
     double xtotal();
     /// how many vertical units for the viewport?
     double ytotal();
+
+    /// how many horizontal units for count pixels?
+    double fromPixelsX(int count);
+    /// how many vertical units for count pixels?
+    double fromPixelsY(int count);
 };
 
 }  // namespace GUI

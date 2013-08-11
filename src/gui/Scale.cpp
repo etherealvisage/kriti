@@ -42,5 +42,13 @@ double Scale::ytotal() {
     return 2.0;
 }
 
+double Scale::fromPixelsX(int count) {
+    return xscale() * count * xtotal();
+}
+
+double Scale::fromPixelsY(int count) {
+    return yscale() * count * ytotal();
+}
+
 }  // namespace GUI
 }  // namespace Kriti

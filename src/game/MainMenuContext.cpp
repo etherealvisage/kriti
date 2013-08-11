@@ -156,6 +156,9 @@ MainMenuContext::MainMenuContext() {
     Profile::Tracker::instance()->addTimer("GUI updating");
     Profile::Tracker::instance()->addCounter("Triangles");
 
+    m_quitButton = boost::make_shared<GUI::Button>(
+        Math::Vector(), Math::Vector(1.0, 1.0), m_textStage, font, "Quit");
+
     m_fpsLabel = boost::make_shared<GUI::Label>(
         Math::Vector(1.0, 1.0), m_textStage, font, "This is a much longer label");
     m_fpsLabel2 = boost::make_shared<GUI::Label>(
@@ -180,7 +183,7 @@ MainMenuContext::MainMenuContext() {
     {
         auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
         layout->addItem(m_testPanel);
-        layout->addItem(m_fpsLabel3);
+        layout->addItem(m_quitButton);
         m_testPanel = boost::make_shared<GUI::Panel>(
             Math::Vector(), Math::Vector(1,1), m_textStage,
             layout);
@@ -205,6 +208,24 @@ MainMenuContext::MainMenuContext() {
         ).connect(
             boost::bind(&GUI::MouseInteractor::updateMouseCoordinates,
                 m_mouseInteractor.get(), _1, _2)
+        );
+    Interface::DeviceManager::instance()->mouseRouter()->buttonSignal(
+            Interface::MouseRouter::LeftButton
+        ).connect(
+            boost::bind(&GUI::MouseInteractor::updateMouseButton,
+                m_mouseInteractor.get(), 0, _1)
+        );
+    Interface::DeviceManager::instance()->mouseRouter()->buttonSignal(
+            Interface::MouseRouter::MiddleButton
+        ).connect(
+            boost::bind(&GUI::MouseInteractor::updateMouseButton,
+                m_mouseInteractor.get(), 1, _1)
+        );
+    Interface::DeviceManager::instance()->mouseRouter()->buttonSignal(
+            Interface::MouseRouter::RightButton
+        ).connect(
+            boost::bind(&GUI::MouseInteractor::updateMouseButton,
+                m_mouseInteractor.get(), 2, _1)
         );
 
     m_mouseCursor = boost::make_shared<GUI::MouseCursor>();
@@ -232,11 +253,20 @@ void MainMenuContext::run() {
     while(m_frames.size() > 0 && m_frames.front() <= earliest) m_frames.pop();
     //if(m_fpsDisplay) m_textStage->removeRenderable(m_fpsDisplay);
 
-    Render::TechniqueParams &tp =
-        ResourceRegistry::instance()->get<Render::Material>(
-            "gui_panel")->params();
-    tp.setParam("gui_xscale", GUI::Scale().xscale());
-    tp.setParam("gui_yscale", GUI::Scale().yscale());
+    {
+        Render::TechniqueParams &tp =
+            ResourceRegistry::instance()->get<Render::Material>(
+                "gui_panel")->params();
+        tp.setParam("gui_xscale", GUI::Scale().xscale());
+        tp.setParam("gui_yscale", GUI::Scale().yscale());
+    }
+    {
+        Render::TechniqueParams &tp =
+            ResourceRegistry::instance()->get<Render::Material>(
+                "gui_button")->params();
+        tp.setParam("gui_xscale", GUI::Scale().xscale());
+        tp.setParam("gui_yscale", GUI::Scale().yscale());
+    }
 
     m_fpsLabel->setText(StreamAsString() << "FPS: " <<
         m_frames.size()/(interval.toMsec()/1000.0));

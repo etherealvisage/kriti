@@ -8,10 +8,13 @@ namespace GUI {
 
 class MouseInteractor {
 private:
-    int m_mouseX, m_mouseY;
+    int m_mouseX, m_mouseY, m_buttons;
     boost::weak_ptr<LayoutItem> m_lastHover;
 public:
+    MouseInteractor() : m_buttons(0) {}
+
     void updateMouseCoordinates(int x, int y);
+    void updateMouseButton(int which, bool value);
 
     void updateMouseActivation(boost::shared_ptr<OutlineRegistry> registry);
 };
