@@ -193,6 +193,10 @@ MainMenuContext::MainMenuContext() {
             Math::Vector(), Math::Vector(1,1), m_textStage,
             layout);
     }
+    {
+        m_scaler = boost::make_shared<GUI::ItemScaler>();
+        m_scaler->setChild(m_testPanel);
+    }
 
     m_outlineRegistry = boost::make_shared<GUI::OutlineRegistry>();
     m_mouseInteractor = boost::make_shared<GUI::MouseInteractor>();
@@ -240,10 +244,14 @@ void MainMenuContext::run() {
     //Message3(Game, Debug, "Main update");
 
     Profile::Tracker::instance()->beginTimer("GUI updating");
-    m_testPanel->update(m_outlineRegistry,
+    //m_testPanel->update(m_outlineRegistry,
+    m_scaler->update(m_outlineRegistry,
         Math::Vector(-2*Interface::Video::instance()->aspectRatio()/3.0, -0.5),
         Math::Vector(1.0, 0.75, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
+
+    m_scaler->setFactor(m_scaler->factor() / 1.001);
+
     m_mouseInteractor->updateMouseActivation(m_outlineRegistry);
     Profile::Tracker::instance()->endTimer("GUI updating");
 

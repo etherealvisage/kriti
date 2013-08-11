@@ -21,6 +21,7 @@
 #include "gui/Panel.h"
 #include "gui/MouseInteractor.h"
 #include "gui/MouseCursor.h"
+#include "gui/ItemScaler.h"
 
 #include "TimeValue.h"
 
@@ -45,6 +46,7 @@ private:
     boost::shared_ptr<GUI::Panel> m_testPanel, m_testPanel2;
     boost::shared_ptr<GUI::MouseInteractor> m_mouseInteractor;
     boost::shared_ptr<GUI::MouseCursor> m_mouseCursor;
+    boost::shared_ptr<GUI::ItemScaler> m_scaler;
     std::queue<TimeValue> m_frames;
 public:
     MainMenuContext();

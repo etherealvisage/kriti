@@ -43,10 +43,8 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
     m_stage->addRenderable(m_renderable);
 
     if(m_layout) m_layout->update(registry,
-        pos() + Scale().padding() + Scale().perLayer(),
-        size() - Scale().padding()*2, scale());
-    
-    //m_layout->update(pos() + Scale().perLayer(), size(), scale());
+        pos() + Scale().padding()*scale() + Scale().perLayer(),
+        size() - Scale().padding()*scale()*2, scale());
 }
 
 }  // namespace GUI

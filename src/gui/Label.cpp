@@ -37,11 +37,11 @@ void Label::updated(boost::shared_ptr<OutlineRegistry> registry) {
 
     Math::Vector ul, lr;
     TextRenderer().size(m_font, m_text, ul, lr);
-    ul = ul * m_textScale;
-    lr = lr * m_textScale;
+    ul = ul * m_textScale * scale();
+    lr = lr * m_textScale * scale();
 
-    double hspace = size().x() - (lr.x() - ul.x());
-    double vspace = size().y() - (lr.y() - ul.y());
+    double hspace = (size().x() - (lr.x() - ul.x()));
+    double vspace = (size().y() - (lr.y() - ul.y()));
 
     Math::Vector offset;
     switch(m_halign) {
