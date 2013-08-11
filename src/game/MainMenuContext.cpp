@@ -202,6 +202,15 @@ MainMenuContext::MainMenuContext() {
             boost::bind(&GUI::MouseInteractor::updateMouseCoordinates,
                 m_mouseInteractor.get(), _1, _2)
         );
+
+    m_mouseCursor = boost::make_shared<GUI::MouseCursor>();
+    m_blendStage->addRenderable(m_mouseCursor->renderable());
+
+    Interface::DeviceManager::instance()->mouseRouter()->motionSignal(
+        ).connect(
+            boost::bind(&GUI::MouseCursor::updateMouseCoordinates,
+                m_mouseCursor.get(), _1, _2)
+        );
 }
 
 void MainMenuContext::run() {

@@ -9,6 +9,6 @@ uniform sampler2D baseStage, overlayStage;
 void main() {
     vec4 base = texture(baseStage, v_tex);
     vec4 overlay = texture(overlayStage, v_tex);
-    fragColour = mix(base, overlay, overlay.a);
+    fragColour = mix(base, overlay, overlay.a*0.9f);
     fragColour.a = 1.0f;
 }

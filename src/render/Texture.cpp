@@ -42,7 +42,8 @@ bool Texture::loadFrom(std::string identifier) {
     m_width = result->w;
     m_height = result->h;
 
-    auto fmt = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+    //auto fmt = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
+    auto fmt = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
     SDL_Surface *conv = SDL_ConvertSurface(result, fmt, 0);
 
     glBindTexture(GL_TEXTURE_2D, m_id);

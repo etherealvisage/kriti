@@ -40,7 +40,6 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
     m_renderable->renderSequence(0)->materialParams().setParam(
         "panel_activation", m_activation);
 
-
     m_stage->addRenderable(m_renderable);
 
     if(m_layout) m_layout->update(registry,

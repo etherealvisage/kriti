@@ -43,6 +43,8 @@ void Video::initializeSDL() {
         Message3(Interface, Fatal, "Failed to initialize SDL_image: "
             << IMG_GetError());
     }
+
+    SDL_ShowCursor(0);
 }
 
 void Video::setVideoMode() {

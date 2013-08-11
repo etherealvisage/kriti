@@ -29,9 +29,9 @@ void main() {
     }*/
 
     if(xdist <= 5.0f || ydist <= 5.0f) {
-        vec4 activated = vec4(0.5f, 0.5f, 0.0f, 1.0f);
+        vec4 activated = vec4(1.0f, 1.0f, 0.0f, 1.0f);
         vec4 deactivated = vec4(0.1f, 0.1f, 0.0f, 1.0f);
-        vec4 border = mix(activated, deactivated, panel_activation);
+        vec4 border = mix(deactivated, activated, panel_activation);
         fragColour = mix(vec4(0.3f, 0.3f, 0.0f, 1.0f), border,
             distance(5.0f, min(xdist,ydist)) / 5.0f);
     }
