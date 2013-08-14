@@ -125,9 +125,6 @@ MainMenuContext::MainMenuContext() {
     /* set up text/blending pipeline stages. */
     m_guiStage = ResourceRegistry::get<Render::Stage>("gui");
     double aratio = Interface::Video::instance()->aspectRatio();
-    m_guiStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
-        aratio*2, 2.0, 0.1, 1000.0
-    ));
     m_guiStage->camera()->step(0.0);
 
     auto font = ResourceRegistry::get<GUI::Font>("ubuntu");
@@ -139,9 +136,6 @@ MainMenuContext::MainMenuContext() {
     //m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "baseStage");
     //m_blendStage->addMapping(1, Render::Framebuffer::ColourBuffer0, "overlayStage");
 
-    m_blendStage->camera()->setProjection(Math::ViewGenerator().orthogonal(
-        aratio*2, 2.0, 0.1, 1000.0
-    ));
     m_blendStage->camera()->step(0.0);
 
     Math::Vector base(-aratio, -1.0), x(aratio*2,0), y(0,2.0);

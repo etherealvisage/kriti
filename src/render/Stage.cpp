@@ -13,6 +13,11 @@
 
 #include "profile/Tracker.h"
 
+#include "math/ViewGenerator.h"
+
+// HACK: shouldn't have this dependency on the GUI module...
+#include "gui/Scale.h"
+
 #include "MessageSystem.h"
 #include "ResourceRegistry.h"
 #include "XMLResource.h"
@@ -89,6 +94,20 @@ bool Stage::loadFrom(std::string identifier) {
         std::string uniform = child.attribute("to").as_string();
 
         addMapping(from, which, uniform);
+    }
+
+    // HACK: shouldn't have this dependency on the GUI module...
+    auto projection = node.child("projection");
+    if(projection) {
+        std::string type = projection.text().as_string("");
+
+        if(type == "gui") {
+            m_camera.setProjection(Math::ViewGenerator().orthogonal(
+                GUI::Scale().xtotal(), GUI::Scale().ytotal(), 0.1, 1000.0));
+        }
+        else {
+            Message3(Render, Error, "Unknown projection specified");
+        }
     }
 
     return true;
