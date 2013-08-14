@@ -5,12 +5,28 @@
 #include "math/ViewGenerator.h"
 
 #include "MessageSystem.h"
-
+#include "ResourceRegistry.h"
+#include "XMLResource.h"
 
 namespace Kriti {
 namespace Render {
 
-Pipeline::Pipeline() {
+bool Pipeline::loadFrom(std::string identifier) {
+    std::string stageName = ResourceRegistry::get<XMLResource>(
+            "data"
+        )->doc().first_element_by_path(
+            "/kriti/render/"
+        ).find_child_by_attribute(
+            "pipeline", "name", identifier.c_str()
+        ).attribute("last").as_string("");
+
+    if(stageName == "") return false;
+
+    m_lastStage = ResourceRegistry::get<Stage>(stageName);
+
+    if(!m_lastStage) return false;
+
+    return true;
 }
 
 void Pipeline::render() {

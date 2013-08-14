@@ -9,16 +9,20 @@
 
 #include "Stage.h"
 
+#include "Resource.h"
+
 namespace Kriti {
 namespace Render {
 
-class Pipeline {
+class Pipeline : public Resource {
 private:
+    std::string m_name;
+
     boost::shared_ptr<Stage> m_lastStage;
 
     std::set<boost::shared_ptr<Stage>> m_rendered;
 public:
-    Pipeline();
+    virtual bool loadFrom(std::string identifier);
 
     void setLastStage(boost::shared_ptr<Stage> lastStage)
         { m_lastStage = lastStage; }

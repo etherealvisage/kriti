@@ -1,3 +1,4 @@
+#include <cstring>
 #include <algorithm>
 
 #include <GL/glew.h>
@@ -13,32 +14,84 @@
 #include "profile/Tracker.h"
 
 #include "MessageSystem.h"
+#include "ResourceRegistry.h"
+#include "XMLResource.h"
 
 namespace Kriti {
 namespace Render {
 
+Stage::Stage() {}
+
 Stage::Stage(int outputs, int width, int height, std::string name)
     : m_name(name) {
+    
+    Message3(Render, Debug, "Making new Stage (!)");
 
-    if(width == -1) width = Interface::Video::instance()->width();
-    if(height == -1) height = Interface::Video::instance()->height();
-    m_width = width, m_height = height;
+    initialize(outputs, width, height);
+}
 
-    m_framebuffer = boost::make_shared<Framebuffer>();
+bool Stage::loadFrom(std::string identifier) {
+    auto node = ResourceRegistry::get<XMLResource>(
+            "data"
+        )->doc().first_element_by_path(
+            "/kriti/render/"
+        ).find_child_by_attribute(
+            "stage", "name", identifier.c_str());
 
-    for(int i = 0; i < outputs; i ++) {
-        m_framebuffer->attach(
-            Framebuffer::Attachment(Framebuffer::ColourBuffer0 + i),
-            boost::make_shared<Texture>(Texture::Colour, m_width,
-                m_height));
+    if(!node) return false;
+
+    m_name = identifier;
+
+    int outputs = node.child("outputs").text().as_int(1);
+    int width = -1, height = -1;
+    // TODO: support loading width/height from XML resource
+
+    initialize(outputs, width, height);
+
+    // add previous
+    for(auto child : node.children()) {
+        if(std::strcmp(child.name(), "previous")) continue;
+
+        std::string pname = child.text().as_string("");
+        auto prev = ResourceRegistry::get<Stage>(pname);
+        if(!prev) {
+            Message3(Render, Error, "Couldn't find previous stage " << pname);
+            continue;
+        }
+
+        addPrevious(prev);
     }
-    m_framebuffer->attach(Framebuffer::DepthBuffer, 
-        boost::make_shared<Renderbuffer>(Renderbuffer::Depth, m_width,
-            m_height));
 
-    m_textureContext = boost::make_shared<TextureContext>();
+    for(auto child : node.children()) {
+        if(std::strcmp(child.name(), "map")) continue;
 
-    Profile::Tracker::instance()->addGLTimer(name);
+        std::string fromString = child.attribute("from").as_string();
+        int from = 0;
+        for(; from < m_previous.size(); from ++)
+            if(m_previous[from]->name() == fromString) break;
+        if(from == m_previous.size()) {
+            Message3(Render, Error, "No previous stage " << fromString);
+            continue;
+        }
+
+        std::string whichString = child.attribute("which").as_string();
+        Framebuffer::Attachment which;
+        if(whichString == "colour0") which = Framebuffer::ColourBuffer0;
+        else if(whichString == "colour1") which = Framebuffer::ColourBuffer1;
+        else if(whichString == "colour2") which = Framebuffer::ColourBuffer2;
+        else if(whichString == "colour3") which = Framebuffer::ColourBuffer3;
+        else if(whichString == "depth") which = Framebuffer::DepthBuffer;
+        else {
+            Message3(Render, Debug, "Unknown attachment: " << whichString);
+            continue;
+        }
+        //std::string materialString = child.attribute("material").as_string();
+        std::string uniform = child.attribute("to").as_string();
+
+        addMapping(from, which, uniform);
+    }
+
+    return true;
 }
 
 void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
@@ -92,6 +145,28 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
     }
     m_textureContext->clearBindings();
     Profile::Tracker::instance()->endGLTimer(m_name);
+}
+
+void Stage::initialize(int outputs, int width, int height) {
+    if(width == -1) width = Interface::Video::instance()->width();
+    if(height == -1) height = Interface::Video::instance()->height();
+    m_width = width, m_height = height;
+
+    m_framebuffer = boost::make_shared<Framebuffer>();
+
+    for(int i = 0; i < outputs; i ++) {
+        m_framebuffer->attach(
+            Framebuffer::Attachment(Framebuffer::ColourBuffer0 + i),
+            boost::make_shared<Texture>(Texture::Colour, m_width,
+                m_height));
+    }
+    m_framebuffer->attach(Framebuffer::DepthBuffer, 
+        boost::make_shared<Renderbuffer>(Renderbuffer::Depth, m_width,
+            m_height));
+
+    m_textureContext = boost::make_shared<TextureContext>();
+
+    Profile::Tracker::instance()->addGLTimer(m_name);
 }
 
 }  // namespace Render

@@ -10,16 +10,17 @@
 
 #include "Framebuffer.h"
 
+#include "Resource.h"
+
 namespace Kriti {
 namespace Render {
 
 class TextureContext;
 
-class Stage {
+class Stage : public Resource {
 private:
     std::vector<boost::shared_ptr<Stage>> m_previous;
     std::list<boost::shared_ptr<Renderable>> m_objects;
-    //std::vector<boost::shared_ptr<Renderable>> m_objects;
     SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
@@ -33,8 +34,11 @@ private:
     int m_width, m_height;
     std::string m_name;
 public:
+    Stage();
     Stage(int outputs, int width, int height, std::string name);
     Stage(std::string name) : Stage(1, -1, -1, name) {}
+
+    virtual bool loadFrom(std::string identifier);
 
     SceneCamera *camera() { return &m_camera; }
 
@@ -45,16 +49,20 @@ public:
         { return m_previous[which]; }
     int previousCount() const { return m_previous.size(); }
 
+    void addRenderable(boost::shared_ptr<Renderable> renderable);
+    void removeRenderable(boost::shared_ptr<Renderable> renderable);
+
     void addMapping(int previousIndex, Framebuffer::Attachment attachment,
         std::string uniformName);
 
     boost::shared_ptr<Framebuffer> framebuffer() const
         { return m_framebuffer; }
 
-    void addRenderable(boost::shared_ptr<Renderable> renderable);
-    void removeRenderable(boost::shared_ptr<Renderable> renderable);
+    std::string name() const { return m_name; }
 
     void render(Uniforms &globalParams, bool isLast = false);
+private:
+    void initialize(int outputs, int width, int height);
 };
 
 }  // namespace Render

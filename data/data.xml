@@ -15,7 +15,7 @@
 <materials>
     <material name="track">
         <vertex-shader>simple</vertex-shader>
-        <fragment-shader>perlin_track</fragment-shader>
+        <fragment-shader>cylinder_track</fragment-shader>
     </material>
 
     <material name="simple">
@@ -72,21 +72,22 @@
     <stage name="game">
         <!-- No previous passes etc. -->
         <!-- Projection handled in code. -->
+        <!-- Only one output. -->
     </stage>
     <stage name="gui">
         <projection>gui</projection>
     </stage>
-    <stage name="game-overlay">
+    <stage name="blend">
         <previous>game</previous>
         <previous>gui</previous>
 
         <projection>gui</projection>
 
-        <map from="game" which="colour0" for="overlay" to="game" />
-        <map from="gui" which="colour0" for="overlay" to="gui" />
+        <map from="game" which="colour0" material="overlay" to="baseStage" />
+        <map from="gui" which="colour0" material="overlay" to="overlayStage" />
     </stage>
 
-    <pipeline name="game" last="game-overlay" />
+    <pipeline name="game" last="blend" />
 </render>
 
 <guis>
