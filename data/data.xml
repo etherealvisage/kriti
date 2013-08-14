@@ -100,7 +100,7 @@
 
     <gui name="main-menu">
         <widget type="panel">
-            <layout type="packed" align="vertical" />
+            <layout type="packed" direction="vertical" />
             <widget type="button" name="main-menu-start">
                 <font>ubuntu</font>
                 <min-size width="0" height="0" />

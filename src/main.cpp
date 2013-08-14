@@ -15,6 +15,7 @@
 #include "context/ContextManager.h"
 #include "game/MainMenuContext.h"
 #include "profile/Tracker.h"
+#include "gui/Loader.h"
 
 #include "XMLResource.h"
 
@@ -47,6 +48,9 @@ int main() {
     // create input devices.
     dmanager->registerDevices();
 
+    // initialize GUI system
+    GUI::Loader::instance();
+
     // initialize context manager
     Context::ContextManager::instance();
 
@@ -56,11 +60,14 @@ int main() {
 
     Context::ContextManager::instance()->pushContext("Game::MainMenuContext");
     
+    
     // run the rest of the program.
     Context::ContextManager::instance()->loop();
 
     // clean up.
     Context::ContextManager::destroy();
+
+    GUI::Loader::destroy();
 
     Interface::Video::destroy();
     Interface::DeviceManager::destroy();
