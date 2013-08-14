@@ -5,7 +5,7 @@
 #include <boost/make_shared.hpp>
 
 #include "Stage.h"
-#include "TechniqueParams.h"
+#include "Uniforms.h"
 #include "TextureContext.h"
 
 #include "interface/Video.h"
@@ -61,7 +61,7 @@ void Stage::removeRenderable(boost::shared_ptr<Renderable> renderable) {
     }
 }
 
-void Stage::render(TechniqueParams &globalParams, bool isLast) {
+void Stage::render(Uniforms &globalParams, bool isLast) {
     Profile::Tracker::instance()->beginGLTimer(m_name);
     auto cameraMatrix = m_camera.matrix();
 

@@ -27,7 +27,7 @@ Texture::~Texture() {
 }
 
 bool Texture::loadFrom(std::string identifier) {
-    auto file = ResourceRegistry::instance()->get<FileResource>(
+    auto file = ResourceRegistry::get<FileResource>(
         "textures/" + identifier + ".png");
 
     std::string contents = file->fileContent();

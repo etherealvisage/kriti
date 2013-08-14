@@ -14,7 +14,7 @@ void Renderable::addRenderSequence(
     m_sequences.push_back(sequence);
 }
 
-void Renderable::draw(const TechniqueParams &params,
+void Renderable::draw(const Uniforms &params,
     boost::shared_ptr<TextureContext> textureContext) {
 
     Math::AffineTransformation at;

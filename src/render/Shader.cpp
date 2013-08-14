@@ -19,8 +19,7 @@ Shader::~Shader() {
 
 bool Shader::loadFrom(std::string identifier) {
     boost::shared_ptr<FileResource> shaderFile
-        = ResourceRegistry::instance()->get<FileResource>(
-            "shaders/" + identifier);
+        = ResourceRegistry::get<FileResource>("shaders/" + identifier);
     // Determine what type of shader this is.
     bool isVertex = boost::algorithm::ends_with(identifier, ".vert");
     bool isFrag = boost::algorithm::ends_with(identifier, ".frag");

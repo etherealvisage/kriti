@@ -1,7 +1,6 @@
 #include <boost/make_shared.hpp>
 
 #include "RenderableFactory.h"
-#include "Technique.h"
 #include "ResourceRegistry.h"
 
 #include "VAO.h"
@@ -38,7 +37,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
 
     /* Create RenderSequence objects. */
     for(auto ms : model->sequences()) {
-        auto material = ResourceRegistry::instance()->get<Material>(
+        auto material = ResourceRegistry::get<Material>(
             ms.materialName());
         boost::shared_ptr<RenderSequence> rs(new RenderSequence(material, vao,
             ms.start(), ms.end()));
@@ -87,7 +86,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
     vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
-        ResourceRegistry::instance()->get<Material>(material), vao, 0,
+        ResourceRegistry::get<Material>(material), vao, 0,
         tris.size()-1));
 
     Message3(Render, Debug, "Created Renderable from tri geom: "
@@ -127,7 +126,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
     vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
-        ResourceRegistry::instance()->get<Material>(material), vao, 0,
+        ResourceRegistry::get<Material>(material), vao, 0,
         vertices.size()-1, RenderSequence::Lines));
 
     return renderable;
@@ -181,7 +180,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     vao->addVBO(indexVBO, VAO::Element);
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
-        ResourceRegistry::instance()->get<Material>(material), vao, 0,
+        ResourceRegistry::get<Material>(material), vao, 0,
         indices.size()-1));
 
     return renderable;
@@ -224,7 +223,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuadGeometry(
 
 
     renderable->addRenderSequence(boost::make_shared<RenderSequence>(
-        ResourceRegistry::instance()->get<Material>(material), vao, 0,
+        ResourceRegistry::get<Material>(material), vao, 0,
         tris.size()-1));
 
     /*Message3(Render, Debug, "Created Renderable from quad geom: "

@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "RenderSequence.h"
-#include "TechniqueParams.h"
+#include "Uniforms.h"
 
 #include "math/Vector.h"
 #include "math/Quaternion.h"
@@ -28,7 +28,7 @@ public:
     int renderSequenceCount() const { return m_sequences.size(); }
     void clearRenderSequences() { m_sequences.clear(); }
 
-    void draw(const TechniqueParams &params,
+    void draw(const Uniforms &params,
         boost::shared_ptr<TextureContext> textureContext);
 
     Math::Vector &location() { return m_location; }

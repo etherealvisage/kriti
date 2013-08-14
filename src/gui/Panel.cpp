@@ -25,9 +25,9 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
         pos() + size(),
         pos() + Math::Vector(size().x()),
         "gui_panel");
-    m_renderable->renderSequence(0)->materialParams().setParam("panel_xscale",
+    m_renderable->renderSequence(0)->extraParams().setParam("panel_xscale",
         (size().x() / Scale().xtotal()) / scale().x());
-    m_renderable->renderSequence(0)->materialParams().setParam("panel_yscale",
+    m_renderable->renderSequence(0)->extraParams().setParam("panel_yscale",
         (size().y() / Scale().ytotal()) / scale().y());
 
     if(mouseState().posSet()) {
@@ -37,7 +37,7 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
         m_activation *= 0.5;
     }
 
-    m_renderable->renderSequence(0)->materialParams().setParam(
+    m_renderable->renderSequence(0)->extraParams().setParam(
         "panel_activation", m_activation);
 
     m_stage->addRenderable(m_renderable);

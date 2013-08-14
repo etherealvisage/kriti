@@ -6,36 +6,38 @@
 
 #include "render/Texture.h"
 
-#include "config/Tree.h"
-
 #include "MessageSystem.h"
 #include "ResourceRegistry.h"
 #include "FileResource.h"
+#include "XMLResource.h"
 
 namespace Kriti {
 namespace GUI {
 
 bool Font::loadFrom(std::string identifier) {
     Message3(GUI, Debug, "Loading font \"" << identifier << "\"");
-    auto ctree = Config::Tree::instance();
-    m_materialName 
-        = ctree->getString("fonts." + identifier + ".material_name");
+    const pugi::xml_node &fontNode =
+        ResourceRegistry::get<XMLResource>(
+        "data")->doc().first_element_by_path(
+        "/kriti/fonts").find_child_by_attribute(
+        "font", "name", identifier.c_str());
+
+    m_materialName = fontNode.child("material").text().as_string("");
 
     if(m_materialName == "") return false;
 
-    std::string desc_name
-        = ctree->getString("fonts." + identifier + ".description_name");
+    std::string desc_name = fontNode.child("description").text().as_string("");
 
-    auto desc = ResourceRegistry::instance()->get<FileResource>(  
-        "fonts/" + desc_name);
+    auto desc = ResourceRegistry::get<FileResource>(  
+        "fonts/" + desc_name + ".txt");
     if(!desc) return false;
 
     std::istringstream iss(desc->fileContent());
 
     int texture_width
-        = ctree->getInt("fonts." + identifier + ".texture_width");
+        = fontNode.child("texture").attribute("width").as_int(0);
     int texture_height
-        = ctree->getInt("fonts." + identifier + ".texture_height");
+        = fontNode.child("texture").attribute("height").as_int(0);
 
     int id;
     CharSpec cs;

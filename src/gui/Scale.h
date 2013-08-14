@@ -17,9 +17,9 @@ public:
     /// z-spacing between elements layered on top of each other
     Math::Vector perLayer();
 
-    /// at GUI scale 1.0, how many horizontal units per pixel?
+    /// what percentage of the screen is one horizontal pixel unit?
     double xscale();
-    /// at GUI scale 1.0, how many vertical units per pixel?
+    /// what percentage of the screen is one vertical pixel unit?
     double yscale();
 
     /// how many horizontal units for the viewport?

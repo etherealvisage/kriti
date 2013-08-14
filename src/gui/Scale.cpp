@@ -2,17 +2,24 @@
 
 #include "interface/Video.h"
 
-#include "config/Tree.h"
+#include "ResourceRegistry.h"
+#include "XMLResource.h"
 
 namespace Kriti {
 namespace GUI {
 
 double Scale::defaultWidth() {
-    return xscale() * Config::Tree::instance()->getDouble("gui.scale", 100.0);
+    return xscale() *
+        ResourceRegistry::get<XMLResource>(
+        "config")->doc().first_element_by_path(
+        "/kriti/gui/scale").text().as_double(100.0);
 }
 
 double Scale::defaultHeight() {
-    return yscale() * Config::Tree::instance()->getDouble("gui.scale", 100.0);
+    return yscale() *
+        ResourceRegistry::get<XMLResource>(
+        "config")->doc().first_element_by_path(
+        "/kriti/gui/scale").text().as_double(100.0);
 }
 
 Math::Vector Scale::padding() {

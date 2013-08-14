@@ -5,7 +5,6 @@
 #include "MainMenuContext.h"
 #include "Object.h"
 
-
 #include "context/ContextManager.h"
 
 #include "interface/DeviceManager.h"
@@ -76,7 +75,7 @@ MainMenuContext::MainMenuContext() {
 
     m_playerObject = boost::make_shared<Object>();
     m_playerObject->setRenderable(Render::RenderableFactory().fromModel(
-        ResourceRegistry::instance()->get<Render::Model>("vehicle4")));
+        ResourceRegistry::get<Render::Model>("vehicle4")));
 
     m_playerObject->setPhysical(
         Physics::ObjectFactory().makeBox(1.0, 1.0, 0.3, 2.0));
@@ -129,7 +128,7 @@ MainMenuContext::MainMenuContext() {
     ));
     m_textStage->camera()->step(0.0);
 
-    auto font = ResourceRegistry::instance()->get<GUI::Font>("ubuntu");
+    auto font = ResourceRegistry::get<GUI::Font>("ubuntu");
 
     m_blendStage = boost::make_shared<Render::Stage>("Blending stage");
     m_blendStage->addPrevious(m_gameStage);
@@ -254,18 +253,18 @@ void MainMenuContext::run() {
     //if(m_fpsDisplay) m_textStage->removeRenderable(m_fpsDisplay);
 
     {
-        Render::TechniqueParams &tp =
-            ResourceRegistry::instance()->get<Render::Material>(
+        Render::Uniforms &u =
+            ResourceRegistry::get<Render::Material>(
                 "gui_panel")->params();
-        tp.setParam("gui_xscale", GUI::Scale().xscale());
-        tp.setParam("gui_yscale", GUI::Scale().yscale());
+        u.setParam("gui_xscale", GUI::Scale().xscale());
+        u.setParam("gui_yscale", GUI::Scale().yscale());
     }
     {
-        Render::TechniqueParams &tp =
-            ResourceRegistry::instance()->get<Render::Material>(
+        Render::Uniforms &u =
+            ResourceRegistry::get<Render::Material>(
                 "gui_button")->params();
-        tp.setParam("gui_xscale", GUI::Scale().xscale());
-        tp.setParam("gui_yscale", GUI::Scale().yscale());
+        u.setParam("gui_xscale", GUI::Scale().xscale());
+        u.setParam("gui_yscale", GUI::Scale().yscale());
     }
 
     m_fpsLabel->setText(StreamAsString() << "FPS: " <<

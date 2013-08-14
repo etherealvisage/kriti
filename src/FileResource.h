@@ -1,6 +1,8 @@
 #ifndef KRITI__FILE_RESOURCE_H
 #define KRITI__FILE_RESOURCE_H
 
+#include <vector>
+
 #include "Resource.h"
 
 namespace Kriti {

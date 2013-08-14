@@ -1,8 +1,9 @@
 #include <cctype>
 
 #include "Keyboard.h"
-#include "config/Tree.h"
 
+#include "XMLResource.h"
+#include "ResourceRegistry.h"
 
 namespace Kriti {
 namespace Interface {
@@ -47,13 +48,18 @@ void Keyboard::poll() {
 void Keyboard::reloadMapping() {
     m_keyMapping.clear();
 
-    boost::shared_ptr<Config::Tree> tree = Config::Tree::instance();
+    const pugi::xml_node &keyconfig =
+        ResourceRegistry::get<XMLResource>(
+        "config")->doc().first_element_by_path("/kriti/keyboard");
+
     KeyboardRouter::SignalName name =
         static_cast<KeyboardRouter::SignalName>(0);
+
     const char *p;
     while((p = m_router->configName(name)) != NULL) {
-        std::string key = tree->getString(StreamAsString() << "keys." << p);
-
+        std::string key = keyconfig.find_child_by_attribute("name",
+            p).text().as_string("");
+ 
         int keycode = m_mappings[key];
         m_keyMapping.insert(std::make_pair(keycode, &m_router->signal(name)));
 

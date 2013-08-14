@@ -6,7 +6,6 @@
 
 #include "SDL.h"
 
-#include "config/Parser.h"
 #include "ResourceRegistry.h"
 #include "interface/Video.h"
 #include "interface/Keyboard.h"
@@ -15,36 +14,30 @@
 #include "event/EventRouter.h"
 #include "context/ContextManager.h"
 #include "game/MainMenuContext.h"
-#include "render/Technique.h"
 #include "profile/Tracker.h"
+
+#include "XMLResource.h"
 
 int main() {
     using namespace Kriti;
     std::cout << "Kriti." << std::endl;
 
-    /* Create config tree. */
-    boost::shared_ptr<Config::Tree> tree = Config::Tree::instance();
-    Config::Parser parser(tree);
 
-    /* Parse main configuration file. */
-    parser.parseFile("kriti.config");
+    // load configuration
+    /// NOTE: here "config" uses a special hardcoded path
+    auto config = ResourceRegistry::get<XMLResource>("config");
 
-    /* Parse secondary configuration files. */
-    parser.parseFile(tree->getString("kriti.data_path") + "techniques.config");
-    parser.parseFile(tree->getString("kriti.data_path") + "materials.config");
-    parser.parseFile(tree->getString("kriti.data_path") + "gui.config");
-    parser.parseFile(tree->getString("kriti.data_path") + "fonts.config");
-
-    /* Initialize profiling infrastructure. */
-    Profile::Tracker::instance();
+    if(!config) Message3(General, Fatal, "Could not load configuration file");
+    Message3(General, Log, "Loaded configuration.");
 
     /* Set the log file. */
     MessageSystem::setLogFile(
-        tree->getString("kriti.logfile", "logs/kriti-%d.log")
+        config->doc().first_element_by_path(
+            "/kriti/general/logfile").text().as_string("logs/kriti-%d.log")
     );
 
-    // create resource registry.
-    ResourceRegistry::instance();
+    /* Initialize profiling infrastructure. */
+    Profile::Tracker::instance();
 
     // explicit calls to create the singleton instances.
     boost::shared_ptr<Interface::DeviceManager> dmanager
@@ -72,13 +65,11 @@ int main() {
     Interface::Video::destroy();
     Interface::DeviceManager::destroy();
 
-    ResourceRegistry::destroy();
+    ResourceRegistry::unload();
 
     Profile::Tracker::destroy();
 
     MessageSystem::closeLogFile();
-
-    Config::Tree::destroy();
 
     return 0;
 }

@@ -1,11 +1,10 @@
-#ifndef KRITI_RENDER__TECHNIQUE_H
-#define KRITI_RENDER__TECHNIQUE_H
+#ifndef KRITI_RENDER__PROGRAM_H
+#define KRITI_RENDER__PROGRAM_H
 
 #include <boost/shared_ptr.hpp>
 
 #include <map>
 
-#include "Resource.h"
 #include "Shader.h"
 
 #include "math/Matrix.h"
@@ -16,24 +15,21 @@ namespace Render {
 class Texture;
 class TextureContext;
 
-class Technique : public Resource {
+class Program {
 private:
     boost::shared_ptr<TextureContext> m_textureContext;
 
-    std::string m_name;
-    std::string m_vertexShaderName;
+    std::string m_vsName;
     boost::shared_ptr<Shader> m_vertexShader;
-    std::string m_fragShaderName;
+    std::string m_fsName;
     boost::shared_ptr<Shader> m_fragShader;
 
     GLuint m_programID;
 
     std::map<std::string, GLint> m_uniformLocations;
 public:
-    Technique() {}
+    Program(std::string vsName, std::string fsName);
     
-    virtual bool loadFrom(std::string identifier);
-
     void setUniform(const std::string &name, const Math::Matrix &matrix);
     void setUniform(const std::string &name, int value);
     void setUniform(const std::string &name, float value);

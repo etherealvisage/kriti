@@ -5,7 +5,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include "FileResource.h"
-#include "config/Tree.h"
+#include "XMLResource.h"
+#include "ResourceRegistry.h"
 
 namespace Kriti {
 
@@ -18,8 +19,12 @@ FileResource::~FileResource() {
 }
 
 bool FileResource::loadFrom(std::string filename) {
-    std::string prefix
-        = Config::Tree::instance()->getString("kriti.data_path", "data/");
+    std::string prefix = ResourceRegistry::get<XMLResource>(
+            "config"
+        )->doc().first_element_by_path(
+            "/kriti/general/data-path"
+        ).text().as_string("data/");
+
     m_filename = prefix + filename;
     if(!boost::filesystem::exists(m_filename)) return false;
 

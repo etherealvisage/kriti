@@ -2,8 +2,6 @@
 #define KRITI_RENDER__RENDER_SEQUENCE_H
 
 #include "Material.h"
-#include "Technique.h"
-#include "TechniqueParams.h"
 #include "VAO.h"
 
 #include "math/Matrix.h"
@@ -27,7 +25,7 @@ private:
     boost::shared_ptr<VAO> m_vao;
     RenderType m_type;
     RenderMode m_mode;
-    TechniqueParams m_materialParams;
+    Uniforms m_extraParams;
 public:
     RenderSequence(boost::shared_ptr<Material> material,
         boost::shared_ptr<VAO> vao, int start, int end,
@@ -41,10 +39,10 @@ public:
 
     void updateRange(int start, int end) { m_start = start, m_end = end; }
 
-    TechniqueParams &materialParams() { return m_materialParams; }
-    const TechniqueParams &materialParams() const { return m_materialParams; }
+    Uniforms &extraParams() { return m_extraParams; }
+    const Uniforms &extraParams() const { return m_extraParams; }
 
-    void draw(const TechniqueParams &params,
+    void draw(const Uniforms &params,
         boost::shared_ptr<TextureContext> textureContext,
         const Math::Matrix &modelTransformation);
 };

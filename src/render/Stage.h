@@ -54,7 +54,7 @@ public:
     void addRenderable(boost::shared_ptr<Renderable> renderable);
     void removeRenderable(boost::shared_ptr<Renderable> renderable);
 
-    void render(TechniqueParams &globalParams, bool isLast = false);
+    void render(Uniforms &globalParams, bool isLast = false);
 };
 
 }  // namespace Render

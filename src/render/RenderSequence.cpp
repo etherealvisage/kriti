@@ -11,17 +11,17 @@
 namespace Kriti {
 namespace Render {
 
-void RenderSequence::draw(const TechniqueParams &params,
+void RenderSequence::draw(const Uniforms &params,
     boost::shared_ptr<TextureContext> textureContext,
     const Math::Matrix &modelTransformation) {
 
     m_vao->bind();
-    auto technique = m_material->technique();
-    technique->activate(textureContext);
-    m_material->params().set(technique);
-    technique->setUniform("model", modelTransformation);
-    m_materialParams.set(technique);
-    params.set(technique);
+    auto program = m_material->program();
+    program->activate(textureContext);
+    m_material->params().set(program);
+    program->setUniform("model", modelTransformation);
+    m_extraParams.set(program);
+    params.set(program);
 
     GLenum type;
     switch(m_type) {

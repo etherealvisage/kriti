@@ -18,7 +18,7 @@ private:
 public:
     TextureContext();
 
-    void nextTechnique() { m_round ++; }
+    void nextProgram() { m_round ++; }
     void clearBindings();
 
     int bind(boost::shared_ptr<Texture> texture);

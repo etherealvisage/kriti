@@ -10,7 +10,7 @@ namespace Render {
 
 bool Model::loadFrom(std::string identifier) {
     boost::shared_ptr<FileResource> file
-        = ResourceRegistry::instance()->get<FileResource>("models/"
+        = ResourceRegistry::get<FileResource>("models/"
             + identifier + ".obj");
     if(!file) return false;
 

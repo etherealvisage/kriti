@@ -6,8 +6,10 @@
 #include <SDL_image.h>
 
 #include "Video.h"
-#include "config/Tree.h"
 #include "MessageSystem.h"
+
+#include "ResourceRegistry.h"
+#include "XMLResource.h"
 
 namespace Kriti {
 namespace Interface {
@@ -48,11 +50,18 @@ void Video::initializeSDL() {
 }
 
 void Video::setVideoMode() {
-    m_width = Config::Tree::instance()->getInt("video.width", 800);
-    m_height = Config::Tree::instance()->getInt("video.height", 600);
-    int bpp = Config::Tree::instance()->getInt("video.bpp", 24);
-    bool fullscreen = Config::Tree::instance()->getBool("video.fullscreen",
-        false);
+    const pugi::xml_node &videoconfig =
+        ResourceRegistry::get<XMLResource>(
+        "config")->doc().first_element_by_path("/kriti/video");
+
+    m_width = videoconfig.first_element_by_path("resolution").attribute(
+        "width").as_int(800);
+    m_height = videoconfig.first_element_by_path("resolution").attribute(
+        "height").as_int(600);
+    int bpp = videoconfig.first_element_by_path("resolution").attribute(
+        "bpp").as_int(0);
+    bool fullscreen = videoconfig.first_element_by_path(
+        "/fullscreen").text().as_bool(false);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
@@ -68,11 +77,11 @@ void Video::setVideoMode() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    if(Config::Tree::instance()->getBool("video.msaa.enabled", false)) {
+    /*if(Config::Tree::instance()->getBool("video.msaa.enabled", false)) {
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 
             Config::Tree::instance()->getInt("video.msaa.samples", 4));
-    }
+    }*/
 
     int flags = SDL_WINDOW_OPENGL;
     if(fullscreen) flags |= SDL_WINDOW_FULLSCREEN;
@@ -130,7 +139,9 @@ void Video::initializeGL() {
     }
 
     /* If video profiling is enabled . . . */
-    if(Config::Tree::instance()->getBool("kriti.profile")
+    if(ResourceRegistry::get<XMLResource>(
+        "config")->doc().first_element_by_path(
+        "/kriti/general/profile").text().as_bool(false)
         && !GLEW_ARB_timer_query) {
 
         Message3(Interface, Fatal, "Profiling enabled, but "

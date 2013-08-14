@@ -5,7 +5,8 @@
 #include "render/Stage.h"
 #include "render/RenderableFactory.h"
 
-#include "config/Tree.h"
+#include "XMLResource.h"
+#include "ResourceRegistry.h"
 
 namespace Kriti {
 namespace GUI {
@@ -16,7 +17,9 @@ Label::Label(Math::Vector stretch, boost::shared_ptr<Render::Stage> stage,
     : Widget(stretch, stage), m_font(font), m_text(text), m_halign(halign),
     m_valign(valign) {
 
-    m_textScale = Config::Tree::instance()->getDouble("gui.text_scale", 0.3);
+    m_textScale = ResourceRegistry::get<XMLResource>(
+        "config")->doc().first_element_by_path(
+        "/kriti/gui/text-scale").text().as_double(0.3);
 }
 
 Math::Vector Label::minSize() {
@@ -29,7 +32,9 @@ Math::Vector Label::minSize() {
     return lr-ul;
 }
 
-void Label::updated(boost::shared_ptr<OutlineRegistry> registry) {
+void Label::updated(
+    boost::shared_ptr<OutlineRegistry> __attribute__((unused)) registry) {
+
     // TODO: re-use old renderable . . . this is expensive.
     if(m_renderable) m_stage->removeRenderable(m_renderable);
 

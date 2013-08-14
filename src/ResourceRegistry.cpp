@@ -2,14 +2,8 @@
 
 namespace Kriti {
 
-boost::shared_ptr<ResourceRegistry> ResourceRegistry::s_singleton;
+std::map<std::string, boost::shared_ptr<Resource>>
+    ResourceRegistry::s_resources;
 
-ResourceRegistry::ResourceRegistry() {
-    
-}
-
-ResourceRegistry::~ResourceRegistry() {
-
-}
 
 }  // namespace Kriti

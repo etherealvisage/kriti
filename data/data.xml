@@ -1,0 +1,121 @@
+<?xml version="1.0" ?>
+
+<kriti>
+
+<textures>
+    <texture name="cursor">
+        <mipmap level="0">cursor.png</mipmap>
+    </texture>
+
+    <texture name="ubuntu">
+        <mipmap level="0">ubuntu.png</mipmap>
+    </texture>
+</textures>
+
+<materials>
+    <material name="track">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>perlin_track</fragment-shader>
+    </material>
+
+    <material name="simple">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>simple</fragment-shader>
+    </material>
+
+    <material name="ubuntu">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>textured</fragment-shader>
+
+        <uniform name="u_tex" type="string">ubuntu</uniform>
+    </material>
+
+    <material name="red">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>red</fragment-shader>
+    </material>
+
+    <material name="gui_panel">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>gui_panel</fragment-shader>
+    </material>
+
+    <material name="gui_button">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>gui_button</fragment-shader>
+    </material>
+
+    <material name="gui_cursor">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>textured</fragment-shader>
+
+        <uniform name="u_tex" type="string">cursor</uniform>
+    </material>
+
+    <material name="overlay">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>overlay</fragment-shader>
+
+        <uniform name="maxblend" type="float">0.5</uniform>
+    </material>
+</materials>
+
+<fonts>
+    <font name="ubuntu">
+        <material>ubuntu</material>
+        <description>ubuntu</description>
+        <texture width="512" height="512" />
+    </font>
+</fonts>
+
+<render>
+    <stage name="game">
+        <!-- No previous passes etc. -->
+        <!-- Projection handled in code. -->
+    </stage>
+    <stage name="gui">
+        <projection>gui</projection>
+    </stage>
+    <stage name="game-overlay">
+        <previous>game</previous>
+        <previous>gui</previous>
+
+        <projection>gui</projection>
+
+        <map from="game" which="colour0" for="overlay" to="game" />
+        <map from="gui" which="colour0" for="overlay" to="gui" />
+    </stage>
+
+    <pipeline name="game" last="game-overlay" />
+</render>
+
+<guis>
+    <gui name="fps">
+        <widget type="label" name="fps_label">
+            <align vertical="centre" horizontal="centre" />
+            <font>ubuntu</font>
+        </widget>
+    </gui>
+
+    <gui name="main-menu">
+        <widget type="panel">
+            <layout type="packed" align="vertical" />
+            <widget type="button" name="main-menu-start">
+                <font>ubuntu</font>
+                <min-size width="0" height="0" />
+                <stretch x="1" y="1" />
+
+                <text>Start</text>
+            </widget>
+            <widget type="button" name="main-menu-quit">
+                <font>ubuntu</font>
+                <min-size width="0" height="0" />
+                <stretch x="1" y="1" />
+
+                <text>Quit</text>
+            </widget>
+        </widget>
+    </gui>
+</guis>
+
+</kriti>

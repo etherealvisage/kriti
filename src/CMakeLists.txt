@@ -4,7 +4,6 @@ add_definitions(-g)
 
 aux_source_directory(. dotSources)
 aux_source_directory(math mathSources)
-aux_source_directory(config configSources)
 aux_source_directory(interface interfaceSources)
 aux_source_directory(event eventSources)
 aux_source_directory(context contextSources)
@@ -20,7 +19,6 @@ include_directories(.)
 set(sources
     ${dotSources}
     ${mathSources}
-    ${configSources}
     ${interfaceSources}
     ${eventSources}
     ${contextSources}
@@ -50,9 +48,14 @@ include_directories(${OPENGL_INCLUDE_DIR})
 find_package(GLEW)
 include_directories(${GLEW_INCLUDE_DIR})
 
+include_directories(${pugixmlInclude})
+
 add_executable(kriti ${sources})
 
 target_link_libraries(kriti
+    # pugixml from source tree
+    pugixml
+
     ${Boost_LIBRARIES}
     ${BULLET_LIBRARIES}
     ${SDL2_LIBRARY}

@@ -2,8 +2,6 @@
 
 #include "Pipeline.h"
 
-#include "config/Tree.h"
-
 #include "math/ViewGenerator.h"
 
 #include "MessageSystem.h"
@@ -16,14 +14,14 @@ Pipeline::Pipeline() {
 }
 
 void Pipeline::render() {
-    TechniqueParams tp;
-    tp.setParam("time", (int)TimeValue::current().toMsec());
+    Uniforms u;
+    u.setParam("time", (int)TimeValue::current().toMsec());
 
     m_rendered.clear();
-    render(tp, m_lastStage);
+    render(u, m_lastStage);
 }
 
-void Pipeline::render(TechniqueParams &tp, boost::shared_ptr<Stage> stage) {
+void Pipeline::render(Uniforms &tp, boost::shared_ptr<Stage> stage) {
     // check if it's already been rendered.
     if(m_rendered.find(stage) != m_rendered.end()) return;
 

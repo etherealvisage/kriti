@@ -2,11 +2,11 @@
 
 #include "Tracker.h"
 
-#include "config/Tree.h"
-
 #include "render/Timer.h"
 
 #include "MessageSystem.h"
+#include "ResourceRegistry.h"
+#include "XMLResource.h"
 
 namespace Kriti {
 namespace Profile {
@@ -16,7 +16,10 @@ bool Tracker::s_enabled = false;
 
 Tracker::Tracker() {
     m_frameCount = 0;
-    s_enabled = Config::Tree::instance()->getBool("kriti.profile", false);
+    //s_enabled = Config::Tree::instance()->getBool("kriti.profile", false);
+    s_enabled = ResourceRegistry::get<XMLResource>(
+        "config")->doc().first_element_by_path(
+        "/kriti/general/profile").text().as_bool(false);
 
     if(s_enabled) {
         Message3(Profile, Log, "Profiling enabled.");

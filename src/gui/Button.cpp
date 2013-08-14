@@ -34,14 +34,14 @@ void Button::updated(boost::shared_ptr<OutlineRegistry> registry) {
         pos() + size(),
         pos() + Math::Vector(size().x()),
         "gui_button");
-    m_renderable->renderSequence(0)->materialParams().setParam("button_xscale",
+    m_renderable->renderSequence(0)->extraParams().setParam("button_xscale",
         (size().x() / Scale().xtotal()) / scale().x());
-    m_renderable->renderSequence(0)->materialParams().setParam("button_yscale",
+    m_renderable->renderSequence(0)->extraParams().setParam("button_yscale",
         (size().y() / Scale().ytotal()) / scale().y());
 
     if(mouseState().posSet()) {
         m_activation = std::pow(0.3, m_activation)/2.0;
-        m_renderable->renderSequence(0)->materialParams().setParam(
+        m_renderable->renderSequence(0)->extraParams().setParam(
             "button_click", mouseState().button(0)?1.0:0.0);
         
         if(mouseState().button(0)) {
@@ -54,12 +54,12 @@ void Button::updated(boost::shared_ptr<OutlineRegistry> registry) {
     }
     else {
         m_activation *= 0.5;
-        m_renderable->renderSequence(0)->materialParams().setParam(
+        m_renderable->renderSequence(0)->extraParams().setParam(
             "button_click", 0.0);
         m_wasClicked = false;
     }
 
-    m_renderable->renderSequence(0)->materialParams().setParam(
+    m_renderable->renderSequence(0)->extraParams().setParam(
         "button_activation", m_activation);
 
 

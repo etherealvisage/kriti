@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<kriti>
+
+<general>
+    <logfile>logs/kriti-%d.log</logfile>
+    <data>data/</data>
+    <profile>false</profile>
+</general>
+
+<video>
+    <resolution width="1024" height="768" />
+    <fullscreen>false</fullscreen>
+</video>
+
+<keyboard>
+    <key name="gui_accept">return</key>
+    <key name="gui_reject">escape</key>
+    <key name="gui_exit">escape</key>
+
+    <key name="mm_playerPitchUp">up</key>
+    <key name="mm_playerPitchDown">down</key>
+</keyboard>
+
+<gui>
+    <default-font>ubuntu</default-font>
+    <text-scale>0.3</text-scale>
+    <scale>100</scale>
+</gui>
+
+</kriti>
