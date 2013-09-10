@@ -146,7 +146,9 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
 
     m_renderables->iterate(
         boost::bind(&Stage::renderRenderable, this, globalParams, _1));
-    m_textureContext->clearBindings();
+
+    m_textureContext->nextProgram();
+
     Profile::Tracker::instance()->endGLTimer(m_name);
 }
 

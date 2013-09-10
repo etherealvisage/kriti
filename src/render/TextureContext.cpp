@@ -19,6 +19,7 @@ TextureContext::TextureContext() {
 }
 
 void TextureContext::clearBindings() {
+    m_lastUnit = -1;
     m_bindings.assign(m_bindings.size(),
         std::make_pair(-1, boost::shared_ptr<Texture>()));
 }
