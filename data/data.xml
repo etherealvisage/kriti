@@ -2,8 +2,7 @@
 
 <kriti>
 
-<textures>
-    <texture name="cursor">
+<textures> <texture name="cursor">
         <mipmap level="0">cursor.png</mipmap>
     </texture>
 
@@ -87,6 +86,7 @@
         <map from="gui" which="colour0" material="overlay" to="overlayStage" />
     </stage>
 
+    <!-- <pipeline name="game" last="blend" /> -->
     <pipeline name="game" last="blend" />
 </render>
 

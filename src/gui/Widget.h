@@ -18,10 +18,8 @@ private:
     Math::Vector m_stretch;
 protected:
     boost::shared_ptr<Render::Renderable> m_renderable;
-    boost::shared_ptr<Render::Stage> m_stage;
 public:
-    Widget(Math::Vector stretch, boost::shared_ptr<Render::Stage> stage)
-        : m_stretch(stretch), m_stage(stage) {}
+    Widget(Math::Vector stretch) : m_stretch(stretch) {}
 
     virtual Math::Vector stretch() { return m_stretch; }
 

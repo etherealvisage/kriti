@@ -19,8 +19,7 @@ private:
     double m_activation;
 public:
     Panel(Math::Vector minSize, Math::Vector stretch,
-        boost::shared_ptr<Render::Stage> stage,
-        boost::shared_ptr<Layout> layout) : Widget(stretch, stage),
+        boost::shared_ptr<Layout> layout) : Widget(stretch),
         m_minSize(minSize), m_layout(layout), m_activation(0.0) {}
 
     boost::shared_ptr<Layout> layout() const { return m_layout; }

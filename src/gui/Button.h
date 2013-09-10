@@ -15,8 +15,7 @@ private:
     bool m_wasClicked;
 public:
     Button(Math::Vector minSize, Math::Vector stretch,
-        boost::shared_ptr<Render::Stage> stage, boost::shared_ptr<Font> font,
-        std::string text);
+        boost::shared_ptr<Font> font, std::string text);
 
     virtual Math::Vector minSize();
 protected:

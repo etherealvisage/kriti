@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 
 #include <boost/make_shared.hpp>
+#include <boost/bind.hpp>
 
 #include "Stage.h"
 #include "Uniforms.h"
@@ -122,17 +123,6 @@ void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
     m_attachments.push_back(std::make_tuple(prev, attachment, uniformName));
 }
 
-void Stage::addRenderable(boost::shared_ptr<Renderable> renderable) {
-    m_objects.push_back(renderable);
-}
-
-void Stage::removeRenderable(boost::shared_ptr<Renderable> renderable) {
-    auto it = std::find(m_objects.begin(), m_objects.end(), renderable);
-    if(it != m_objects.end()) {
-        m_objects.erase(it);
-    }
-}
-
 void Stage::render(Uniforms &globalParams, bool isLast) {
     Profile::Tracker::instance()->beginGLTimer(m_name);
     auto cameraMatrix = m_camera.matrix();
@@ -146,7 +136,6 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
     globalParams.setParam("camera", cameraMatrix);
     // HACK: use current time, should be set elsewhere?
     
-    // HACK: use texture unit 1 for everything...
     for(auto mapping : m_attachments) {
         auto fb = std::get<0>(mapping)->framebuffer();
         auto texture = fb->getTextureAttachment(std::get<1>(mapping));
@@ -155,13 +144,8 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for(auto renderable : m_objects) {
-        auto error = glGetError();
-        if(error != GL_NO_ERROR) {
-            Message3(Render, Error, "GL error: " << gluErrorString(error));
-        }
-        renderable->draw(globalParams, m_textureContext);
-    }
+    m_renderables->iterate(
+        boost::bind(&Stage::renderRenderable, this, globalParams, _1));
     m_textureContext->clearBindings();
     Profile::Tracker::instance()->endGLTimer(m_name);
 }
@@ -186,6 +170,18 @@ void Stage::initialize(int outputs, int width, int height) {
     m_textureContext = boost::make_shared<TextureContext>();
 
     Profile::Tracker::instance()->addGLTimer(m_name);
+
+    m_renderables = boost::make_shared<RenderableContainer>();
+}
+
+void Stage::renderRenderable(Uniforms &globalParams,
+    boost::shared_ptr<Renderable> renderable) {
+
+    auto error = glGetError();
+    if(error != GL_NO_ERROR) {
+        Message3(Render, Error, "GL error: " << gluErrorString(error));
+    }
+    renderable->draw(globalParams, m_textureContext);
 }
 
 }  // namespace Render

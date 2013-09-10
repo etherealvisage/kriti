@@ -17,14 +17,27 @@ Math::Vector Panel::minSize() {
 void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
     registry->updateOutline(shared_from_this(), pos(), size());
 
-    // TODO: re-use old renderable . . . this is expensive.
-    if(m_renderable) m_stage->removeRenderable(m_renderable);
-    m_renderable = Render::RenderableFactory().fromQuad(
-        pos(),
-        pos() + Math::Vector(0,size().y()),
-        pos() + size(),
-        pos() + Math::Vector(size().x()),
-        "gui_panel");
+    if(!m_renderable) {
+        m_renderable = Render::RenderableFactory().fromQuad(
+            pos(),
+            pos() + Math::Vector(0,size().y()),
+            pos() + size(),
+            pos() + Math::Vector(size().x()),
+            "gui_panel");
+    }
+    else {
+        std::vector<Math::Vector> loc;
+        loc.push_back(pos());
+        loc.push_back(pos() + Math::Vector(0,size().y()));
+        loc.push_back(pos() + size());
+
+        loc.push_back(pos());
+        loc.push_back(pos() + size());
+        loc.push_back(pos() + Math::Vector(size().x()));
+
+        m_renderable->renderSequence(0)->vao()->vbo(
+            Render::VAO::Vertex)->setData3(loc);
+    }
     m_renderable->renderSequence(0)->extraParams().setParam("panel_xscale",
         (size().x() / Scale().xtotal()) / scale().x());
     m_renderable->renderSequence(0)->extraParams().setParam("panel_yscale",
@@ -39,8 +52,6 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
 
     m_renderable->renderSequence(0)->extraParams().setParam(
         "panel_activation", m_activation);
-
-    m_stage->addRenderable(m_renderable);
 
     if(m_layout) m_layout->update(registry,
         pos() + Scale().padding()*scale() + Scale().perLayer(),

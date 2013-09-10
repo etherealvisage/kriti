@@ -7,6 +7,7 @@
 
 #include "Renderable.h"
 #include "SceneCamera.h"
+#include "RenderableContainer.h"
 
 #include "Framebuffer.h"
 
@@ -20,7 +21,7 @@ class TextureContext;
 class Stage : public Resource {
 private:
     std::vector<boost::shared_ptr<Stage>> m_previous;
-    std::list<boost::shared_ptr<Renderable>> m_objects;
+    boost::shared_ptr<RenderableContainer> m_renderables;
     SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
@@ -33,6 +34,7 @@ private:
 
     int m_width, m_height;
     std::string m_name;
+
 public:
     Stage();
     Stage(int outputs, int width, int height, std::string name);
@@ -49,8 +51,8 @@ public:
         { return m_previous[which]; }
     int previousCount() const { return m_previous.size(); }
 
-    void addRenderable(boost::shared_ptr<Renderable> renderable);
-    void removeRenderable(boost::shared_ptr<Renderable> renderable);
+    boost::shared_ptr<RenderableContainer> renderables() const
+        { return m_renderables; }
 
     void addMapping(int previousIndex, Framebuffer::Attachment attachment,
         std::string uniformName);
@@ -63,6 +65,9 @@ public:
     void render(Uniforms &globalParams, bool isLast = false);
 private:
     void initialize(int outputs, int width, int height);
+
+    void renderRenderable(Uniforms &globalParams,
+        boost::shared_ptr<Renderable> renderable);
 };
 
 }  // namespace Render

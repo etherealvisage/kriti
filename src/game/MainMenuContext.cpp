@@ -56,12 +56,8 @@ MainMenuContext::MainMenuContext() {
         ).connect(
             boost::bind(&MainMenuContext::playerPitchDown, this, _1)
         );
-    /*m_pipeline = boost::make_shared<Render::Pipeline>();
-    m_gameStage = boost::make_shared<Render::Stage>("Game stage");*/
     m_pipeline = ResourceRegistry::get<Render::Pipeline>("game");
     m_gameStage = ResourceRegistry::get<Render::Stage>("game");
-
-    //m_pipeline->setLastStage(m_gameStage);
 
     // camera setup
     m_gameStage->camera()->setProjection(Math::ViewGenerator().perspective(
@@ -87,7 +83,7 @@ MainMenuContext::MainMenuContext() {
 
     m_world->addObject(m_playerObject->physical());
 
-    m_gameStage->addRenderable(m_playerObject->renderable());
+    m_gameStage->renderables()->add(m_playerObject->renderable());
 
     // generate track
     Track::RandomGenerator rg(0);
@@ -103,9 +99,10 @@ MainMenuContext::MainMenuContext() {
     m_trackObject->setRenderable(trackRenderable);
     m_trackObject->setPhysical(Physics::ObjectFactory().makeIndexedTriMesh(0.0,
         trackExtrusion->vertices(), trackExtrusion->indices()));
+
     //m_world->addObject(m_trackObject->physical());
 
-    m_gameStage->addRenderable(m_trackObject->renderable());
+    m_gameStage->renderables()->add(m_trackObject->renderable());
 
     m_world->addModifier(m_forceModifier);
 
@@ -130,20 +127,12 @@ MainMenuContext::MainMenuContext() {
     auto font = ResourceRegistry::get<GUI::Font>("ubuntu");
 
     m_blendStage = ResourceRegistry::get<Render::Stage>("blend");
-    //m_blendStage->addPrevious(m_gameStage);
-    //m_blendStage->addPrevious(m_guiStage);
-
-    //m_blendStage->addMapping(0, Render::Framebuffer::ColourBuffer0, "baseStage");
-    //m_blendStage->addMapping(1, Render::Framebuffer::ColourBuffer0, "overlayStage");
 
     m_blendStage->camera()->step(0.0);
 
     Math::Vector base(-aratio, -1.0), x(aratio*2,0), y(0,2.0);
-    m_blendStage->addRenderable(Render::RenderableFactory().fromQuad(
+    m_blendStage->renderables()->add(Render::RenderableFactory().fromQuad(
         base, base+y, base+x+y, base+x, "overlay"));
-
-    //m_pipeline->setLastStage(m_blendStage);
-    //m_pipeline->setLastStage(m_guiStage);
 
     Profile::Tracker::instance()->addTimer("Total");
     Profile::Tracker::instance()->addTimer("Rendering");
@@ -152,27 +141,27 @@ MainMenuContext::MainMenuContext() {
     Profile::Tracker::instance()->addCounter("Triangles");
 
     m_quitButton = boost::make_shared<GUI::Button>(
-        Math::Vector(), Math::Vector(1.0, 1.0), m_guiStage, font, "Quit");
+        Math::Vector(), Math::Vector(1.0, 1.0), font, "Quit");
 
     m_fpsLabel = boost::make_shared<GUI::Label>(
-        Math::Vector(1.0, 1.0), m_guiStage, font, "This is a much longer label");
+        Math::Vector(1.0, 1.0), font, "This is a much longer label");
     m_fpsLabel2 = boost::make_shared<GUI::Label>(
-        Math::Vector(1.0, 1.0), m_guiStage, font, "This is a much longer label");
+        Math::Vector(1.0, 1.0), font, "This is a much longer label");
     m_fpsLabel3 = boost::make_shared<GUI::Label>(
-        Math::Vector(1.0, 1.0), m_guiStage, font, "This is yet another label...");
+        Math::Vector(1.0, 1.0), font, "This is yet another label...");
     {
         auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
         layout->addItem(m_fpsLabel);
         layout->addItem(m_fpsLabel2);
         m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1), m_guiStage,
+            Math::Vector(), Math::Vector(1,1),
             layout);
     }
     {
         auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
         layout->addItem(m_fpsLabel2);
         m_testPanel2 = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1), m_guiStage,
+            Math::Vector(), Math::Vector(1,1),
             layout);
     }
     {
@@ -180,7 +169,7 @@ MainMenuContext::MainMenuContext() {
         layout->addItem(m_testPanel);
         layout->addItem(m_quitButton);
         m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1), m_guiStage,
+            Math::Vector(), Math::Vector(1,1),
             layout);
     }
     {
@@ -188,7 +177,7 @@ MainMenuContext::MainMenuContext() {
         layout->addItem(m_testPanel);
         layout->addItem(m_testPanel2);
         m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1), m_guiStage,
+            Math::Vector(), Math::Vector(1,1),
             layout);
     }
     {
@@ -224,7 +213,8 @@ MainMenuContext::MainMenuContext() {
         );
 
     m_mouseCursor = boost::make_shared<GUI::MouseCursor>();
-    m_blendStage->addRenderable(m_mouseCursor->renderable());
+    //m_blendStage->addRenderable(m_mouseCursor->renderable());
+    m_blendStage->renderables()->add(m_mouseCursor->renderable());
 
     Interface::DeviceManager::instance()->mouseRouter()->motionSignal(
         ).connect(
@@ -246,7 +236,6 @@ void MainMenuContext::run() {
 
     m_frames.push(current);
     while(m_frames.size() > 0 && m_frames.front() <= earliest) m_frames.pop();
-    //if(m_fpsDisplay) m_guiStage->removeRenderable(m_fpsDisplay);
 
     {
         Render::Uniforms &u =

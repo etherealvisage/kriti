@@ -12,11 +12,10 @@ namespace Kriti {
 namespace GUI {
 
 Button::Button(Math::Vector minSize, Math::Vector stretch,
-    boost::shared_ptr<Render::Stage> stage, boost::shared_ptr<Font> font,
-    std::string text) : Widget(stretch, stage), m_minSize(minSize),
-    m_activation(0.0) { 
+    boost::shared_ptr<Font> font, std::string text) : Widget(stretch),
+    m_minSize(minSize), m_activation(0.0) { 
     
-    m_label = boost::make_shared<Label>(stretch, stage, font, text);
+    m_label = boost::make_shared<Label>(stretch, font, text);
 }
 
 Math::Vector Button::minSize() {
@@ -26,6 +25,7 @@ Math::Vector Button::minSize() {
 void Button::updated(boost::shared_ptr<OutlineRegistry> registry) {
     registry->updateOutline(shared_from_this(), pos(), size());
 
+#if 0
     // TODO: re-use old renderable . . . this is expensive.
     if(m_renderable) m_stage->removeRenderable(m_renderable);
     m_renderable = Render::RenderableFactory().fromQuad(
@@ -68,6 +68,7 @@ void Button::updated(boost::shared_ptr<OutlineRegistry> registry) {
     m_label->update(registry,
         pos() + Scale().padding()*scale() + Scale().perLayer(),
         size() - Scale().padding()*scale()*2, scale());
+#endif
 }
 
 }  // namespace GUI

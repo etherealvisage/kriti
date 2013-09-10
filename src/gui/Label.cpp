@@ -11,10 +11,9 @@
 namespace Kriti {
 namespace GUI {
 
-Label::Label(Math::Vector stretch, boost::shared_ptr<Render::Stage> stage,
-    boost::shared_ptr<Font> font, std::string text,
-    HorizontalAlignment halign, VerticalAlignment valign)
-    : Widget(stretch, stage), m_font(font), m_text(text), m_halign(halign),
+Label::Label(Math::Vector stretch, boost::shared_ptr<Font> font,
+    std::string text, HorizontalAlignment halign, VerticalAlignment valign)
+    : Widget(stretch), m_font(font), m_text(text), m_halign(halign),
     m_valign(valign) {
 
     m_textScale = ResourceRegistry::get<XMLResource>(
@@ -35,8 +34,9 @@ Math::Vector Label::minSize() {
 void Label::updated(
     boost::shared_ptr<OutlineRegistry> __attribute__((unused)) registry) {
 
+#if 0
     // TODO: re-use old renderable . . . this is expensive.
-    if(m_renderable) m_stage->removeRenderable(m_renderable);
+    //if(m_renderable) m_stage->removeRenderable(m_renderable);
 
     m_renderable = TextRenderer().render(m_font, m_text, scale()*m_textScale);
 
@@ -75,6 +75,7 @@ void Label::updated(
         = pos() + Math::Vector(0.0, size().y() - (lr.y() - ul.y())) + offset;
 
     m_stage->addRenderable(m_renderable);
+#endif
 }
 
 }  // namespace GUI

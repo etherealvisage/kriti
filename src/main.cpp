@@ -60,7 +60,6 @@ int main() {
 
     Context::ContextManager::instance()->pushContext("Game::MainMenuContext");
     
-    
     // run the rest of the program.
     Context::ContextManager::instance()->loop();
 

@@ -29,8 +29,7 @@ private:
     VerticalAlignment m_valign;
     double m_textScale;
 public:
-    Label(Math::Vector stretch, boost::shared_ptr<Render::Stage> stage,
-        boost::shared_ptr<Font> font, std::string text,
+    Label(Math::Vector stretch, boost::shared_ptr<Font> font, std::string text,
         HorizontalAlignment halign = HCentre,
         VerticalAlignment valign = VCentre);
 
