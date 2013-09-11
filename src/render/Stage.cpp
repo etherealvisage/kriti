@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 
+#include <boost/weak_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/bind.hpp>
 
@@ -91,10 +92,11 @@ bool Stage::loadFrom(std::string identifier) {
             Message3(Render, Debug, "Unknown attachment: " << whichString);
             continue;
         }
-        //std::string materialString = child.attribute("material").as_string();
+        std::string materialString = child.attribute("material").as_string();
         std::string uniform = child.attribute("to").as_string();
 
-        addMapping(from, which, uniform);
+        auto mat = ResourceRegistry::get<Render::Material>(materialString);
+        addMapping(from, which, mat, uniform);
     }
 
     // HACK: shouldn't have this dependency on the GUI module...
@@ -115,12 +117,13 @@ bool Stage::loadFrom(std::string identifier) {
 }
 
 void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
-    std::string uniformName) {
+    boost::shared_ptr<Render::Material> material, std::string uniformName) {
 
     auto prev = m_previous[previousIndex];
     auto pfb = prev->framebuffer();
 
-    m_attachments.push_back(std::make_tuple(prev, attachment, uniformName));
+    m_attachments.push_back(std::make_tuple(prev, attachment, material,
+        uniformName));
 }
 
 void Stage::render(Uniforms &globalParams,
@@ -136,19 +139,22 @@ void Stage::render(Uniforms &globalParams,
     }
 
     globalParams.setParam("camera", cameraMatrix);
-    // HACK: use current time, should be set elsewhere?
     
+    MaterialParams materialParams;
+
     for(auto mapping : m_attachments) {
         auto fb = std::get<0>(mapping)->framebuffer();
         auto texture = fb->getTextureAttachment(std::get<1>(mapping));
-        globalParams.setParam(std::get<2>(mapping), texture);
+
+        auto material = std::get<2>(mapping);
+        materialParams[material].setParam(std::get<3>(mapping), texture);
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_renderables->iterate(
         boost::bind(&Stage::renderRenderable, this, globalParams,
-            textureContext, _1));
+            materialParams, textureContext, _1));
 
     Profile::Tracker::instance()->endGLTimer(m_name);
 }
@@ -176,6 +182,7 @@ void Stage::initialize(int outputs, int width, int height) {
 }
 
 void Stage::renderRenderable(Uniforms &globalParams,
+    MaterialParams &materialParams,
     boost::shared_ptr<TextureContext> textureContext,
     boost::shared_ptr<Renderable> renderable) {
 
@@ -183,7 +190,7 @@ void Stage::renderRenderable(Uniforms &globalParams,
     if(error != GL_NO_ERROR) {
         Message3(Render, Error, "GL error: " << gluErrorString(error));
     }
-    renderable->draw(globalParams, textureContext);
+    renderable->draw(globalParams, materialParams, textureContext);
 }
 
 }  // namespace Render

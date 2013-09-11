@@ -1,6 +1,7 @@
 #ifndef KRITI_RENDER__STAGE_H
 #define KRITI_RENDER__STAGE_H
 
+#include <map>
 #include <vector>
 #include <list>
 #include <tuple>
@@ -19,6 +20,8 @@ namespace Render {
 class TextureContext;
 
 class Stage : public Resource {
+public:
+    typedef std::map<boost::weak_ptr<Material>, Uniforms> MaterialParams;
 private:
     std::vector<boost::shared_ptr<Stage>> m_previous;
     boost::shared_ptr<RenderableContainer> m_renderables;
@@ -27,9 +30,9 @@ private:
     boost::shared_ptr<Framebuffer> m_framebuffer;
 
     // what stage is it from, what attachment on that stage's framebuffer,
-    // and what uniform to fill with the sampler2D.
+    // what material, and what uniform to fill with the sampler2D.
     std::vector<std::tuple<boost::shared_ptr<Stage>, Framebuffer::Attachment,
-        std::string>> m_attachments;
+        boost::shared_ptr<Render::Material>, std::string>> m_attachments;
 
     int m_width, m_height;
     std::string m_name;
@@ -54,7 +57,7 @@ public:
         { return m_renderables; }
 
     void addMapping(int previousIndex, Framebuffer::Attachment attachment,
-        std::string uniformName);
+        boost::shared_ptr<Render::Material> material, std::string uniformName);
 
     boost::shared_ptr<Framebuffer> framebuffer() const
         { return m_framebuffer; }
@@ -67,6 +70,7 @@ private:
     void initialize(int outputs, int width, int height);
 
     void renderRenderable(Uniforms &globalParams,
+        MaterialParams &materialParams,
         boost::shared_ptr<TextureContext> textureContext,
         boost::shared_ptr<Renderable> renderable);
 };

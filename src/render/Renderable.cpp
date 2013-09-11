@@ -15,6 +15,7 @@ void Renderable::addRenderSequence(
 }
 
 void Renderable::draw(const Uniforms &params,
+    std::map<boost::weak_ptr<Material>, Uniforms> &materialParams,
     boost::shared_ptr<TextureContext> textureContext) {
 
     Math::AffineTransformation at;
@@ -24,7 +25,7 @@ void Renderable::draw(const Uniforms &params,
     Math::Matrix modelTransform = at.matrix();
 
     for(auto sequence : m_sequences) {
-        sequence->draw(params, textureContext, modelTransform);
+        sequence->draw(params, materialParams, textureContext, modelTransform);
     }
 }
 

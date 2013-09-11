@@ -29,6 +29,7 @@ public:
     void clearRenderSequences() { m_sequences.clear(); }
 
     void draw(const Uniforms &params,
+        std::map<boost::weak_ptr<Material>, Uniforms> &materialParams,
         boost::shared_ptr<TextureContext> textureContext);
 
     Math::Vector &location() { return m_location; }

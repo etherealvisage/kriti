@@ -1,5 +1,7 @@
 #include <GL/glew.h>
 
+#include <boost/weak_ptr.hpp>
+
 #include "RenderSequence.h"
 #include "TextureContext.h"
 
@@ -12,6 +14,7 @@ namespace Kriti {
 namespace Render {
 
 void RenderSequence::draw(const Uniforms &params,
+    std::map<boost::weak_ptr<Material>, Uniforms> &materialParams,
     boost::shared_ptr<TextureContext> textureContext,
     const Math::Matrix &modelTransformation) {
 
@@ -21,6 +24,9 @@ void RenderSequence::draw(const Uniforms &params,
     m_material->params().set(program);
     program->setUniform("model", modelTransformation);
     m_extraParams.set(program);
+
+    materialParams[m_material].set(program);
+
     params.set(program);
 
     GLenum type;
