@@ -16,6 +16,7 @@ bool Tracker::s_enabled = false;
 
 Tracker::Tracker() {
     m_frameCount = 0;
+    m_currentFrame = 0;
     //s_enabled = Config::Tree::instance()->getBool("kriti.profile", false);
     s_enabled = ResourceRegistry::get<XMLResource>(
         "config")->doc().first_element_by_path(
