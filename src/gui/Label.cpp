@@ -32,7 +32,7 @@ Math::Vector Label::minSize() {
 }
 
 void Label::fill(boost::shared_ptr<Render::RenderableContainer> container) {
-    if(m_renderable) container->add(m_renderable);
+    if(m_renderable) container->addTransparent(m_renderable);
 }
 
 void Label::updated(

@@ -8,4 +8,5 @@ uniform sampler2D u_tex;
 
 void main() {
     fragColour = texture(u_tex, v_tex);
+    if(fragColour.a <= 0.001) discard;
 }

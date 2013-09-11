@@ -73,7 +73,6 @@ void Program::setUniform(const std::string &name,
     GLint location = getUniformLocation(name);
     if(location != -1) {
         int index = m_textureContext->bind(texture);
-        Message3(Render, Debug, "Texture for uniform " << name << " was bound to context " << index);
         glUniform1i(location, index);
     }
 }

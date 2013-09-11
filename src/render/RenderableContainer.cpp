@@ -17,8 +17,16 @@ void RenderableContainer::iterate(IteratorType iterator,
 
         iterator(renderable);
     }
+
     for(auto container : m_containers) {
         container->iterate(iterator, visited);
+    }
+
+    for(auto renderable : m_transRenderables) {
+        if(visited.find(renderable) != visited.end()) continue;
+        visited.insert(renderable);
+
+        iterator(renderable);
     }
 }
 

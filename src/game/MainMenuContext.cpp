@@ -216,7 +216,7 @@ MainMenuContext::MainMenuContext() {
 
     m_mouseCursor = boost::make_shared<GUI::MouseCursor>();
     //m_blendStage->addRenderable(m_mouseCursor->renderable());
-    m_blendStage->renderables()->add(m_mouseCursor->renderable());
+    m_blendStage->renderables()->addTransparent(m_mouseCursor->renderable());
 
     Interface::DeviceManager::instance()->mouseRouter()->motionSignal(
         ).connect(
