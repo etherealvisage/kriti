@@ -12,6 +12,7 @@
 
 #include "render/Model.h"
 #include "render/RenderableFactory.h"
+#include "render/TextureContext.h"
 
 #include "math/ViewGenerator.h"
 #include "math/Constants.h"
@@ -58,6 +59,7 @@ MainMenuContext::MainMenuContext() {
         );
     m_pipeline = ResourceRegistry::get<Render::Pipeline>("game");
     m_gameStage = ResourceRegistry::get<Render::Stage>("game");
+    m_textureContext = boost::make_shared<Render::TextureContext>();
 
     // camera setup
     m_gameStage->camera()->setProjection(Math::ViewGenerator().perspective(
@@ -264,6 +266,8 @@ void MainMenuContext::run() {
         Math::Vector(1.0, 0.75, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
 
+    m_scaler->fill(m_guiStage->renderables());
+
     m_scaler->setFactor(m_scaler->factor() / 1.001);
 
     m_mouseInteractor->updateMouseActivation(m_outlineRegistry);
@@ -279,7 +283,7 @@ void MainMenuContext::run() {
     m_gameStage->camera()->step(sinceLast.toUsec() / 1e3);
 
     Profile::Tracker::instance()->beginTimer("Rendering");
-    m_pipeline->render();
+    m_pipeline->render(m_textureContext);
     Profile::Tracker::instance()->endTimer("Rendering");
 
     GLint err = glGetError();

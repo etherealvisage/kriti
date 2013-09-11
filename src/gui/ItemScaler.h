@@ -13,6 +13,9 @@ private:
 public:
     ItemScaler() : m_factor(1.0) {}
 
+    virtual void fill(
+        boost::shared_ptr<Render::RenderableContainer> container);
+
     void setChild(boost::shared_ptr<LayoutItem> child) { m_child = child; }
 
     double factor() const { return m_factor; }

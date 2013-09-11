@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include <stdint.h>
+
 #include <boost/shared_ptr.hpp>
 
 namespace Kriti {
@@ -12,8 +14,8 @@ class Texture;
 
 class TextureContext {
 private:
-    int m_round;
-    std::vector<std::pair<int, boost::shared_ptr<Texture>>> m_bindings;
+    int64_t m_round;
+    std::vector<std::pair<int64_t, boost::shared_ptr<Texture>>> m_bindings;
     int m_lastUnit;
 public:
     TextureContext();

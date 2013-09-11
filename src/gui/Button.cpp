@@ -22,18 +22,35 @@ Math::Vector Button::minSize() {
     return m_minSize;
 }
 
+void Button::fill(boost::shared_ptr<Render::RenderableContainer> container) {
+    if(m_renderable) container->add(m_renderable);
+    if(m_label) m_label->fill(container);
+}
+
 void Button::updated(boost::shared_ptr<OutlineRegistry> registry) {
     registry->updateOutline(shared_from_this(), pos(), size());
 
-#if 0
-    // TODO: re-use old renderable . . . this is expensive.
-    if(m_renderable) m_stage->removeRenderable(m_renderable);
-    m_renderable = Render::RenderableFactory().fromQuad(
-        pos(),
-        pos() + Math::Vector(0,size().y()),
-        pos() + size(),
-        pos() + Math::Vector(size().x()),
-        "gui_button");
+    if(!m_renderable) {
+        m_renderable = Render::RenderableFactory().fromQuad(
+            pos(),
+            pos() + Math::Vector(0,size().y()),
+            pos() + size(),
+            pos() + Math::Vector(size().x()),
+            "gui_button");
+    }
+    else {
+        std::vector<Math::Vector> loc;
+        loc.push_back(pos());
+        loc.push_back(pos() + Math::Vector(0,size().y()));
+        loc.push_back(pos() + size());
+
+        loc.push_back(pos());
+        loc.push_back(pos() + size());
+        loc.push_back(pos() + Math::Vector(size().x()));
+
+        m_renderable->renderSequence(0)->vao()->vbo(
+            Render::VAO::Vertex)->setData3(loc);
+    }
     m_renderable->renderSequence(0)->extraParams().setParam("button_xscale",
         (size().x() / Scale().xtotal()) / scale().x());
     m_renderable->renderSequence(0)->extraParams().setParam("button_yscale",
@@ -62,13 +79,9 @@ void Button::updated(boost::shared_ptr<OutlineRegistry> registry) {
     m_renderable->renderSequence(0)->extraParams().setParam(
         "button_activation", m_activation);
 
-
-    m_stage->addRenderable(m_renderable);
-
     m_label->update(registry,
         pos() + Scale().padding()*scale() + Scale().perLayer(),
         size() - Scale().padding()*scale()*2, scale());
-#endif
 }
 
 }  // namespace GUI

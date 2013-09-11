@@ -18,6 +18,9 @@ public:
         boost::shared_ptr<Font> font, std::string text);
 
     virtual Math::Vector minSize();
+
+    virtual void fill(
+        boost::shared_ptr<Render::RenderableContainer> container);
 protected:
     virtual void updated(boost::shared_ptr<OutlineRegistry> registry);
 };

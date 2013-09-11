@@ -152,6 +152,10 @@ public:
         return m_x == other.m_x && m_y == other.m_y && m_z == other.m_z;
     }
 
+    bool operator!=(const Vector &other) const {
+        return !(*this == other);
+    }
+
     std::string toString() const;
 };
 

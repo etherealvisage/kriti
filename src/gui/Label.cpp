@@ -14,7 +14,7 @@ namespace GUI {
 Label::Label(Math::Vector stretch, boost::shared_ptr<Font> font,
     std::string text, HorizontalAlignment halign, VerticalAlignment valign)
     : Widget(stretch), m_font(font), m_text(text), m_halign(halign),
-    m_valign(valign) {
+    m_valign(valign), m_regen(true) {
 
     m_textScale = ResourceRegistry::get<XMLResource>(
         "config")->doc().first_element_by_path(
@@ -31,14 +31,22 @@ Math::Vector Label::minSize() {
     return lr-ul;
 }
 
+void Label::fill(boost::shared_ptr<Render::RenderableContainer> container) {
+    if(m_renderable) container->add(m_renderable);
+}
+
 void Label::updated(
     boost::shared_ptr<OutlineRegistry> __attribute__((unused)) registry) {
 
-#if 0
-    // TODO: re-use old renderable . . . this is expensive.
-    //if(m_renderable) m_stage->removeRenderable(m_renderable);
-
-    m_renderable = TextRenderer().render(m_font, m_text, scale()*m_textScale);
+    if(!m_renderable) {
+        m_renderable = TextRenderer().render(m_font, m_text, scale()*m_textScale);
+    }
+    else if(!(m_lastScale == scale()) || m_regen) {
+        auto temp = TextRenderer().render(m_font, m_text, scale()*m_textScale);
+        m_renderable->clearRenderSequences();
+        m_renderable->addRenderSequence(temp->renderSequence(0));
+        m_regen = false;
+    }
 
     Math::Vector ul, lr;
     TextRenderer().size(m_font, m_text, ul, lr);
@@ -73,9 +81,6 @@ void Label::updated(
 
     m_renderable->location()
         = pos() + Math::Vector(0.0, size().y() - (lr.y() - ul.y())) + offset;
-
-    m_stage->addRenderable(m_renderable);
-#endif
 }
 
 }  // namespace GUI

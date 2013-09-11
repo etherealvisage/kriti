@@ -4,6 +4,7 @@
 #include "LayoutItem.h"
 
 #include "render/Renderable.h"
+#include "render/RenderableContainer.h"
 
 namespace Kriti {
 

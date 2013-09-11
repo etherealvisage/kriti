@@ -14,6 +14,13 @@ Math::Vector Panel::minSize() {
     return m_minSize + Scale().padding()*2;
 }
 
+void Panel::fill(boost::shared_ptr<Render::RenderableContainer> container) {
+    if(m_renderable) {
+        container->add(m_renderable);
+    }
+    m_layout->fill(container);
+}
+
 void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
     registry->updateOutline(shared_from_this(), pos(), size());
 

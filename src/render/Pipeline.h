@@ -27,9 +27,10 @@ public:
     void setLastStage(boost::shared_ptr<Stage> lastStage)
         { m_lastStage = lastStage; }
 
-    void render();
+    void render(boost::shared_ptr<TextureContext> textureContext);
 private:
-    void render(Uniforms &tp, boost::shared_ptr<Stage> stage);
+    void render(Uniforms &tp, boost::shared_ptr<TextureContext> textureContext,
+        boost::shared_ptr<Stage> stage);
 };
 
 }  // namespace Render

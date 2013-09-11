@@ -6,6 +6,8 @@
 #include "math/Vector.h"
 #include "math/AffineTransformation.h"
 
+#include "render/RenderableContainer.h"
+
 #include "OutlineRegistry.h"
 #include "MouseState.h"
 
@@ -27,6 +29,11 @@ public:
     void update(boost::shared_ptr<OutlineRegistry> registry, Math::Vector pos,
         Math::Vector size, Math::Vector scale)
         { m_pos = pos, m_size = size, m_scale = scale; updated(registry); }
+
+    /// fill in/register all renderables into the container
+    /// should be re-implemented in derived types
+    virtual void fill(boost::shared_ptr<Render::RenderableContainer>
+            __attribute__((unused)) container) {}
     
     Math::Vector pos() const { return m_pos; }
     Math::Vector size() const { return m_size; }

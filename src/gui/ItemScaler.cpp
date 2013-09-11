@@ -3,6 +3,12 @@
 namespace Kriti {
 namespace GUI {
 
+void ItemScaler::fill(
+    boost::shared_ptr<Render::RenderableContainer> container) {
+    
+    if(m_child) m_child->fill(container);
+}
+
 Math::Vector ItemScaler::minSize() {
     if(m_child) return m_child->minSize();
     return Math::Vector();

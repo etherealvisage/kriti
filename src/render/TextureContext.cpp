@@ -38,10 +38,14 @@ int TextureContext::bind(boost::shared_ptr<Texture> texture) {
         int in = (m_lastUnit+i)%m_bindings.size();
         if(m_bindings[in].first >= m_round) continue;
 
+        //Message3(Render, Debug, "Selecting texture unit offset " << i);
+
         m_bindings[in] = std::make_pair(m_round, texture);
 
         texture->bindToUnit(in);
         m_lastUnit = in;
+
+        //Message3(Render, Debug, "Seting last unit to " << m_lastUnit);
         return in;
     }
 

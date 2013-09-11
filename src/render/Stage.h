@@ -25,7 +25,6 @@ private:
     SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
-    boost::shared_ptr<TextureContext> m_textureContext;
 
     // what stage is it from, what attachment on that stage's framebuffer,
     // and what uniform to fill with the sampler2D.
@@ -62,11 +61,13 @@ public:
 
     std::string name() const { return m_name; }
 
-    void render(Uniforms &globalParams, bool isLast = false);
+    void render(Uniforms &globalParams,
+        boost::shared_ptr<TextureContext> textureContext, bool isLast = false);
 private:
     void initialize(int outputs, int width, int height);
 
     void renderRenderable(Uniforms &globalParams,
+        boost::shared_ptr<TextureContext> textureContext,
         boost::shared_ptr<Renderable> renderable);
 };
 

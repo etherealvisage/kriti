@@ -21,6 +21,9 @@ public:
 
     virtual Math::Vector stretch() { return m_stretch; }
 
+    virtual void fill(
+        boost::shared_ptr<Render::RenderableContainer> container);
+
     void addItem(boost::shared_ptr<LayoutItem> item)
         { m_items.push_back(item); }
 };
