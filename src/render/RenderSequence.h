@@ -44,7 +44,6 @@ public:
 
     void draw(const Uniforms &params,
         std::map<boost::weak_ptr<Material>, Uniforms> &materialParams,
-        boost::shared_ptr<TextureContext> textureContext,
         const Math::Matrix &modelTransformation);
 };
 

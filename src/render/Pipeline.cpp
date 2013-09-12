@@ -29,27 +29,25 @@ bool Pipeline::loadFrom(std::string identifier) {
     return true;
 }
 
-void Pipeline::render(boost::shared_ptr<TextureContext> textureContext) {
+void Pipeline::render() {
     Uniforms u;
     u.setParam("time", (int)TimeValue::current().toMsec());
 
     m_rendered.clear();
-    render(u, textureContext, m_lastStage);
+    render(u, m_lastStage);
 }
 
-void Pipeline::render(Uniforms &tp,
-    boost::shared_ptr<TextureContext> textureContext,
-    boost::shared_ptr<Stage> stage) {
+void Pipeline::render(Uniforms &tp, boost::shared_ptr<Stage> stage) {
 
     // check if it's already been rendered.
     if(m_rendered.find(stage) != m_rendered.end()) return;
 
     // render all previous
     for(int i = 0; i < stage->previousCount(); i ++) {
-        render(tp, textureContext, stage->previous(i));
+        render(tp, stage->previous(i));
     }
 
-    stage->render(tp, textureContext, stage == m_lastStage);
+    stage->render(tp, stage == m_lastStage);
 
     m_rendered.insert(stage);
 }

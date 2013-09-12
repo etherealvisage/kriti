@@ -36,7 +36,6 @@ private:
 
     int m_width, m_height;
     std::string m_name;
-
 public:
     Stage();
     Stage(int outputs, int width, int height, std::string name);
@@ -64,14 +63,12 @@ public:
 
     std::string name() const { return m_name; }
 
-    void render(Uniforms &globalParams,
-        boost::shared_ptr<TextureContext> textureContext, bool isLast = false);
+    void render(Uniforms &globalParams, bool isLast = false);
 private:
     void initialize(int outputs, int width, int height);
 
     void renderRenderable(Uniforms &globalParams,
         MaterialParams &materialParams,
-        boost::shared_ptr<TextureContext> textureContext,
         boost::shared_ptr<Renderable> renderable);
 };
 

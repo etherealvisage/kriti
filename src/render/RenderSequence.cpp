@@ -15,12 +15,11 @@ namespace Render {
 
 void RenderSequence::draw(const Uniforms &params,
     std::map<boost::weak_ptr<Material>, Uniforms> &materialParams,
-    boost::shared_ptr<TextureContext> textureContext,
     const Math::Matrix &modelTransformation) {
 
     m_vao->bind();
     auto program = m_material->program();
-    program->activate(textureContext);
+    program->activate();
     m_material->params().set(program);
     program->setUniform("model", modelTransformation);
     m_extraParams.set(program);

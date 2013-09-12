@@ -8,6 +8,8 @@
 namespace Kriti {
 namespace Render {
 
+boost::shared_ptr<TextureContext> TextureContext::s_singleton;
+
 TextureContext::TextureContext() {
     GLint count;
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &count);

@@ -59,7 +59,6 @@ MainMenuContext::MainMenuContext() {
         );
     m_pipeline = ResourceRegistry::get<Render::Pipeline>("game");
     m_gameStage = ResourceRegistry::get<Render::Stage>("game");
-    m_textureContext = boost::make_shared<Render::TextureContext>();
 
     // camera setup
     m_gameStage->camera()->setProjection(Math::ViewGenerator().perspective(
@@ -283,7 +282,7 @@ void MainMenuContext::run() {
     m_gameStage->camera()->step(sinceLast.toUsec() / 1e3);
 
     Profile::Tracker::instance()->beginTimer("Rendering");
-    m_pipeline->render(m_textureContext);
+    m_pipeline->render();
     Profile::Tracker::instance()->endTimer("Rendering");
 
     GLint err = glGetError();

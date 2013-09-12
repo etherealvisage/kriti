@@ -72,18 +72,17 @@ void Program::setUniform(const std::string &name,
 
     GLint location = getUniformLocation(name);
     if(location != -1) {
-        int index = m_textureContext->bind(texture);
+        int index = TextureContext::instance()->bind(texture);
         glUniform1i(location, index);
     }
 }
 
-void Program::activate(boost::shared_ptr<TextureContext> textureContext) {
+void Program::activate() {
     if(m_programID == 0) {
         Message3(Render, Error, "Activating non-loaded Program . . .");
     }
     glUseProgram(m_programID);
-    m_textureContext = textureContext;
-    m_textureContext->nextProgram();
+    TextureContext::instance()->nextProgram();
 }
 
 GLint Program::getUniformLocation(const std::string &name) {

@@ -16,6 +16,7 @@
 #include "game/MainMenuContext.h"
 #include "profile/Tracker.h"
 #include "gui/Loader.h"
+#include "render/TextureContext.h"
 
 #include "XMLResource.h"
 
@@ -48,6 +49,9 @@ int main() {
     // create input devices.
     dmanager->registerDevices();
 
+    // initialize rendering infrastructure
+    Render::TextureContext::instance();
+
     // initialize GUI system
     GUI::Loader::instance();
 
@@ -67,6 +71,8 @@ int main() {
     Context::ContextManager::destroy();
 
     GUI::Loader::destroy();
+
+    Render::TextureContext::destroy();
 
     Interface::Video::destroy();
     Interface::DeviceManager::destroy();

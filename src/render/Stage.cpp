@@ -126,8 +126,7 @@ void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
         uniformName));
 }
 
-void Stage::render(Uniforms &globalParams,
-    boost::shared_ptr<TextureContext> textureContext, bool isLast) {
+void Stage::render(Uniforms &globalParams, bool isLast) {
 
     Profile::Tracker::instance()->beginGLTimer(m_name);
     auto cameraMatrix = m_camera.matrix();
@@ -154,7 +153,7 @@ void Stage::render(Uniforms &globalParams,
 
     m_renderables->iterate(
         boost::bind(&Stage::renderRenderable, this, globalParams,
-            materialParams, textureContext, _1));
+            materialParams, _1));
 
     Profile::Tracker::instance()->endGLTimer(m_name);
 }
@@ -182,15 +181,13 @@ void Stage::initialize(int outputs, int width, int height) {
 }
 
 void Stage::renderRenderable(Uniforms &globalParams,
-    MaterialParams &materialParams,
-    boost::shared_ptr<TextureContext> textureContext,
-    boost::shared_ptr<Renderable> renderable) {
+    MaterialParams &materialParams, boost::shared_ptr<Renderable> renderable) {
 
     auto error = glGetError();
     if(error != GL_NO_ERROR) {
         Message3(Render, Error, "GL error: " << gluErrorString(error));
     }
-    renderable->draw(globalParams, materialParams, textureContext);
+    renderable->draw(globalParams, materialParams);
 }
 
 }  // namespace Render

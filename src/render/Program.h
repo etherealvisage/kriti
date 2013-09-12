@@ -17,8 +17,6 @@ class TextureContext;
 
 class Program {
 private:
-    boost::shared_ptr<TextureContext> m_textureContext;
-
     std::string m_vsName;
     boost::shared_ptr<Shader> m_vertexShader;
     std::string m_fsName;
@@ -36,7 +34,7 @@ public:
     void setUniform(const std::string &name,
         boost::shared_ptr<Texture> texture);
 
-    void activate(boost::shared_ptr<TextureContext> textureContext);
+    void activate();
 private:
     GLint getUniformLocation(const std::string &name);
 };
