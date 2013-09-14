@@ -33,7 +33,7 @@ public:
 private:
     void makeTexture();
     void makeBlank();
-    void makeFromFile();
+    void makeFromFile(std::string filename, int mipmap);
 };
 
 }  // namespace Render

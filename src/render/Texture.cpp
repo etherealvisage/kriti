@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include <GL/glew.h>
 
 #include <SDL_image.h>
@@ -6,6 +8,7 @@
 #include "Texture.h"
 
 #include "ResourceRegistry.h"
+#include "XMLResource.h"
 #include "FileResource.h"
 #include "MessageSystem.h"
 
@@ -27,47 +30,19 @@ Texture::~Texture() {
 }
 
 bool Texture::loadFrom(std::string identifier) {
-    auto file = ResourceRegistry::get<FileResource>(
-        "textures/" + identifier + ".png");
+    auto node = ResourceRegistry::get<XMLResource>(
+        "data")->doc().first_element_by_path(
+        "/kriti/textures/").find_child_by_attribute("name",
+        identifier.c_str());
 
-    std::string contents = file->fileContent();
+    for(auto child : node.children()) {
+        if(std::strcmp(child.name(), "mipmap")) continue;
 
-    SDL_Surface *result =
-        IMG_Load_RW(SDL_RWFromConstMem(contents.data(), contents.size()), 1);
+        int level = child.attribute("level").as_int(0);
 
-    if(!result) {
-        Message3(Render, Error, "Could not load texture: " << IMG_GetError());
-        return false;
+        makeFromFile(std::string("textures/") + child.text().as_string(""),
+            level);
     }
-    m_width = result->w;
-    m_height = result->h;
-
-    //auto fmt = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA8888);
-    auto fmt = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
-    SDL_Surface *conv = SDL_ConvertSurface(result, fmt, 0);
-
-    glBindTexture(GL_TEXTURE_2D, m_id);
-
-    glTexImage2D(GL_TEXTURE_2D,
-        // level 0, no mipmapping...
-        0, 
-        // internal format: RGBA, floats.
-        GL_RGBA32F,
-        // width and height
-        m_width, m_height,
-        // border?
-        0,
-        // input format
-        GL_RGBA,
-        // input
-        GL_UNSIGNED_BYTE,
-        // input data
-        conv->pixels
-    );
-
-    SDL_FreeSurface(result);
-    SDL_FreeSurface(conv);
-    SDL_FreeFormat(fmt);
 
     return true;
 }
@@ -122,6 +97,48 @@ void Texture::makeBlank() {
     );
 
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::makeFromFile(std::string filename, int mipmap) {
+    auto file = ResourceRegistry::get<FileResource>(filename);
+
+    std::string contents = file->fileContent();
+
+    SDL_Surface *result =
+        IMG_Load_RW(SDL_RWFromConstMem(contents.data(), contents.size()), 1);
+
+    if(!result) {
+        Message3(Render, Error, "Could not load texture: " << IMG_GetError());
+        return;
+    }
+    m_width = result->w;
+    m_height = result->h;
+
+    auto fmt = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface *conv = SDL_ConvertSurface(result, fmt, 0);
+
+    glBindTexture(GL_TEXTURE_2D, m_id);
+
+    glTexImage2D(GL_TEXTURE_2D,
+        // mipmap level
+        mipmap, 
+        // internal format: RGBA, floats.
+        GL_RGBA32F,
+        // width and height
+        m_width, m_height,
+        // border?
+        0,
+        // input format
+        GL_RGBA,
+        // input
+        GL_UNSIGNED_BYTE,
+        // input data
+        conv->pixels
+    );
+
+    SDL_FreeSurface(result);
+    SDL_FreeSurface(conv);
+    SDL_FreeFormat(fmt);
 }
 
 }  // namespace Render

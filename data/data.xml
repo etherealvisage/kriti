@@ -107,7 +107,10 @@
                 <stretch x="1" y="1" />
 
                 <text>Start</text>
+
+                <event-hook event="activated" target="mm_panel_start" />
             </widget>
+<!--
             <widget type="button" name="main-menu-quit">
                 <font>ubuntu</font>
                 <min-size width="0" height="0" />
@@ -115,6 +118,7 @@
 
                 <text>Quit</text>
             </widget>
+-->
         </widget>
     </gui>
 </guis>
