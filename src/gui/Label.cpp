@@ -11,10 +11,11 @@
 namespace Kriti {
 namespace GUI {
 
-Label::Label(Math::Vector stretch, boost::shared_ptr<Font> font,
-    std::string text, HorizontalAlignment halign, VerticalAlignment valign)
-    : Widget(stretch), m_font(font), m_text(text), m_halign(halign),
-    m_valign(valign), m_regen(true) {
+Label::Label(Math::Vector minSize, Math::Vector stretch,
+    boost::shared_ptr<Font> font, std::string text, HorizontalAlignment halign,
+    VerticalAlignment valign) : Widget(stretch), m_minSize(minSize),
+    m_font(font), m_text(text), m_halign(halign), m_valign(valign),
+    m_regen(true) {
 
     m_textScale = ResourceRegistry::get<XMLResource>(
         "config")->doc().first_element_by_path(
@@ -28,7 +29,10 @@ Math::Vector Label::minSize() {
     ul = ul * m_textScale;
     lr = lr * m_textScale;
 
-    return lr-ul;
+    Math::Vector textMinSize = lr-ul;
+
+    return Math::Vector(std::max(textMinSize.x(), m_minSize.x()),
+        std::max(textMinSize.y(), m_minSize.y()));
 }
 
 void Label::fill(boost::shared_ptr<Render::RenderableContainer> container) {

@@ -26,6 +26,7 @@
 #include "gui/TextRenderer.h"
 #include "gui/Scale.h"
 #include "gui/PackedLayout.h"
+#include "gui/Loader.h"
 
 #include "track/RandomGenerator.h"
 #include "track/ClosedSubdivider.h"
@@ -141,53 +142,11 @@ MainMenuContext::MainMenuContext() {
     Profile::Tracker::instance()->addTimer("GUI updating");
     Profile::Tracker::instance()->addCounter("Triangles");
 
-    m_quitButton = boost::make_shared<GUI::Button>(
-        Math::Vector(), Math::Vector(1.0, 1.0), font, "Quit");
-
-    m_fpsLabel = boost::make_shared<GUI::Label>(
-        Math::Vector(1.0, 1.0), font, "This is a much longer label");
-    m_fpsLabel2 = boost::make_shared<GUI::Label>(
-        Math::Vector(1.0, 1.0), font, "This is a much longer label");
-    m_fpsLabel3 = boost::make_shared<GUI::Label>(
-        Math::Vector(1.0, 1.0), font, "This is yet another label...");
-    {
-        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
-        layout->addItem(m_fpsLabel);
-        layout->addItem(m_fpsLabel2);
-        m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1),
-            layout);
-    }
-    {
-        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
-        layout->addItem(m_fpsLabel2);
-        m_testPanel2 = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1),
-            layout);
-    }
-    {
-        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
-        layout->addItem(m_testPanel);
-        layout->addItem(m_quitButton);
-        m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1),
-            layout);
-    }
-    {
-        auto layout = boost::make_shared<GUI::PackedLayout>(Math::Vector());
-        layout->addItem(m_testPanel);
-        layout->addItem(m_testPanel2);
-        m_testPanel = boost::make_shared<GUI::Panel>(
-            Math::Vector(), Math::Vector(1,1),
-            layout);
-    }
-    {
-        m_scaler = boost::make_shared<GUI::ItemScaler>();
-        m_scaler->setChild(m_testPanel);
-    }
-
     m_outlineRegistry = boost::make_shared<GUI::OutlineRegistry>();
     m_mouseInteractor = boost::make_shared<GUI::MouseInteractor>();
+
+    m_guiRoot = GUI::Loader::instance()->guiByName<GUI::Widget>("test");
+    Message3(Game, Debug, "m_guiRoot: " << m_guiRoot);
 
     Interface::DeviceManager::instance()->mouseRouter()->motionSignal(
         ).connect(
@@ -253,21 +212,30 @@ void MainMenuContext::run() {
         u.setParam("gui_yscale", GUI::Scale().yscale());
     }
 
-    m_fpsLabel->setText(StreamAsString() << "FPS: " <<
-        m_frames.size()/(interval.toMsec()/1000.0));
+    GUI::Loader::instance()->widgetByName<GUI::Label>("fps-label")->setText(
+       StreamAsString() << "FPS: "
+           << m_frames.size()/(interval.toMsec()/1000.0)); 
+    /*m_fpsLabel->setText(StreamAsString() << "FPS: " <<
+        m_frames.size()/(interval.toMsec()/1000.0));*/
 
     //Message3(Game, Debug, "Main update");
 
     Profile::Tracker::instance()->beginTimer("GUI updating");
     //m_testPanel->update(m_outlineRegistry,
-    m_scaler->update(m_outlineRegistry,
+    /*m_scaler->update(m_outlineRegistry,
+        Math::Vector(-2*Interface::Video::instance()->aspectRatio()/3.0, -0.5),
+        Math::Vector(1.0, 0.75, 0.0),
+        Math::Vector(1.0, 1.0, 1.0));*/
+
+    m_guiRoot->fill(m_guiStage->renderables());
+    m_guiRoot->update(m_outlineRegistry,
         Math::Vector(-2*Interface::Video::instance()->aspectRatio()/3.0, -0.5),
         Math::Vector(1.0, 0.75, 0.0),
         Math::Vector(1.0, 1.0, 1.0));
 
-    m_scaler->fill(m_guiStage->renderables());
+    /*m_scaler->fill(m_guiStage->renderables());
 
-    m_scaler->setFactor(m_scaler->factor() / 1.001);
+    m_scaler->setFactor(m_scaler->factor() / 1.001); */
 
     m_mouseInteractor->updateMouseActivation(m_outlineRegistry);
     Profile::Tracker::instance()->endTimer("GUI updating");

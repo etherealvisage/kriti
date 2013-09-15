@@ -23,6 +23,7 @@ public:
         Bottom 
     };
 private:
+    Math::Vector m_minSize;
     boost::shared_ptr<Font> m_font;
     std::string m_text;
     HorizontalAlignment m_halign;
@@ -31,7 +32,8 @@ private:
     bool m_regen;
     Math::Vector m_lastScale;
 public:
-    Label(Math::Vector stretch, boost::shared_ptr<Font> font, std::string text,
+    Label(Math::Vector minSize, Math::Vector stretch,
+        boost::shared_ptr<Font> font, std::string text,
         HorizontalAlignment halign = HCentre,
         VerticalAlignment valign = VCentre);
 

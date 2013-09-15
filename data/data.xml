@@ -2,7 +2,8 @@
 
 <kriti>
 
-<textures> <texture name="cursor">
+<textures>
+    <texture name="cursor">
         <mipmap level="0">cursor.png</mipmap>
     </texture>
 
@@ -91,6 +92,23 @@
 </render>
 
 <guis>
+    <gui name="test">
+        <widget type="panel">
+            <layout type="packed" direction="vertical" />
+
+            <widget type="button">
+                <font>ubuntu</font>
+                <text>Test button</text>
+
+                <stretch x="1" y="0" />
+            </widget>
+            <widget type="label" name="fps-label">
+                <font>ubuntu</font>
+                <text>Test label</text>
+            </widget>
+        </widget>
+    </gui>
+
     <gui name="fps">
         <widget type="label" name="fps_label">
             <align vertical="centre" horizontal="centre" />

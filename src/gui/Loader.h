@@ -33,11 +33,11 @@ private:
 public:
     template<typename T>
     boost::shared_ptr<T> guiByName(std::string name) {
-        return boost::shared_ptr<T>();
+        return boost::dynamic_pointer_cast<T>(m_guis[name]);
     }
     template<typename T>
     boost::shared_ptr<T> widgetByName(std::string name) {
-        return boost::shared_ptr<T>();
+        return boost::dynamic_pointer_cast<T>(m_namedWidgets[name]);
     }
 private:
     void load();
