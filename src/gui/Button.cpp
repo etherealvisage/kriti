@@ -19,7 +19,11 @@ Button::Button(Math::Vector minSize, Math::Vector stretch,
 }
 
 Math::Vector Button::minSize() {
-    return m_minSize;
+    Math::Vector label_min = m_label->minSize() + Scale().padding()*scale()*2;
+
+    return Math::Vector(
+        std::max(label_min.x(), m_minSize.x()),
+        std::max(label_min.y(), m_minSize.y()));
 }
 
 void Button::fill(boost::shared_ptr<Render::RenderableContainer> container) {

@@ -31,9 +31,7 @@ void Loader::load() {
 
     for(auto child : node) {
         std::string guiName = child.attribute("name").as_string("");
-        Message3(GUI, Debug, "Loading GUI named \"" << guiName << "\"");
         m_guis[guiName] = loadWidget(child.child("widget"));
-        Message3(GUI, Debug, "Result: " << m_guis[guiName]);
     }
 }
 
@@ -51,7 +49,7 @@ boost::shared_ptr<Widget> Loader::loadWidget(const pugi::xml_node &from) {
 
     auto snode = from.child("stretch");
     Math::Vector stretch(snode.attribute("x").as_double(1.0),
-        snode.attribute("x").as_double(1.0));
+        snode.attribute("y").as_double(1.0));
 
     if(type == "panel") {
         auto lnode = from.child("layout");

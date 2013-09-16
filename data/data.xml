@@ -105,6 +105,8 @@
             <widget type="label" name="fps-label">
                 <font>ubuntu</font>
                 <text>Test label</text>
+
+                <stretch x="1" y="0" />
             </widget>
         </widget>
     </gui>
