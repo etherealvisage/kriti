@@ -20,6 +20,8 @@
 
 #include "XMLResource.h"
 
+#include "AssimpWrapper.h"
+
 int main() {
     using namespace Kriti;
     std::cout << "Kriti." << std::endl;
@@ -54,6 +56,9 @@ int main() {
 
     // initialize GUI system
     GUI::Loader::instance();
+
+    // initialize the Open Asset Import Library wrapper
+    AssimpWrapper::instance();
 
     // initialize context manager
     Context::ContextManager::instance();

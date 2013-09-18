@@ -49,12 +49,15 @@ find_package(GLEW)
 include_directories(${GLEW_INCLUDE_DIR})
 
 include_directories(${pugixmlInclude})
+include_directories(${assimpInclude})
 
 add_executable(kriti ${sources})
 
 target_link_libraries(kriti
     # pugixml from source tree
     pugixml
+    # assimp from source tree
+    assimp
 
     ${Boost_LIBRARIES}
     ${BULLET_LIBRARIES}
