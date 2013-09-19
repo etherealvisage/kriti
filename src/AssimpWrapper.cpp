@@ -10,7 +10,7 @@ boost::shared_ptr<AssimpWrapper> AssimpWrapper::s_singleton;
 AssimpWrapper::AssimpWrapper() {
     Assimp::Importer importer;
 
-    Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
+    Assimp::DefaultLogger::create("", Assimp::Logger::NORMAL);
 
     Assimp::DefaultLogger::get()->attachStream(
         new LogStream<MessageSystem::Debug>(), Assimp::Logger::Debugging);

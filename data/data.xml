@@ -58,6 +58,11 @@
 
         <uniform name="maxblend" type="float">0.5</uniform>
     </material>
+
+    <material name="scene-tex-0">
+        <vertex-shader>simple</vertex-shader>
+        <fragment-shader>scene_tex_0</fragment-shader>
+    </material>
 </materials>
 
 <fonts>

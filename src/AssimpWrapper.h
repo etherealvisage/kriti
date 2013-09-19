@@ -39,6 +39,8 @@ private:
     AssimpWrapper();
 public:
     ~AssimpWrapper();
+
+    
 };
 
 }  // namespace Kriti

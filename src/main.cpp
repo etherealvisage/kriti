@@ -17,6 +17,7 @@
 #include "profile/Tracker.h"
 #include "gui/Loader.h"
 #include "render/TextureContext.h"
+#include "scene/Model.h"
 
 #include "XMLResource.h"
 
@@ -62,6 +63,8 @@ int main() {
 
     // initialize context manager
     Context::ContextManager::instance();
+
+    auto result = ResourceRegistry::get<Scene::Model>("cart_wheel.3ds");
 
     Context::ContextManager::instance()->addContext(
         new Game::MainMenuContext()

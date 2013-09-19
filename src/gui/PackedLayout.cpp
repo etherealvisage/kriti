@@ -17,6 +17,10 @@ Math::Vector PackedLayout::minSize() {
             minY += item->minSize().y();
         }
 
+        if(m_items.size() > 0) {
+            minY += (m_items.size()-1) * Scale().padding().y() * scale().y();
+        }
+
         return Math::Vector(maxX, minY);
     }
     else return Math::Vector();
@@ -26,10 +30,15 @@ void PackedLayout::updated(boost::shared_ptr<OutlineRegistry> registry) {
     if(m_dir == Vertical) {
         double minY = 0.0;
         double stretchY = 0.0;
+        double ypad = Scale().padding().y() * scale().y();
 
         for(auto item : m_items) {
             minY += item->minSize().y();
             stretchY += item->stretch().y();
+        }
+
+        if(m_items.size() > 0) {
+            minY += (m_items.size()-1) * ypad;
         }
 
         if(stretchY == 0.0) stretchY = 1.0;
@@ -46,6 +55,7 @@ void PackedLayout::updated(boost::shared_ptr<OutlineRegistry> registry) {
                 Math::Vector(size().x(), height), scale());
 
             cursor += height;
+            cursor += ypad;
         }
     }
 }

@@ -16,7 +16,8 @@
     MS_Subsystem(Track), \
     MS_Subsystem(GUI), \
     MS_Subsystem(Profile), \
-    MS_Subsystem(Assimp)
+    MS_Subsystem(Assimp), \
+    MS_Subsystem(Scene)
 
 #define MS_Types \
     MS_Type(Debug), \
