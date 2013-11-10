@@ -3,9 +3,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "MessageSystem.h"
-
 #include <assimp/LogStream.hpp>
+#include <assimp/types.h>
+
+#include "math/Vector.h"
+
+#include "MessageSystem.h"
 
 namespace Kriti {
 
@@ -40,7 +43,8 @@ private:
 public:
     ~AssimpWrapper();
 
-    
+    static Math::Vector convertColour(const aiColor3D &colour);
+    static aiColor3D convertColour(const Math::Vector &colour);
 };
 
 }  // namespace Kriti

@@ -43,6 +43,13 @@ Program::Program(std::string vsName, std::string fsName) : m_vsName(vsName),
     }
 }
 
+void Program::setUniform(const std::string &name, const Math::Vector &value) {
+    GLint location = getUniformLocation(name);
+    if(location != -1) {
+        glUniform3f(location, value.x(), value.y(), value.z());
+    }
+}
+
 void Program::setUniform(const std::string &name,
     const Math::Matrix &matrix) {
 

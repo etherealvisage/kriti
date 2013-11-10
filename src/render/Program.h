@@ -28,6 +28,7 @@ private:
 public:
     Program(std::string vsName, std::string fsName);
     
+    void setUniform(const std::string &name, const Math::Vector &vector);
     void setUniform(const std::string &name, const Math::Matrix &matrix);
     void setUniform(const std::string &name, int value);
     void setUniform(const std::string &name, float value);

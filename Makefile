@@ -9,3 +9,8 @@ redep:
 .PHONY: clean
 clean:
 	$(MAKE) -C build clean
+
+.PHONY: distclean
+distclean:
+	$(MAKE) -C build clean
+	rm -rf build

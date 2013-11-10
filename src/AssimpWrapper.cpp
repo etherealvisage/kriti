@@ -26,4 +26,12 @@ AssimpWrapper::~AssimpWrapper() {
     Assimp::DefaultLogger::kill();
 }
 
+Math::Vector AssimpWrapper::convertColour(const aiColor3D &colour) {
+    return Math::Vector(colour.r, colour.g, colour.b);
+}
+
+aiColor3D AssimpWrapper::convertColour(const Math::Vector &colour) {
+    return aiColor3D(colour.x(), colour.y(), colour.z());
+}
+
 }  // namespace Kriti

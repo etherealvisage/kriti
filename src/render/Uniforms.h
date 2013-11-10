@@ -18,6 +18,7 @@ class Uniforms {
 private:
     std::map<std::string, int> m_ints;
     std::map<std::string, float> m_floats;
+    std::map<std::string, Math::Vector> m_vectors;
     std::map<std::string, Math::Matrix> m_matrices;
     std::map<std::string, boost::shared_ptr<Texture>> m_textures;
 public:
@@ -25,6 +26,7 @@ public:
     void setParam(std::string name, float value);
     void setParam(std::string name, double value)
         { setParam(name, (float)value); }
+    void setParam(std::string name, const Math::Vector &vector);
     void setParam(std::string name, const Math::Matrix &matrix);
     void setParam(std::string name, boost::shared_ptr<Texture> texture);
 
