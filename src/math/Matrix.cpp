@@ -5,7 +5,7 @@ namespace Math {
 
 Matrix::Matrix() {
     for(int i = 0; i < 16; i ++) {
-        m_coefficients[i] = ((i % 5) == 0);
+        m_coefficients[i] = ((i % 5) == 0) ? 1 : 0;
     }
 }
 

@@ -21,7 +21,7 @@ void RenderSequence::draw(const Uniforms &params,
     auto program = m_material->program();
     program->activate();
     m_material->params().set(program);
-    program->setUniform("model", modelTransformation);
+    program->setUniform("model", m_sequenceTransform * modelTransformation);
     m_extraParams.set(program);
 
     materialParams[m_material].set(program);

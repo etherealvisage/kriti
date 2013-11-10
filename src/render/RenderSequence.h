@@ -26,6 +26,7 @@ private:
     RenderType m_type;
     RenderMode m_mode;
     Uniforms m_extraParams;
+    Math::Matrix m_sequenceTransform;
 public:
     RenderSequence(boost::shared_ptr<Material> material,
         boost::shared_ptr<VAO> vao, int start, int end,
@@ -41,6 +42,10 @@ public:
 
     Uniforms &extraParams() { return m_extraParams; }
     const Uniforms &extraParams() const { return m_extraParams; }
+
+    Math::Matrix &sequenceTransform() { return m_sequenceTransform; }
+    const Math::Matrix &sequenceTransform() const
+        { return m_sequenceTransform; }
 
     void draw(const Uniforms &params,
         std::map<boost::weak_ptr<Material>, Uniforms> &materialParams,

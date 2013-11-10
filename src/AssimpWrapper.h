@@ -7,6 +7,7 @@
 #include <assimp/types.h>
 
 #include "math/Vector.h"
+#include "math/Matrix.h"
 
 #include "MessageSystem.h"
 
@@ -47,6 +48,8 @@ public:
     static Math::Vector convertColour(const aiColor3D &colour);
     static Math::Vector convertColour(const aiColor4D &colour);
     static aiColor3D convertColour(const Math::Vector &colour);
+
+    static Math::Matrix convertMatrix(const aiMatrix4x4 &matrix);
 };
 
 }  // namespace Kriti

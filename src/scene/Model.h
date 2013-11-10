@@ -8,6 +8,7 @@
 #include "render/Renderable.h"
 
 struct aiScene;
+struct aiNode;
 
 namespace Kriti {
 namespace Scene {
@@ -15,6 +16,7 @@ namespace Scene {
 class Model : public Resource {
 private:
     std::vector<boost::shared_ptr<Render::Material>> m_materials;
+    std::vector<boost::shared_ptr<Render::RenderSequence>> m_meshes;
     boost::shared_ptr<Render::Renderable> m_renderable;
 public:
     /*Model();
@@ -27,6 +29,7 @@ public:
 private:
     void processMaterial(const aiScene *scene, int index);
     void processMesh(const aiScene *scene, int index);
+    void processNode(const aiNode *node, Math::Matrix transform);
 };
 
 }  // namespace Scene

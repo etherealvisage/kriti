@@ -43,4 +43,16 @@ aiColor3D AssimpWrapper::convertColour(const Math::Vector &colour) {
     return aiColor3D(colour.x(), colour.y(), colour.z());
 }
 
+Math::Matrix AssimpWrapper::convertMatrix(const aiMatrix4x4 &matrix) {
+    Math::Matrix result;
+
+    for(int i = 0; i < 4; i ++) {
+        for(int j = 0; j < 4; j ++) {
+            result(i, j) = matrix[i][j];
+        }
+    }
+
+    return result;
+}
+
 }  // namespace Kriti

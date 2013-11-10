@@ -55,10 +55,12 @@ bool Model::loadFrom(std::string identifier) {
         Message3(Scene, Debug, "Very strange . . . no meshes?");
     }
     else {
-        for(int i = 1; i < result->mNumMeshes; i ++) {
+        for(int i = 0; i < result->mNumMeshes; i ++) {
             processMesh(result, i);
         }
     }
+
+    processNode(result->mRootNode, Math::Matrix());
 
     return true;
 }
@@ -67,6 +69,7 @@ void Model::processMaterial(const aiScene *scene, int index) {
     const aiMaterial *source = scene->mMaterials[index];
 
     auto dest = boost::make_shared<Render::Material>();
+    // TODO: select better shader to load
     dest->loadFrom("simple");
     m_materials.push_back(dest);
 
@@ -97,8 +100,6 @@ void Model::processMaterial(const aiScene *scene, int index) {
 
 void Model::processMesh(const aiScene *scene, int index) {
     const aiMesh *mesh = scene->mMeshes[index];
-
-    Message3(Scene, Debug, "Processing mesh " << index);
 
     if(mesh->GetNumUVChannels() > 4) {
         Message3(Scene, Error, "More than 4 texture channels in model.");
@@ -162,7 +163,29 @@ void Model::processMesh(const aiScene *scene, int index) {
             Render::RenderSequence::Triangles,
             Render::RenderSequence::Indexed);
 
-    m_renderable->addRenderSequence(seq);
+    m_meshes.push_back(seq);
+}
+
+void Model::processNode(const aiNode *node, Math::Matrix transform) {
+    if(node == NULL) return;
+
+    transform *= AssimpWrapper::convertMatrix(node->mTransformation);
+
+    for(int i = 0; i < node->mNumMeshes; i ++) {
+        // create copy of mesh render sequence
+        Message3(Scene, Debug, "Mesh index: " << node->mMeshes[i]);
+        auto seq = boost::make_shared<Render::RenderSequence>(
+            *m_meshes[node->mMeshes[i]]);
+
+        seq->sequenceTransform() = transform;
+
+        m_renderable->addRenderSequence(seq);
+    }
+
+    Message3(Scene, Debug, "This node has " << node->mNumChildren << " children!");
+    for(int i = 0; i < node->mNumChildren; i ++) {
+        processNode(node->mChildren[i], transform);
+    }
 }
 
 }  // namespace Scene
