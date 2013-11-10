@@ -26,7 +26,16 @@ AssimpWrapper::~AssimpWrapper() {
     Assimp::DefaultLogger::kill();
 }
 
+Math::Vector AssimpWrapper::convertVector(const aiVector3D &vector) {
+    return Math::Vector(vector.x, vector.y, vector.z);
+}
+
 Math::Vector AssimpWrapper::convertColour(const aiColor3D &colour) {
+    return Math::Vector(colour.r, colour.g, colour.b);
+}
+
+Math::Vector AssimpWrapper::convertColour(const aiColor4D &colour) {
+    // TODO: handle alpha channel
     return Math::Vector(colour.r, colour.g, colour.b);
 }
 

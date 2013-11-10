@@ -20,6 +20,9 @@ public:
     /*Model();
     ~Model();*/
 
+    boost::shared_ptr<Render::Renderable> renderable() const
+        { return m_renderable; }
+
     virtual bool loadFrom(std::string identifier);
 private:
     void processMaterial(const aiScene *scene, int index);

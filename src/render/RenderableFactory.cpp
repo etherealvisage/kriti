@@ -29,7 +29,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
 
     boost::shared_ptr<VBO> textureVBO(new VBO());
     textureVBO->setData2(model->texCoords());
-    vao->addVBO(textureVBO, VAO::Texture);
+    vao->addVBO(textureVBO, VAO::Texture0);
 
     boost::shared_ptr<VBO> indexVBO(new VBO(VBO::Element));
     indexVBO->setData(model->indices());
@@ -79,7 +79,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromTriangleGeometry(
 
     auto textureVBO = boost::make_shared<VBO>();
     textureVBO->setData2(texs);
-    vao->addVBO(textureVBO, VAO::Texture);
+    vao->addVBO(textureVBO, VAO::Texture0);
 
     auto indexVBO = boost::make_shared<VBO>(VBO::Element);
     indexVBO->setData(tris);
@@ -117,7 +117,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
     std::vector<Math::Vector> texs;
     for(auto v : vertices) texs.push_back(Math::Vector());
     textureVBO->setData2(texs);
-    vao->addVBO(textureVBO, VAO::Texture);
+    vao->addVBO(textureVBO, VAO::Texture0);
 
     std::vector<unsigned int> indices;
     for(unsigned i = 0; i < vertices.size(); i ++) indices.push_back(i);
@@ -166,7 +166,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     texs.push_back(Math::Vector(1,1));
     texs.push_back(Math::Vector(1,0));
     textureVBO->setData2(texs);
-    vao->addVBO(textureVBO, VAO::Texture);
+    vao->addVBO(textureVBO, VAO::Texture0);
 
     std::vector<unsigned int> indices;
     indices.push_back(0);
@@ -205,7 +205,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuadGeometry(
 
     auto textureVBO = boost::make_shared<VBO>();
     textureVBO->setData2(texs);
-    vao->addVBO(textureVBO, VAO::Texture);
+    vao->addVBO(textureVBO, VAO::Texture0);
 
     auto indexVBO = boost::make_shared<VBO>(VBO::Element);
     std::vector<unsigned int> tris;

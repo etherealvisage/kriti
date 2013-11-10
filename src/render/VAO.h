@@ -12,9 +12,16 @@ namespace Render {
 class VAO {
 public:
     enum Location {
-        Vertex,
-        Normal,
-        Texture,
+        Vertex, // 0
+        Normal, // 1
+        Colour0, // 2
+        Colour1, // 3
+        Colour2, // 4
+        Colour3, // 5
+        Texture0, // 6
+        Texture1, // 7
+        Texture2, // 8
+        Texture3, // 9
         Element,
         Locations
     };

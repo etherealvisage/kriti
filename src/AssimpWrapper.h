@@ -43,7 +43,9 @@ private:
 public:
     ~AssimpWrapper();
 
+    static Math::Vector convertVector(const aiVector3D &vector);
     static Math::Vector convertColour(const aiColor3D &colour);
+    static Math::Vector convertColour(const aiColor4D &colour);
     static aiColor3D convertColour(const Math::Vector &colour);
 };
 

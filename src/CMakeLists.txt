@@ -1,5 +1,5 @@
 add_definitions(-Wall -Wextra -std=c++11)
-add_definitions(-Wno-unused-parameter)
+add_definitions(-Wno-unused-parameter -Wno-sign-compare)
 add_definitions(-g)
 
 aux_source_directory(. dotSources)

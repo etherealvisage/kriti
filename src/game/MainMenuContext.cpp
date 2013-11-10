@@ -33,6 +33,8 @@
 #include "track/PlanarExtruder.h"
 #include "track/CylindricExtruder.h"
 
+#include "scene/Model.h"
+
 #include "profile/Tracker.h"
 
 #include "ResourceRegistry.h"
@@ -105,6 +107,11 @@ MainMenuContext::MainMenuContext() {
     //m_world->addObject(m_trackObject->physical());
 
     m_gameStage->renderables()->add(m_trackObject->renderable());
+
+    auto cartwheel_model = ResourceRegistry::get<Scene::Model>("cart_wheel.3ds");
+    auto cartwheel_renderable = cartwheel_model->renderable();
+    cartwheel_renderable->location() = Math::Vector(0.0, 0.0, -100.0);
+    m_gameStage->renderables()->add(cartwheel_renderable);
 
     m_world->addModifier(m_forceModifier);
 

@@ -94,6 +94,12 @@
 
     <!-- <pipeline name="game" last="blend" /> -->
     <pipeline name="game" last="blend" />
+
+    <stage name="model">
+        <!-- nothing special. -->
+    </stage>
+
+    <pipeline name="model" last="model" />
 </render>
 
 <guis>

@@ -23,6 +23,8 @@
 
 #include "AssimpWrapper.h"
 
+#include "ModelViewerContext.h"
+
 int main() {
     using namespace Kriti;
     std::cout << "Kriti." << std::endl;
@@ -64,13 +66,16 @@ int main() {
     // initialize context manager
     Context::ContextManager::instance();
 
-    auto result = ResourceRegistry::get<Scene::Model>("cart_wheel.3ds");
-
     Context::ContextManager::instance()->addContext(
         new Game::MainMenuContext()
     );
 
-    Context::ContextManager::instance()->pushContext("Game::MainMenuContext");
+    Context::ContextManager::instance()->addContext(
+        new ModelViewerContext()
+    );
+
+    //Context::ContextManager::instance()->pushContext("Game::MainMenuContext");
+    Context::ContextManager::instance()->pushContext("ModelViewerContext");
     
     // run the rest of the program.
     Context::ContextManager::instance()->loop();

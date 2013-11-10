@@ -4,7 +4,7 @@
 
 layout (location = 0) in vec3 i_position;
 layout (location = 1) in vec3 i_normal;
-layout (location = 2) in vec2 i_tex;
+layout (location = 6) in vec2 i_tex;
 
 uniform mat4 camera;
 uniform mat4 model;

@@ -55,18 +55,19 @@ bool Model::loadFrom(std::string identifier) {
         Message3(Scene, Debug, "Very strange . . . no meshes?");
     }
     else {
-        for(int i = 0; i < result->mNumMeshes; i ++) {
+        for(int i = 1; i < result->mNumMeshes; i ++) {
             processMesh(result, i);
         }
     }
 
-    return false;
+    return true;
 }
 
 void Model::processMaterial(const aiScene *scene, int index) {
     const aiMaterial *source = scene->mMaterials[index];
 
     auto dest = boost::make_shared<Render::Material>();
+    dest->loadFrom("simple");
     m_materials.push_back(dest);
 
     // ambient
@@ -97,14 +98,70 @@ void Model::processMaterial(const aiScene *scene, int index) {
 void Model::processMesh(const aiScene *scene, int index) {
     const aiMesh *mesh = scene->mMeshes[index];
 
-    /*Message3(Scene, Debug, "Mesh channels: " << mesh->GetNumColorChannels()
-        << "/" << mesh->GetNumUVChannels());*/
+    Message3(Scene, Debug, "Processing mesh " << index);
+
+    if(mesh->GetNumUVChannels() > 4) {
+        Message3(Scene, Error, "More than 4 texture channels in model.");
+        return;
+    }
+    if(mesh->GetNumColorChannels() > 4) {
+        Message3(Scene, Error, "More than 4 colour channels in model.");
+        return;
+    }
 
     auto vao = boost::make_shared<Render::VAO>();
-    int vao_size = mesh->mNumFaces;
+    int vao_size = mesh->mNumFaces*3; // each face is a triangle
+
+    auto vertexVBO = boost::make_shared<Render::VBO>();
+    auto normalVBO = boost::make_shared<Render::VBO>();
+    std::vector<Math::Vector> vertv, normv;
+    for(int i = 0; i < mesh->mNumVertices; i ++) {
+        vertv.push_back(AssimpWrapper::convertVector(mesh->mVertices[i]));
+        normv.push_back(AssimpWrapper::convertVector(mesh->mNormals[i]));
+    }
+    vertexVBO->setData4(vertv, 1.0f);
+    normalVBO->setData4(normv, 1.0f);
+    vao->addVBO(vertexVBO, Render::VAO::Vertex);
+    vao->addVBO(normalVBO, Render::VAO::Normal);
+
+    Render::VAO::Location cloc = Render::VAO::Colour0;
+
+    for(int i = 0; i < mesh->GetNumColorChannels(); i ++) {
+        std::vector<Math::Vector> colv;
+        for(int j = 0; j < mesh->mNumVertices; j ++) {
+            colv.push_back(AssimpWrapper::convertColour(mesh->mColors[i][j]));
+        }
+        cloc = (Render::VAO::Location)((int)cloc + 1);
+    }
+
+    Render::VAO::Location uvloc = Render::VAO::Texture0;
+
+    for(int i = 0; i < mesh->GetNumUVChannels(); i ++) {
+        std::vector<Math::Vector> texv;
+        for(int j = 0; j < mesh->mNumVertices; j ++) {
+            texv.push_back(
+                AssimpWrapper::convertVector(mesh->mTextureCoords[i][j]));
+        }
+        uvloc = (Render::VAO::Location)((int)uvloc + 1);
+    }
+
+    std::vector<unsigned int> facev;
+    for(int i = 0; i < mesh->mNumFaces; i ++) {
+        for(int j = 0; j < mesh->mFaces[i].mNumIndices; j ++) {
+            facev.push_back(mesh->mFaces[i].mIndices[j]);
+        }
+    }
+
+    auto facesVBO = boost::make_shared<Render::VBO>(Render::VBO::Element);
+    facesVBO->setData(facev);
+
+    vao->addVBO(facesVBO, Render::VAO::Element);
 
     auto seq = boost::make_shared<Render::RenderSequence>(
-        m_materials[mesh->mMaterialIndex], vao, 0, vao_size-1);
+        m_materials[mesh->mMaterialIndex], vao, 0, vao_size-1,
+            Render::RenderSequence::Triangles,
+            Render::RenderSequence::Indexed);
+
     m_renderable->addRenderSequence(seq);
 }
 
