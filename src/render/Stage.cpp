@@ -82,35 +82,23 @@ bool Stage::loadFrom(std::string identifier) {
         }
 
         std::string whichString = child.attribute("which").as_string();
-        Framebuffer::Attachment which;
-        if(whichString == "colour0") which = Framebuffer::ColourBuffer0;
-        else if(whichString == "colour1") which = Framebuffer::ColourBuffer1;
-        else if(whichString == "colour2") which = Framebuffer::ColourBuffer2;
-        else if(whichString == "colour3") which = Framebuffer::ColourBuffer3;
-        else if(whichString == "depth") which = Framebuffer::DepthBuffer;
-        else {
-            Message3(Render, Debug, "Unknown attachment: " << whichString);
+        const std::map<std::string, Framebuffer::Attachment> whichMap = {
+            {"colour0", Framebuffer::ColourBuffer0},
+            {"colour1", Framebuffer::ColourBuffer1},
+            {"colour2", Framebuffer::ColourBuffer2},
+            {"colour3", Framebuffer::ColourBuffer3},
+            {"depth", Framebuffer::DepthBuffer}
+        };
+        if(whichMap.count(whichString) == 0) {
+            Message3(Render, Warning, "Unknown attachment: " << whichString);
             continue;
         }
+
         std::string materialString = child.attribute("material").as_string();
         std::string uniform = child.attribute("to").as_string();
 
         auto mat = ResourceRegistry::get<Render::Material>(materialString);
-        addMapping(from, which, mat, uniform);
-    }
-
-    // HACK: shouldn't have this dependency on the GUI module...
-    auto projection = node.child("projection");
-    if(projection) {
-        std::string type = projection.text().as_string("");
-
-        if(type == "gui") {
-            m_camera.setProjection(Math::ViewGenerator().orthogonal(
-                GUI::Scale().xtotal(), GUI::Scale().ytotal(), 0.1, 1000.0));
-        }
-        else {
-            Message3(Render, Error, "Unknown projection specified");
-        }
+        addMapping(from, whichMap.at(whichString), mat, uniform);
     }
 
     return true;
@@ -127,9 +115,7 @@ void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
 }
 
 void Stage::render(Uniforms &globalParams, bool isLast) {
-
     Profile::Tracker::instance()->beginGLTimer(m_name);
-    auto cameraMatrix = m_camera.matrix();
 
     if(!isLast) m_framebuffer->bindWrite();
     else {
@@ -137,7 +123,9 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
         glDrawBuffer(GL_BACK);
     }
 
-    globalParams.setParam("camera", cameraMatrix);
+    for(auto hook : m_uniformHooks) {
+        hook->hook(globalParams);
+    }
     
     MaterialParams materialParams;
 

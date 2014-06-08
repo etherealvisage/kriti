@@ -5,6 +5,8 @@
 
 #include "render/Pipeline.h"
 
+#include "scene/Camera.h"
+
 #include "TimeValue.h"
 
 namespace Kriti {
@@ -13,6 +15,8 @@ class ModelViewerContext : public Context::AbstractContext {
 private:
     boost::shared_ptr<Render::Pipeline> m_pipeline;
     boost::shared_ptr<Render::Stage> m_modelStage;
+
+    boost::shared_ptr<Scene::Camera> m_camera;
 
     TimeValue m_lastTime;
 public:

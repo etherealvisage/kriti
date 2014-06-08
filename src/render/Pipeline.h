@@ -4,7 +4,6 @@
 #include <set>
 
 #include "Renderable.h"
-#include "SceneCamera.h"
 #include "Timer.h"
 
 #include "Stage.h"

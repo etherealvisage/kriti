@@ -10,5 +10,6 @@
 /kriti
 /build/
 core
-
+core.*.*
+/*assimp*
 

@@ -7,8 +7,8 @@
 #include <tuple>
 
 #include "Renderable.h"
-#include "SceneCamera.h"
 #include "RenderableContainer.h"
+#include "UniformHook.h"
 
 #include "Framebuffer.h"
 
@@ -25,7 +25,6 @@ public:
 private:
     std::vector<boost::shared_ptr<Stage>> m_previous;
     boost::shared_ptr<RenderableContainer> m_renderables;
-    SceneCamera m_camera;
 
     boost::shared_ptr<Framebuffer> m_framebuffer;
 
@@ -36,14 +35,14 @@ private:
 
     int m_width, m_height;
     std::string m_name;
+
+    std::vector<boost::shared_ptr<UniformHook>> m_uniformHooks;
 public:
     Stage();
     Stage(int outputs, int width, int height, std::string name);
     Stage(std::string name) : Stage(1, -1, -1, name) {}
 
     virtual bool loadFrom(std::string identifier);
-
-    SceneCamera *camera() { return &m_camera; }
 
     void addPrevious(boost::shared_ptr<Stage> previous)
         { m_previous.push_back(previous); }
@@ -62,6 +61,9 @@ public:
         { return m_framebuffer; }
 
     std::string name() const { return m_name; }
+
+    void addUniformHook(boost::shared_ptr<UniformHook> hook)
+        { m_uniformHooks.push_back(hook); }
 
     void render(Uniforms &globalParams, bool isLast = false);
 private:

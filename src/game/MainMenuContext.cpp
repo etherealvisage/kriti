@@ -39,6 +39,7 @@
 
 #include "ResourceRegistry.h"
 
+#if 0
 namespace Kriti {
 namespace Game {
 
@@ -294,3 +295,4 @@ void MainMenuContext::playerPitchDown(bool pressed) {
 
 }  // namespace Game
 }  // namespace Kriti
+#endif

@@ -1,14 +1,16 @@
-#ifndef KRITI_RENDER__SCENE_CAMERA_H
-#define KRITI_RENDER__SCENE_CAMERA_H
+#ifndef KRITI_SCENE__CAMERA_H
+#define KRITI_SCENE__CAMERA_H
 
 #include "math/Vector.h"
 #include "math/Quaternion.h"
 #include "math/Matrix.h"
 
-namespace Kriti {
-namespace Render {
+#include "render/UniformHook.h"
 
-class SceneCamera {
+namespace Kriti {
+namespace Scene {
+
+class Camera : public Render::UniformHook {
 private:
     Math::Vector m_position;
     Math::Quaternion m_orientation;
@@ -28,9 +30,11 @@ public:
     void setTarget(Math::Vector pos, Math::Quaternion orientation) 
         { m_positionTarget = pos, m_orientationTarget = orientation; }
     void step(double time);
+
+    virtual void hook(Render::Uniforms &uniforms);
 };
 
-}  // namespace Render
+}  // namespace Scene
 }  // namespace Kriti
 
 #endif

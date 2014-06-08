@@ -1,3 +1,5 @@
+#include <boost/make_shared.hpp>
+
 #include "ModelViewerContext.h"
 
 #include "context/ContextManager.h"
@@ -8,6 +10,7 @@
 #include "math/ViewGenerator.h"
 
 #include "scene/Model.h"
+#include "scene/LightRegistry.h"
 
 #include "ResourceRegistry.h"
 
@@ -23,16 +26,30 @@ ModelViewerContext::ModelViewerContext() {
     m_pipeline = ResourceRegistry::get<Render::Pipeline>("model");
     m_modelStage = ResourceRegistry::get<Render::Stage>("model");
 
+
     // camera setup
-    m_modelStage->camera()->setProjection(Math::ViewGenerator().perspective(
+    m_camera = boost::make_shared<Scene::Camera>();
+    m_camera->setProjection(Math::ViewGenerator().perspective(
         Math::Constants::Pi/3.0, Interface::Video::instance()->aspectRatio(),
         0.1, 1000.0
     ));
+    m_modelStage->addUniformHook(m_camera);
 
-    auto cartwheel_model = ResourceRegistry::get<Scene::Model>("cart_wheel.3ds");
+    auto cartwheel_model = ResourceRegistry::get<Scene::Model>("vehicle-2.3ds");
     auto cartwheel_renderable = cartwheel_model->renderable();
     cartwheel_renderable->location() = Math::Vector(0.0, 0.0, 0.0);
     m_modelStage->renderables()->add(cartwheel_renderable);
+
+    auto lightRegistry = boost::make_shared<Scene::LightRegistry>();
+
+    for(int i = 0; i < 1; i ++) {
+        lightRegistry->add(boost::make_shared<Scene::Light>(
+            Math::Vector(1.0,1.0,1.0),
+            Math::Vector(1.0,1.0,1.0),
+            Math::Vector(1.0,1.0,1.0),
+            1.0,1.0,1.0));
+    }
+    m_modelStage->addUniformHook(lightRegistry);
 }
 
 void ModelViewerContext::run() {
@@ -40,13 +57,12 @@ void ModelViewerContext::run() {
     TimeValue sinceLast = current - m_lastTime;
     m_lastTime = current;
 
-    Math::Quaternion q = m_modelStage->camera()->orientation();
+    Math::Quaternion q = m_camera->orientation();
     q = q * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), M_PI/100.0);
-    m_modelStage->camera()->setTarget(
-        q.conjugate() * Math::Vector(0.0, 0.0, 50.0), q);
-    m_modelStage->camera()->step(sinceLast.toUsec() / 1e3);
+    m_camera->setTarget(
+        q.conjugate() * Math::Vector(0.0, 0.0, 30.0), q);
+    m_camera->step(sinceLast.toUsec() / 1e3);
     
-
     m_pipeline->render();
     
     Interface::Video::instance()->swapBuffers();

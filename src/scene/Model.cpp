@@ -70,31 +70,33 @@ void Model::processMaterial(const aiScene *scene, int index) {
 
     auto dest = boost::make_shared<Render::Material>();
     // TODO: select better shader to load
-    dest->loadFrom("simple");
+    dest->loadFrom("simple_phong");
     m_materials.push_back(dest);
 
     // ambient
     aiColor3D colour;
     source->Get(AI_MATKEY_COLOR_AMBIENT, colour);
-    dest->params().setParam("u_ambient", AssimpWrapper::convertColour(colour));
+    dest->params().setParam("u_material.ambient",
+        AssimpWrapper::convertColour(colour));
 
     // diffuse
     source->Get(AI_MATKEY_COLOR_DIFFUSE, colour);
-    dest->params().setParam("u_diffuse", AssimpWrapper::convertColour(colour));
+    dest->params().setParam("u_material.diffuse",
+        AssimpWrapper::convertColour(colour));
 
     // specular
     source->Get(AI_MATKEY_COLOR_SPECULAR, colour);
-    dest->params().setParam("u_specular",
+    dest->params().setParam("u_material.specular",
         AssimpWrapper::convertColour(colour));
 
     // shininess
     source->Get(AI_MATKEY_SHININESS, colour);
-    dest->params().setParam("u_specularPower",
+    dest->params().setParam("u_material.specularPower",
         AssimpWrapper::convertColour(colour));
 
     // specular scaling
     source->Get(AI_MATKEY_SHININESS_STRENGTH, colour);
-    dest->params().setParam("u_specularScale",
+    dest->params().setParam("u_material.specularScale",
         AssimpWrapper::convertColour(colour));
 }
 

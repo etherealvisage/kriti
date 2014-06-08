@@ -1,11 +1,11 @@
-#include "SceneCamera.h"
+#include "Camera.h"
 
 #include "math/AffineTransformation.h"
 
 namespace Kriti {
-namespace Render {
+namespace Scene {
 
-Math::Matrix SceneCamera::matrix() const {
+Math::Matrix Camera::matrix() const {
     Math::AffineTransformation at;
     at.translate(-m_position);
     Math::AffineTransformation at2;
@@ -13,11 +13,15 @@ Math::Matrix SceneCamera::matrix() const {
     return m_projection * at2.matrix() * at.matrix();
 }
 
-void SceneCamera::step(double time) {
+void Camera::step(double time) {
     // just jump for now
     m_position = m_positionTarget;
     m_orientation = m_orientationTarget;
 }
 
-}  // namespace Render
+void Camera::hook(Render::Uniforms &uniforms) {
+    uniforms.setParam("u_camera", matrix());
+}
+
+}  // namespace Scene
 }  // namespace Kriti

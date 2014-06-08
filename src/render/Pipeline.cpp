@@ -1,5 +1,7 @@
 #include <GL/glew.h>
 
+#include <boost/make_shared.hpp>
+
 #include "Pipeline.h"
 
 #include "math/ViewGenerator.h"
@@ -31,7 +33,7 @@ bool Pipeline::loadFrom(std::string identifier) {
 
 void Pipeline::render() {
     Uniforms u;
-    u.setParam("time", (int)TimeValue::current().toMsec());
+    u.setParam("time", static_cast<int>(TimeValue::current().toMsec()));
 
     m_rendered.clear();
     render(u, m_lastStage);

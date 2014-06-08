@@ -67,10 +67,6 @@ int main() {
     Context::ContextManager::instance();
 
     Context::ContextManager::instance()->addContext(
-        new Game::MainMenuContext()
-    );
-
-    Context::ContextManager::instance()->addContext(
         new ModelViewerContext()
     );
 
