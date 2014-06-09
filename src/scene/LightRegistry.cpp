@@ -18,7 +18,7 @@ void LightRegistry::remove(boost::shared_ptr<Light> light) {
 
 void LightRegistry::hook(Render::Uniforms &uniforms) {
     for(int i = 0; i < m_lights.size(); i ++) {
-        m_lights[i]->setUniforms(uniforms, i);
+        m_lights[i]->setUniforms(uniforms, i, Math::Matrix());
     }
     uniforms.setParam("lightCount", static_cast<int>(m_lights.size()));
 }

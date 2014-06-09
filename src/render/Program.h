@@ -21,12 +21,14 @@ private:
     boost::shared_ptr<Shader> m_vertexShader;
     std::string m_fsName;
     boost::shared_ptr<Shader> m_fragShader;
+    std::string m_gsName;
+    boost::shared_ptr<Shader> m_geomShader;
 
     GLuint m_programID;
 
     std::map<std::string, GLint> m_uniformLocations;
 public:
-    Program(std::string vsName, std::string fsName);
+    Program(std::string vsName, std::string fsName, std::string gsName = "");
     
     void setUniform(const std::string &name, const Math::Vector &vector);
     void setUniform(const std::string &name, const Math::Matrix &matrix);

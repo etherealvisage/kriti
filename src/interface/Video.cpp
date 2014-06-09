@@ -132,9 +132,9 @@ void Video::initializeGL() {
         << ", with shading language "
         << glGetString(GL_SHADING_LANGUAGE_VERSION) << ")");
 
-    if(!GLEW_VERSION_3_1) {
-        Message3(Interface, Error, "No OpenGL 3.1 support available.");
-        Message3(Interface, Fatal, "Kriti uses some OpenGL 3.1 features. "
+    if(!GLEW_VERSION_3_2) {
+        Message3(Interface, Error, "No OpenGL 3.2 support available.");
+        Message3(Interface, Fatal, "Kriti uses some OpenGL 3.2 features. "
             "Please upgrade your video drivers and try again.");
     }
 
@@ -148,10 +148,15 @@ void Video::initializeGL() {
             "GL_ARB_timer_query extension not present.");
     }
 
-    /* Need GL_ARB_explicit_attrib_location for shaders. */
+    /* Need GL_ARB_explicit_attrib_location for shaders; it's in GL 3.3.*/
     if(!GL_ARB_explicit_attrib_location) {
         Message3(Interface, Fatal,
             "GL_ARB_explicit_attrib_location OpenGL extension required.");
+    }
+    /* Need GL_ARB_viewport_array for point light sources. */
+    if(!GL_ARB_explicit_attrib_location) {
+        Message3(Interface, Fatal,
+            "GL_ARB_viewport_array OpenGL extension required.");
     }
 }
 

@@ -26,6 +26,7 @@ public:
     void setProjection(Math::Matrix projection) { m_projection = projection; }
 
     Math::Matrix matrix() const;
+    Math::Matrix matrixWithProjection() const;
 
     void setTarget(Math::Vector pos, Math::Quaternion orientation) 
         { m_positionTarget = pos, m_orientationTarget = orientation; }

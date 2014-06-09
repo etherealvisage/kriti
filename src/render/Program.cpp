@@ -9,33 +9,41 @@
 namespace Kriti {
 namespace Render {
 
-Program::Program(std::string vsName, std::string fsName) : m_vsName(vsName),
-    m_fsName(fsName) {
+Program::Program(std::string vsName, std::string fsName, std::string gsName)
+    : m_vsName(vsName), m_fsName(fsName), m_gsName(gsName) {
 
-    m_vertexShader = ResourceRegistry::get<Shader>(
-        vsName + ".vert");
+    m_vertexShader = ResourceRegistry::get<Shader>(vsName + ".vert");
     if(!m_vertexShader) {
         Message3(Render, Fatal, "Could not find vertex shader \""
             << vsName << "\"");
     }
 
-    m_fragShader = ResourceRegistry::get<Shader>(
-        fsName + ".frag");
+    m_fragShader = ResourceRegistry::get<Shader>(fsName + ".frag");
     if(!m_fragShader) {
         Message3(Render, Fatal, "Could not find frag shader \""
             << fsName << "\"");
     }
 
+    if(m_gsName != "") {
+        m_geomShader = ResourceRegistry::get<Shader>(gsName + ".geom");
+        if(!m_geomShader) {
+            Message3(Render, Fatal, "Could not find geometry shader \""
+                << gsName << "\"");
+        }
+    }
+
     m_programID = glCreateProgram();
     glAttachShader(m_programID, m_vertexShader->shaderID());
     glAttachShader(m_programID, m_fragShader->shaderID());
+    if(m_geomShader) glAttachShader(m_programID, m_geomShader->shaderID());
 
     glLinkProgram(m_programID);
     GLint status;
     glGetProgramiv(m_programID, GL_LINK_STATUS, &status);
     if(status == GL_FALSE) {
         Message3(Render, Error, "Shader linking failed for program with "
-            "vertex shader " << vsName << " and fragment shader " << fsName);
+            "vertex shader " << vsName << " fragment shader " << fsName
+            << " and geom shader " << gsName);
         char infoLog[4096];
         int used;
         glGetProgramInfoLog(m_programID, sizeof(infoLog), &used, infoLog);

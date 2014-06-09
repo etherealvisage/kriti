@@ -30,7 +30,8 @@ public:
     float diffuseCoefficient() const { return m_diffuseCoefficient; }
     float specularCoefficient() const { return m_specularCoefficient; }
 
-    void setUniforms(Render::Uniforms &uniforms, int index);
+    void setUniforms(Render::Uniforms &uniforms, int index,
+        const Math::Matrix &transformation);
 };
 
 }  // namespace Scene

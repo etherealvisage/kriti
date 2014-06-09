@@ -32,6 +32,7 @@ bool Material::loadFrom(std::string identifier) {
 
     std::string vsName = node.child("vertex-shader").text().as_string("");
     std::string fsName = node.child("fragment-shader").text().as_string("");
+    std::string gsName = node.child("geometry-shader").text().as_string("");
 
     if(vsName == "") {
         Message3(Render, Error, "Vertex shader not specified for material "
@@ -44,7 +45,9 @@ bool Material::loadFrom(std::string identifier) {
         return false;
     }
 
-    m_program = boost::make_shared<Program>(vsName, fsName);
+    // missing geometry shader is not an error.
+
+    m_program = boost::make_shared<Program>(vsName, fsName, gsName);
 
     for(auto child : node.children()) {
         if(std::strcmp(child.name(), "uniform")) continue;

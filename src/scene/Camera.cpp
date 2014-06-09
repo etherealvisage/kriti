@@ -10,7 +10,11 @@ Math::Matrix Camera::matrix() const {
     at.translate(-m_position);
     Math::AffineTransformation at2;
     at2.rotate(Math::Point(), m_orientation);
-    return m_projection * at2.matrix() * at.matrix();
+    return at2.matrix() * at.matrix();
+}
+
+Math::Matrix Camera::matrixWithProjection() const {
+    return m_projection * matrix();
 }
 
 void Camera::step(double time) {
@@ -20,7 +24,7 @@ void Camera::step(double time) {
 }
 
 void Camera::hook(Render::Uniforms &uniforms) {
-    uniforms.setParam("u_camera", matrix());
+    uniforms.setParam("u_camera", matrixWithProjection());
 }
 
 }  // namespace Scene

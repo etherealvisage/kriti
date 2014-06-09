@@ -177,6 +177,7 @@ inline Vector operator/(double scalar, const Vector &vector) {
 
 class Point : public Vector {
 public:
+    Point(const Vector &vector) : Vector(vector) {}
     Point(double x = 0.0, double y = 0.0, double z = 0.0) : Vector(x,y,z) {}
 };
 

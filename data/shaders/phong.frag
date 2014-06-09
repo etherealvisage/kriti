@@ -34,9 +34,9 @@ void main() {
     vec3 sce = vec3(0.0f,0.0f,0.0f);
 
     for(int i = 0; i < lightCount; i ++) {
-        ace += lights[i].colour * lights[i].ambientCoefficient;
+        ace += lights[i].colour * lights[i].ambientCoefficient*2;
         float normal_coefficient = max(0, dot(v_normal.xyz, normalize(lights[i].position - v_position.xyz)));
-        dce += normal_coefficient * lights[i].colour * lights[i].diffuseCoefficient;
+        dce += normal_coefficient * lights[i].colour * lights[i].diffuseCoefficient*2;
         // XXX: specular
     }
 

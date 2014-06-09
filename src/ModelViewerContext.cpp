@@ -41,14 +41,18 @@ ModelViewerContext::ModelViewerContext() {
     m_modelStage->renderables()->add(cartwheel_renderable);
 
     auto lightRegistry = boost::make_shared<Scene::LightRegistry>();
+    lightRegistry->setCamera(m_camera);
 
-    for(int i = 0; i < 1; i ++) {
-        lightRegistry->add(boost::make_shared<Scene::Light>(
-            Math::Vector(1.0,1.0,1.0),
-            Math::Vector(1.0,1.0,1.0),
-            Math::Vector(1.0,1.0,1.0),
-            1.0,1.0,1.0));
-    }
+    lightRegistry->add(boost::make_shared<Scene::Light>(
+        Math::Vector(100.0,0.0,0.0),
+        Math::Vector(1.0,1.0,1.0),
+        Math::Vector(1.0,1.0,1.0),
+        1.0,1.0,1.0));
+    lightRegistry->add(boost::make_shared<Scene::Light>(
+        Math::Vector(0.0,-100.0,0.0),
+        Math::Vector(1.0,1.0,1.0),
+        Math::Vector(1.0,1.0,1.0),
+        1.0,1.0,1.0));
     m_modelStage->addUniformHook(lightRegistry);
 }
 
@@ -60,7 +64,7 @@ void ModelViewerContext::run() {
     Math::Quaternion q = m_camera->orientation();
     q = q * Math::Quaternion(Math::Vector(0.0, 1.0, 0.0), M_PI/100.0);
     m_camera->setTarget(
-        q.conjugate() * Math::Vector(0.0, 0.0, 30.0), q);
+        q.conjugate() * Math::Vector(0.0, 0.0, 10.0), q);
     m_camera->step(sinceLast.toUsec() / 1e3);
     
     m_pipeline->render();

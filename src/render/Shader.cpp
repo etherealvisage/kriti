@@ -23,13 +23,16 @@ bool Shader::loadFrom(std::string identifier) {
     // Determine what type of shader this is.
     bool isVertex = boost::algorithm::ends_with(identifier, ".vert");
     bool isFrag = boost::algorithm::ends_with(identifier, ".frag");
-    if(!isVertex && !isFrag) {
+    bool isGeom = boost::algorithm::ends_with(identifier, ".geom");
+    if(!isVertex && !isFrag && !isGeom) {
         Message3(Render, Error, "Not sure what to do with shader \"" 
-            << identifier << "\": neither vertex nor fragment shader.");
+            << identifier << "\": neither vertex, fragment, nor geom shader.");
         return false;
     }
 
-    m_shaderID = glCreateShader(isVertex?GL_VERTEX_SHADER:GL_FRAGMENT_SHADER);
+    if(isVertex) m_shaderID = glCreateShader(GL_VERTEX_SHADER);
+    if(isFrag) m_shaderID = glCreateShader(GL_FRAGMENT_SHADER);
+    if(isGeom) m_shaderID = glCreateShader(GL_GEOMETRY_SHADER);
 
     std::string content = shaderFile->fileContent();
     const char *cptr = content.c_str();

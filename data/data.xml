@@ -26,6 +26,7 @@
     <material name="simple_phong">
         <vertex-shader>simple</vertex-shader>
         <fragment-shader>phong</fragment-shader>
+        <geometry-shader>duplication_test</geometry-shader>
     </material>
 
     <material name="ubuntu">
