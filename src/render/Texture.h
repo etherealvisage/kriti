@@ -10,16 +10,23 @@ class Texture : public Resource {
 public:
     enum Type {
         Colour,
-        Depth
+        Depth,
+        Invalid
+    };
+    enum Target {
+        Simple, // 2D texture
+        Cube
     };
 private:
     Type m_type;
+    Target m_target;
     int m_width, m_height;
     int m_samples;
     GLuint m_id;
+    GLuint m_bindTarget;
 public:
     Texture();
-    Texture(Type type, int width, int height, int samples=0);
+    Texture(Type type, Target target, int width, int height, int samples=0);
     ~Texture();
 
     GLuint id() const { return m_id; }

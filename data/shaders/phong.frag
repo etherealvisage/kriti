@@ -2,8 +2,8 @@
 
 #extension GL_ARB_explicit_attrib_location : require
 
-in vec4 v_position;
-in vec4 v_normal;
+in vec4 g_position;
+in vec4 g_normal;
 out vec4 fragColour;
 
 struct material {
@@ -35,7 +35,7 @@ void main() {
 
     for(int i = 0; i < lightCount; i ++) {
         ace += lights[i].colour * lights[i].ambientCoefficient*2;
-        float normal_coefficient = max(0, dot(v_normal.xyz, normalize(lights[i].position - v_position.xyz)));
+        float normal_coefficient = max(0, dot(g_normal.xyz, normalize(lights[i].position - g_position.xyz)));
         dce += normal_coefficient * lights[i].colour * lights[i].diffuseCoefficient*2;
         // XXX: specular
     }

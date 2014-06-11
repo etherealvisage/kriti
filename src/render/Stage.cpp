@@ -156,8 +156,8 @@ void Stage::initialize(int outputs, int width, int height) {
     for(int i = 0; i < outputs; i ++) {
         m_framebuffer->attach(
             Framebuffer::Attachment(Framebuffer::ColourBuffer0 + i),
-            boost::make_shared<Texture>(Texture::Colour, m_width,
-                m_height));
+            boost::make_shared<Texture>(Texture::Colour, Texture::Simple,
+                m_width, m_height));
     }
     m_framebuffer->attach(Framebuffer::DepthBuffer, 
         boost::make_shared<Renderbuffer>(Renderbuffer::Depth, m_width,

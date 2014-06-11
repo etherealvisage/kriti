@@ -16,11 +16,16 @@ namespace Kriti {
 namespace Render {
 
 Texture::Texture() {
-    makeTexture();
+    m_type = Invalid;
+    m_bindTarget = 0;
 }
 
-Texture::Texture(Type type, int width, int height, int samples) : m_type(type),
-    m_width(width), m_height(height), m_samples(samples) {
+Texture::Texture(Type type, Target target, int width, int height, int samples)
+    : m_type(type), m_target(target), m_width(width), m_height(height),
+    m_samples(samples), m_id(0) {
+
+    if(target == Simple) m_bindTarget = GL_TEXTURE_2D;
+    else if(target == Cube) m_bindTarget = GL_TEXTURE_CUBE_MAP;
 
     makeBlank();
 }
@@ -30,10 +35,18 @@ Texture::~Texture() {
 }
 
 bool Texture::loadFrom(std::string identifier) {
+    // TODO: implement support for loading cubemap textures from files.
+    // TODO: implement support for loading depth textures from files.
+    m_target = Simple;
+    m_bindTarget = GL_TEXTURE_2D;
+    m_type = Colour;
+    makeTexture();
+
     auto node = ResourceRegistry::get<XMLResource>(
         "data")->doc().first_element_by_path(
         "/kriti/textures/").find_child_by_attribute("name",
         identifier.c_str());
+
 
     for(auto child : node.children()) {
         if(std::strcmp(child.name(), "mipmap")) continue;
@@ -55,12 +68,14 @@ void Texture::bindToUnit(int which) {
 void Texture::makeTexture() {
     glGenTextures(1, &m_id);
 
-    glBindTexture(GL_TEXTURE_2D, m_id);
+    glBindTexture(m_bindTarget, m_id);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    if(m_target == Cube) 
+        glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(m_bindTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(m_bindTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 void Texture::makeBlank() {
@@ -74,27 +89,57 @@ void Texture::makeBlank() {
         break;
     case Depth:
         iformat = GL_DEPTH_COMPONENT32F;
+        format = GL_DEPTH_COMPONENT;
         break;
     default:
         Message3(Render, Fatal, "Unknown Texture::Type in makeBlank()");
         break;
     }
-    glTexImage2D(GL_TEXTURE_2D,
-        // level 0, no mipmapping...
-        0, 
-        // internal format: RGBA, floats.
-        iformat,
-        // width and height
-        m_width, m_height,
-        // border?
-        0,
-        // input format
-        format,
-        // input
-        GL_UNSIGNED_BYTE,
-        // input data
-        nullptr
-    );
+    if(m_target == Simple) {
+        glTexImage2D(GL_TEXTURE_2D,
+            // level 0, no mipmapping...
+            0, 
+            // internal format: RGBA, floats.
+            iformat,
+            // width and height
+            m_width, m_height,
+            // border?
+            0,
+            // input format
+            format,
+            // input
+            GL_UNSIGNED_BYTE,
+            // input data
+            nullptr
+        );
+    }
+    else if(m_target == Cube) {
+        GLuint targets[6] = {
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
+            GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+            GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+            GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
+        for(int i = 0; i < 6; i ++) {
+            glTexImage2D(targets[i],
+                // level 0, no mipmapping...
+                0, 
+                // internal format: RGBA, floats.
+                iformat,
+                // width and height
+                m_width, m_height,
+                // border?
+                0,
+                // input format
+                format,
+                // input
+                GL_UNSIGNED_BYTE,
+                // input data
+                nullptr
+            );
+        }
+    }
 
     glBindTexture(GL_TEXTURE_2D, 0);
 }

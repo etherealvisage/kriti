@@ -30,7 +30,10 @@ void Framebuffer::attach(Attachment where,
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
     // TODO: support levels other than zero.
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, convert(where), GL_TEXTURE_2D,
+    // TODO: support targets other than GL_TEXTURE_2D
+    /*glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, convert(where), GL_TEXTURE_2D,
+        texture->id(), 0);*/
+    glFramebufferTexture(GL_DRAW_FRAMEBUFFER, convert(where),
         texture->id(), 0);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
@@ -74,6 +77,16 @@ void Framebuffer::bindRead() {
 
 void Framebuffer::bindWrite() {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
+    // determine what we want to render into
+    bool colours = false;
+    for(int i = 0; i < 4 && !colours; i ++) {
+        if(m_textures[ColourBuffer0 + i].first
+            || m_textures[ColourBuffer0 + i].first) colours = true;
+    }
+    // no double buffering, so draw into front buffer
+    if(colours) glDrawBuffer(GL_FRONT);
+    // no colour attachments implies only depth buffer should be constructed.
+    else glDrawBuffer(GL_NONE);
 }
 
 GLenum Framebuffer::convert(Attachment where) {

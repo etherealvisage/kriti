@@ -44,15 +44,15 @@ ModelViewerContext::ModelViewerContext() {
     lightRegistry->setCamera(m_camera);
 
     lightRegistry->add(boost::make_shared<Scene::Light>(
-        Math::Vector(100.0,0.0,0.0),
+        Math::Vector(3.0,0.0,0.0),
         Math::Vector(1.0,1.0,1.0),
         Math::Vector(1.0,1.0,1.0),
         1.0,1.0,1.0));
-    lightRegistry->add(boost::make_shared<Scene::Light>(
+    /*lightRegistry->add(boost::make_shared<Scene::Light>(
         Math::Vector(0.0,-100.0,0.0),
         Math::Vector(1.0,1.0,1.0),
         Math::Vector(1.0,1.0,1.0),
-        1.0,1.0,1.0));
+        1.0,1.0,1.0));*/
     m_modelStage->addUniformHook(lightRegistry);
 }
 
