@@ -151,6 +151,8 @@ void VBO::makeVBO(const void *data, int byteSize) {
     }
     else {
         Message3(Render, Fatal, "Unknown VBO use type");
+        // Keep GCC happy, even though the above abort()s.
+        utype = 0;
     }
 
     glBindBuffer(btype, m_bufferID);
