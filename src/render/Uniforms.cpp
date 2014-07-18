@@ -28,23 +28,23 @@ void Uniforms::setParam(std::string name, boost::shared_ptr<Texture> texture) {
 }
 
 void Uniforms::set(boost::shared_ptr<Program> program) const {
-    for(auto i : m_ints) {
+    for(auto &i : m_ints) {
         program->setUniform(i.first, i.second);
     }
 
-    for(auto i : m_floats) {
+    for(auto &i : m_floats) {
         program->setUniform(i.first, i.second);
     }
 
-    for(auto v : m_vectors) {
+    for(auto &v : m_vectors) {
         program->setUniform(v.first, v.second);
     }
 
-    for(auto m : m_matrices) {
+    for(auto &m : m_matrices) {
         program->setUniform(m.first, m.second);
     }
 
-    for(auto t : m_textures) {
+    for(auto &t : m_textures) {
         program->setUniform(t.first, t.second);
     }
 }

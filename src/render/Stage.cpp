@@ -56,7 +56,7 @@ bool Stage::loadFrom(std::string identifier) {
     initialize(outputs, width, height);
 
     // add previous
-    for(auto child : node.children()) {
+    for(auto &child : node.children()) {
         if(std::strcmp(child.name(), "previous")) continue;
 
         std::string pname = child.text().as_string("");
@@ -69,7 +69,7 @@ bool Stage::loadFrom(std::string identifier) {
         addPrevious(prev);
     }
 
-    for(auto child : node.children()) {
+    for(auto &child : node.children()) {
         if(std::strcmp(child.name(), "map")) continue;
 
         std::string fromString = child.attribute("from").as_string();
@@ -123,13 +123,13 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
         glDrawBuffer(GL_BACK);
     }
 
-    for(auto hook : m_uniformHooks) {
+    for(auto &hook : m_uniformHooks) {
         hook->hook(globalParams);
     }
     
     MaterialParams materialParams;
 
-    for(auto mapping : m_attachments) {
+    for(auto &mapping : m_attachments) {
         auto fb = std::get<0>(mapping)->framebuffer();
         auto texture = fb->getTextureAttachment(std::get<1>(mapping));
 

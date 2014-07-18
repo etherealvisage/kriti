@@ -23,7 +23,7 @@ void Renderable::draw(const Uniforms &params,
     at.translate(m_location);
     Math::Matrix modelTransform = at.matrix();
 
-    for(auto sequence : m_sequences) {
+    for(auto &sequence : m_sequences) {
         sequence->draw(params, materialParams, modelTransform);
     }
 }

@@ -36,7 +36,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromModel(
     vao->addVBO(indexVBO, VAO::Element);
 
     /* Create RenderSequence objects. */
-    for(auto ms : model->sequences()) {
+    for(auto &ms : model->sequences()) {
         auto material = ResourceRegistry::get<Material>(
             ms.materialName());
         boost::shared_ptr<RenderSequence> rs(new RenderSequence(material, vao,
@@ -107,15 +107,13 @@ boost::shared_ptr<Renderable> RenderableFactory::fromLineGeometry(
     vao->addVBO(vertexVBO, VAO::Vertex);
 
     // zero normals.
-    std::vector<Math::Vector> normals;
-    for(auto v : vertices) normals.push_back(Math::Vector());
+    std::vector<Math::Vector> normals(vertices.size(), Math::Vector());
     auto normalVBO = boost::make_shared<VBO>();
     normalVBO->setData3(normals);
     vao->addVBO(normalVBO, VAO::Normal);
 
     auto textureVBO = boost::make_shared<VBO>();
-    std::vector<Math::Vector> texs;
-    for(auto v : vertices) texs.push_back(Math::Vector());
+    std::vector<Math::Vector> texs(vertices.size(), Math::Vector());
     textureVBO->setData2(texs);
     vao->addVBO(textureVBO, VAO::Texture0);
 
@@ -150,8 +148,7 @@ boost::shared_ptr<Renderable> RenderableFactory::fromQuad(Math::Vector p1,
     vao->addVBO(vertexVBO, VAO::Vertex);
 
     // TODO: make these actual normals...
-    std::vector<Math::Vector> normals;
-    for(auto v : vertices) normals.push_back(Math::Vector());
+    std::vector<Math::Vector> normals(vertices.size(), Math::Vector());
     auto normalVBO = boost::make_shared<VBO>();
     normalVBO->setData3(normals);
     vao->addVBO(normalVBO, VAO::Normal);

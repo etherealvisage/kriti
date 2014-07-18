@@ -48,7 +48,7 @@ bool Texture::loadFrom(std::string identifier) {
         identifier.c_str());
 
 
-    for(auto child : node.children()) {
+    for(auto &child : node.children()) {
         if(std::strcmp(child.name(), "mipmap")) continue;
 
         int level = child.attribute("level").as_int(0);

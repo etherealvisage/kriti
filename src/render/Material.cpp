@@ -38,7 +38,7 @@ bool Material::loadFrom(std::string identifier) {
 
     m_program = boost::make_shared<Program>(vsName, fsName, gsName);
 
-    for(auto child : node.children()) {
+    for(auto &child : node.children()) {
         if(std::strcmp(child.name(), "uniform")) continue;
 
         std::string name = child.attribute("name").as_string("");
