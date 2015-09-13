@@ -53,7 +53,7 @@ SET( ASSIMP_BIN_INSTALL_DIR "bin" CACHE PATH
 SET(ASSIMP_DEBUG_POSTFIX "D" CACHE STRING "Debug Postfitx for lib, samples and tools")
 
 # Allow the user to build a static library
-SET ( ASSIMP_BUILD_STATIC_LIB OFF CACHE BOOL
+SET ( ASSIMP_BUILD_STATIC_LIB ON CACHE BOOL
 	"Build a static (.a) version of the library"
 )
 

@@ -13,7 +13,6 @@ aux_source_directory(render renderSources)
 aux_source_directory(physics physicsSources)
 aux_source_directory(profile profileSources)
 aux_source_directory(scene sceneSources)
-aux_source_directory(track trackSources)
 
 include_directories(.)
 
@@ -29,7 +28,6 @@ set(sources
     ${physicsSources}
     ${profileSources}
     ${sceneSources}
-    ${trackSources}
 )
 
 find_package(Boost COMPONENTS filesystem system signals)
@@ -53,9 +51,9 @@ include_directories(${GLEW_INCLUDE_DIR})
 include_directories(${pugixmlInclude})
 include_directories(${assimpInclude})
 
-add_executable(kriti ${sources})
+add_library(kriti_only ${sources})
 
-target_link_libraries(kriti
+set(kritiLibraries CACHE INTERNAL
     # pugixml from source tree
     pugixml
     # assimp from source tree

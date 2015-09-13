@@ -1,0 +1,6 @@
+create libkriti.a
+addlib libkriti_only.a
+addlib libpugixml.a
+addlib libassimp.a
+save
+end

@@ -8,3 +8,6 @@
 - Uniform Buffer Object support
 - Transform Feedback infrastructure
 - improved materials infrastructure (textures etc.)
+
+- Stateful GUI
+- Texture GUI element

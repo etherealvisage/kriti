@@ -13,7 +13,6 @@
 #include "event/EventQueue.h"
 #include "event/EventRouter.h"
 #include "context/ContextManager.h"
-#include "game/MainMenuContext.h"
 #include "profile/Tracker.h"
 #include "gui/Loader.h"
 #include "render/TextureContext.h"
@@ -24,6 +23,8 @@
 #include "AssimpWrapper.h"
 
 #include "ModelViewerContext.h"
+
+extern void game_entry_point();
 
 int main() {
     using namespace Kriti;
@@ -66,15 +67,8 @@ int main() {
     // initialize context manager
     Context::ContextManager::instance();
 
-    Context::ContextManager::instance()->addContext(
-        new ModelViewerContext()
-    );
-
-    //Context::ContextManager::instance()->pushContext("Game::MainMenuContext");
-    Context::ContextManager::instance()->pushContext("ModelViewerContext");
-    
-    // run the rest of the program.
-    Context::ContextManager::instance()->loop();
+    // run application code
+    game_entry_point();
 
     // clean up.
     Context::ContextManager::destroy();
