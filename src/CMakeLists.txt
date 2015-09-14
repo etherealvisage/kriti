@@ -2,21 +2,27 @@ add_definitions(-Wall -Wextra -std=c++11)
 add_definitions(-Wno-unused-parameter -Wno-sign-compare)
 add_definitions(-g)
 
-aux_source_directory(. dotSources)
-aux_source_directory(math mathSources)
-aux_source_directory(interface interfaceSources)
-aux_source_directory(event eventSources)
-aux_source_directory(context contextSources)
-aux_source_directory(game gameSources)
-aux_source_directory(gui guiSources)
-aux_source_directory(render renderSources)
-aux_source_directory(physics physicsSources)
-aux_source_directory(profile profileSources)
-aux_source_directory(scene sceneSources)
+aux_source_directory(assimp assimpSources)
+aux_source_directory(pugixml pugixmlSources)
+
+aux_source_directory(kriti dotSources)
+aux_source_directory(kriti/math mathSources)
+aux_source_directory(kriti/interface interfaceSources)
+aux_source_directory(kriti/event eventSources)
+aux_source_directory(kriti/context contextSources)
+aux_source_directory(kriti/game gameSources)
+aux_source_directory(kriti/gui guiSources)
+aux_source_directory(kriti/render renderSources)
+aux_source_directory(kriti/physics physicsSources)
+aux_source_directory(kriti/profile profileSources)
+aux_source_directory(kriti/scene sceneSources)
 
 include_directories(.)
 
 set(sources
+    ${assimpSources}
+    ${pugixmlSources}
+
     ${dotSources}
     ${mathSources}
     ${interfaceSources}
@@ -48,17 +54,9 @@ include_directories(${OPENGL_INCLUDE_DIR})
 find_package(GLEW)
 include_directories(${GLEW_INCLUDE_DIR})
 
-include_directories(${pugixmlInclude})
-include_directories(${assimpInclude})
-
-add_library(kriti_only ${sources})
+add_library(kriti ${sources})
 
 set(kritiLibraries CACHE INTERNAL
-    # pugixml from source tree
-    pugixml
-    # assimp from source tree
-    assimp
-
     ${Boost_LIBRARIES}
     ${BULLET_LIBRARIES}
     ${SDL2_LIBRARY}

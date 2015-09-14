@@ -1,3 +1,5 @@
+- Sort out licensing for src/assimp and src/pugixml
+
 - new GUI Renderable system (partial)
     - How to remove Renderables from RenderableContainer appropriately?
 - button event system
