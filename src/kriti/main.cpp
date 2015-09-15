@@ -22,9 +22,7 @@
 
 #include "AssimpWrapper.h"
 
-#include "ModelViewerContext.h"
-
-extern void game_entry_point();
+extern void gameEntryPoint();
 
 int main() {
     using namespace Kriti;
@@ -68,7 +66,7 @@ int main() {
     Context::ContextManager::instance();
 
     // run application code
-    game_entry_point();
+    gameEntryPoint();
 
     // clean up.
     Context::ContextManager::destroy();
