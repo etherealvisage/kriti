@@ -16,6 +16,7 @@ aux_source_directory(kriti/render renderSources)
 aux_source_directory(kriti/physics physicsSources)
 aux_source_directory(kriti/profile profileSources)
 aux_source_directory(kriti/scene sceneSources)
+aux_source_directory(kriti/state stateSources)
 
 include_directories(.)
 
@@ -34,6 +35,7 @@ set(sources
     ${physicsSources}
     ${profileSources}
     ${sceneSources}
+    ${stateSources}
 )
 
 find_package(Boost COMPONENTS filesystem system signals)

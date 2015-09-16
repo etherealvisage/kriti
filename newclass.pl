@@ -12,7 +12,7 @@ process_class($ARGV[0]);
 
 sub process_class {
     my $class = shift;
-    my $prefix = "src/";
+    my $prefix = "src/kriti/";
     
     while($class =~ /([^:]+)::/g) {
         $prefix .= lc($1) . '/';

@@ -17,7 +17,8 @@
     MS_Subsystem(GUI), \
     MS_Subsystem(Profile), \
     MS_Subsystem(Assimp), \
-    MS_Subsystem(Scene)
+    MS_Subsystem(Scene), \
+    MS_Subsystem(State)
 
 #define MS_Types \
     MS_Type(Debug), \

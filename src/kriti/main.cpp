@@ -1,3 +1,4 @@
+#if 0
 #include <iostream>
 #include <boost/function.hpp>
 #include <boost/bind/protect.hpp>
@@ -21,6 +22,7 @@
 #include "XMLResource.h"
 
 #include "AssimpWrapper.h"
+
 
 extern void gameEntryPoint();
 
@@ -83,6 +85,31 @@ int main() {
     Profile::Tracker::destroy();
 
     MessageSystem::closeLogFile();
+
+    return 0;
+}
+#endif
+
+#include <iostream>
+
+#include "state/Context.h"
+
+void test(int x) {
+    std::cout << "x: " << x << std::endl;
+}
+
+int main() {
+    Kriti::State::Context con;
+
+    con.addListener("test", boost::function<void (int)>(test));
+
+    con.fire("test", boost::make_tuple(42));
+
+    con.addListener("test", &con, "test");
+
+    con.processQueued();
+    con.processQueued();
+    con.processQueued();
 
     return 0;
 }
