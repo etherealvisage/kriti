@@ -40,7 +40,6 @@ void Pipeline::render() {
 }
 
 void Pipeline::render(Uniforms &tp, boost::shared_ptr<Stage> stage) {
-
     // check if it's already been rendered.
     if(m_rendered.find(stage) != m_rendered.end()) return;
 

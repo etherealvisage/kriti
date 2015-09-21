@@ -17,9 +17,6 @@
 
 #include "../math/ViewGenerator.h"
 
-// HACK: shouldn't have this dependency on the GUI module...
-#include "../gui/Scale.h"
-
 #include "../MessageSystem.h"
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"

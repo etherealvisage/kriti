@@ -1,28 +1,20 @@
-#if 0
+#if 1
 #include <iostream>
 #include <boost/function.hpp>
 #include <boost/bind/protect.hpp>
 
-#include "MessageSystem.h"
-
-#include "SDL.h"
-
-#include "ResourceRegistry.h"
+#include "interface/ContextRegistry.h"
+#include "interface/Input.h"
 #include "interface/Video.h"
-#include "interface/Keyboard.h"
-#include "interface/DeviceManager.h"
-#include "event/EventQueue.h"
-#include "event/EventRouter.h"
-#include "context/ContextManager.h"
 #include "profile/Tracker.h"
 #include "gui/Loader.h"
 #include "render/TextureContext.h"
 #include "scene/Model.h"
 
+#include "ResourceRegistry.h"
 #include "XMLResource.h"
-
 #include "AssimpWrapper.h"
-
+#include "MessageSystem.h"
 
 extern void gameEntryPoint();
 
@@ -48,12 +40,9 @@ int main() {
     Profile::Tracker::instance();
 
     // explicit calls to create the singleton instances.
-    boost::shared_ptr<Interface::DeviceManager> dmanager
-        = Interface::DeviceManager::instance();
     Interface::Video::instance();
-
-    // create input devices.
-    dmanager->registerDevices();
+    Interface::ContextRegistry::instance();
+    Interface::Input::instance();
 
     // initialize rendering infrastructure
     Render::TextureContext::instance();
@@ -64,21 +53,16 @@ int main() {
     // initialize the Open Asset Import Library wrapper
     AssimpWrapper::instance();
 
-    // initialize context manager
-    Context::ContextManager::instance();
-
     // run application code
     gameEntryPoint();
-
-    // clean up.
-    Context::ContextManager::destroy();
 
     GUI::Loader::destroy();
 
     Render::TextureContext::destroy();
 
+    Interface::Input::destroy();
+    Interface::ContextRegistry::destroy();
     Interface::Video::destroy();
-    Interface::DeviceManager::destroy();
 
     ResourceRegistry::unload();
 
@@ -88,7 +72,7 @@ int main() {
 
     return 0;
 }
-#endif
+#else
 
 #include <iostream>
 
@@ -98,18 +82,29 @@ void test(int x) {
     std::cout << "x: " << x << std::endl;
 }
 
+void anon(int x) {
+    std::cout << "(anon) x: " << x << std::endl;
+}
+
 int main() {
     Kriti::State::Context con;
 
-    con.addListener("test", boost::function<void (int)>(test));
+    auto orig = con.addListener("test", boost::function<void (int)>(test));
 
     con.fire("test", boost::make_tuple(42));
 
-    con.addListener("test", &con, "test");
+    auto repeat = con.addListener("test", &con, "test");
 
     con.processQueued();
-    con.processQueued();
+
+    auto anon_event = con.addEvent<int>();
+    auto anon_listener = con.addListener(anon_event,
+        boost::function<void (int)>(test));
+
+    con.fire(anon_event, boost::make_tuple(21));
+
     con.processQueued();
 
     return 0;
 }
+#endif
