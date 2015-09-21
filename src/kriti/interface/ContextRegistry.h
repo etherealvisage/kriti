@@ -31,6 +31,11 @@ private:
 public:
     ContextRegistry();
 
+    void push(boost::shared_ptr<State::Context> context)
+        { m_contextList.push_back(context); }
+    void pop();
+    boost::shared_ptr<State::Context> peek() const;
+
     boost::weak_ptr<State::Context::Event> sdlEvent() const
         { return m_sdlEvent; }
 

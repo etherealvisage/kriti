@@ -26,6 +26,7 @@ void Context::fire(boost::weak_ptr<Event> event, boost::any params,
         Message3(State, Error, "Firing removed event");
         return;
     }
+
     if(!immediate) m_queue.push_back(boost::bind(e->m_handler, params));
     else e->m_handler(params);
 }
