@@ -29,6 +29,8 @@ void ContextRegistry::run() {
         }
         m_sdlContext->processQueued();
 
+        fire("new_frame", boost::make_tuple());
+
         for(auto &context : m_contextList) {
             context->processQueued();
         }

@@ -29,8 +29,6 @@ Stage::Stage() {}
 Stage::Stage(int outputs, int width, int height, std::string name)
     : m_name(name) {
     
-    Message3(Render, Debug, "Making new Stage (!)");
-
     initialize(outputs, width, height);
 }
 

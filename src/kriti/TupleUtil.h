@@ -11,6 +11,11 @@ template<typename R, typename ...T>
 R apply(const boost::function<R (T...)> &function,
     const boost::tuple<T...> &params);
 
+template<typename R>
+R apply(const boost::function<R ()> &function, const boost::tuple<> &) {
+    return function();
+}
+
 template<typename R, typename P1>
 R apply(const boost::function<R (P1)> &function,
     const boost::tuple<P1> &params) {
