@@ -121,7 +121,7 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
     for(auto &hook : m_uniformHooks) {
         hook->hook(globalParams);
     }
-    
+
     MaterialParams materialParams;
 
     for(auto &mapping : m_attachments) {

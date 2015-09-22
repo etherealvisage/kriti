@@ -20,6 +20,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "../MessageSystem.h"
 #include "../TupleUtil.h"
@@ -38,12 +39,17 @@ public:
     public:
         void disconnect();
     };
-    class Event {
+
+    class Event : public boost::enable_shared_from_this<Event> {
+    private:
         friend class Context;
+        Context *m_context;
         std::string m_name;
         std::string m_eventType;
         boost::function<void (boost::any)> m_handler;
         std::vector<boost::shared_ptr<Listener>> m_listeners;
+    public:
+        void fire(boost::any param, bool immediate = false);
     };
 private:
     std::map<std::string, boost::shared_ptr<Event>> m_events;
@@ -72,6 +78,7 @@ public:
         }
 
         auto event = boost::make_shared<Event>();
+        event->m_context = this;
         event->m_name = name;
         event->m_eventType = typeid(boost::tuple<T...>).name();
         event->m_handler = boost::bind(&Context::handler, event, _1);
@@ -83,6 +90,7 @@ public:
     template<typename ...T>
     boost::weak_ptr<Event> addEvent() {
         auto event = boost::make_shared<Event>();
+        event->m_context = this;
         event->m_eventType = typeid(boost::tuple<T...>).name();
         event->m_handler = boost::bind(&Context::handler, event, _1);
         
@@ -137,6 +145,7 @@ public:
         auto own_event = m_events[name];
         if(context->m_events.count(contextName) == 0) {
             auto event = boost::make_shared<Event>();
+            event->m_context = context;
             event->m_eventType = own_event->m_eventType;
             event->m_handler = boost::bind(&Context::handler, event, _1);
             context->m_events[name] = event;

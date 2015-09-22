@@ -3,9 +3,6 @@
 - new GUI Renderable system (partial)
     - How to remove Renderables from RenderableContainer appropriately?
 - button event system
-- keyboard/mouse event system? (may as well...)
-
-- replace/rewrite MainMenuContext
 
 - Uniform Buffer Object support
 - Transform Feedback infrastructure
@@ -13,3 +10,7 @@
 
 - Stateful GUI
 - Texture GUI element
+
+- use GL_ARB_geometry_shader4 instead of GL 3.2 geometry shaders to support
+    Intel GL on Windows for older GPUs
+

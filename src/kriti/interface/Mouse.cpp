@@ -13,9 +13,12 @@ Mouse::Mouse() {
 
 void Mouse::mouseEvent(SDL_Event event) {
     if(event.type == SDL_MOUSEMOTION) {
-        double x = event.motion.x, y = event.motion.y;
+        /*double x = event.motion.x, y = event.motion.y;
         x /= Video::instance()->width();
         y /= Video::instance()->height();
+        ContextRegistry::instance()->fire("mouse_moved",
+            boost::make_tuple(x, y));*/
+        int x = event.motion.x, y = event.motion.y;
         ContextRegistry::instance()->fire("mouse_moved",
             boost::make_tuple(x, y));
     }

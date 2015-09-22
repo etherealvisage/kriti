@@ -69,7 +69,9 @@ void Button::updated(boost::shared_ptr<OutlineRegistry> registry) {
             m_wasClicked = true;
         }
         else if(!mouseState().button(0) && m_wasClicked) {
-            Message3(GUI, Debug, "Button click!");
+            auto event = m_clickEvent.lock();
+            if(event) event->fire(boost::make_tuple());
+
             m_wasClicked = false;
         }
     }

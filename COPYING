@@ -64,7 +64,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 ---- 
 
 The license for the Open Asset Import Library, contained within the src/assimp
-directory, is contained in the file libs/assimp/LICENSE. There are several
+directory, is contained in the file src/assimp/LICENSE. There are several
 other libraries who have code in the same directory, which should individually
 have copyright notices at the top of each file.
 

@@ -25,7 +25,7 @@ void ContextRegistry::run() {
     while(!m_contextList.empty()) {
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
-            m_sdlContext->fire(m_sdlEvent, boost::make_tuple(event));
+            m_sdlEvent->fire(boost::make_tuple(event));
         }
         m_sdlContext->processQueued();
 
