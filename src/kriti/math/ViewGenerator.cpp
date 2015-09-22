@@ -34,28 +34,25 @@ Matrix ViewGenerator::perspective(double fov, double ratio, double near,
     double bottom = -range;
 
     return frustum(left, right, top, bottom, near, far);
-
-    /*Matrix result;
-    result(0,0) = result(1,1)=result(2,2)=result(3,3) = 0;
-
-    result(0, 0) = 2*near / (right-left);
-    result(1, 1) = 2*near / (top-bottom);
-    result(2, 2) = -(far + near) / (far - near);
-    result(2, 3) = -1;
-    result(3, 2) = -(2*far*near)/(far - near);
-
-    return result;*/
 }
 
 Matrix ViewGenerator::orthogonal(double width, double height, double near,
     double far) {
 
+    return orthogonal(-width/2, width/2, -height/2, height/2, near, far);
+}
+
+Matrix ViewGenerator::orthogonal(double left, double right, double top,
+    double bottom, double near, double far) {
+
     Matrix result;
 
-    result(0,0) = 2/width;
-    result(1,1) = 2/height;
+    result(0,0) = 2/(right-left);
+    result(0,3) = -(right+left)/(right-left);
+    result(1,1) = 2/(top-bottom);
+    result(1,3) = -(top+bottom)/(top-bottom);
     result(2,2) = -2/(far-near);
-    result(3,2) = -near/(far-near);
+    result(3,2) = -(far+near)/(far-near);
     result(3,3) = 1.0;
 
     return result;

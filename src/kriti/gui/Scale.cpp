@@ -5,22 +5,10 @@
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
 
+#define DPCM 37.8
+
 namespace Kriti {
 namespace GUI {
-
-double Scale::defaultWidth() {
-    return xscale() *
-        ResourceRegistry::get<XMLResource>(
-        "config")->doc().first_element_by_path(
-        "/kriti/gui/scale").text().as_double(100.0);
-}
-
-double Scale::defaultHeight() {
-    return yscale() *
-        ResourceRegistry::get<XMLResource>(
-        "config")->doc().first_element_by_path(
-        "/kriti/gui/scale").text().as_double(100.0);
-}
 
 Math::Vector Scale::padding() {
     return Math::Vector(xtotal()/100.0, ytotal()/100.0);
@@ -31,30 +19,27 @@ Math::Vector Scale::perLayer() {
 }
 
 double Scale::xscale() {
-    /*return (2*Interface::Video::instance()->aspectRatio())
-        / Interface::Video::instance()->width();*/
-    return 1.0 / Interface::Video::instance()->width();
+    return xtotal() / (Interface::Video::instance()->width() / DPCM);
 }
 
 double Scale::yscale() {
-    /*return 2.0 / Interface::Video::instance()->height();*/
-    return 1.0 / Interface::Video::instance()->height();
+    return (DPCM / Interface::Video::instance()->height());
 }
 
 double Scale::xtotal() {
-    return 2*Interface::Video::instance()->aspectRatio();
+    return Interface::Video::instance()->aspectRatio();
 }
 
 double Scale::ytotal() {
-    return 2.0;
+    return 1.0;
 }
 
 double Scale::fromPixelsX(int count) {
-    return xscale() * count * xtotal();
+    return (count * xtotal()) / Interface::Video::instance()->width();
 }
 
 double Scale::fromPixelsY(int count) {
-    return yscale() * count * ytotal();
+    return (count * ytotal()) / Interface::Video::instance()->height();
 }
 
 }  // namespace GUI

@@ -8,18 +8,14 @@ namespace GUI {
 
 class Scale {
 public:
-    /// default width/height scale of GUI elements
-    double defaultWidth();
-    double defaultHeight();
-
     /// default padding around elements/between elements
     Math::Vector padding();
     /// z-spacing between elements layered on top of each other
     Math::Vector perLayer();
 
-    /// what percentage of the screen is one horizontal pixel unit?
+    /// what percentage of the screen is one centimetre horizontally?
     double xscale();
-    /// what percentage of the screen is one vertical pixel unit?
+    /// what percentage of the screen is one centimetre vertically?
     double yscale();
 
     /// how many horizontal units for the viewport?

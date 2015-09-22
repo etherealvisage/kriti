@@ -45,10 +45,10 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
         m_renderable->renderSequence(0)->vao()->vbo(
             Render::VAO::Vertex)->setData3(loc);
     }
-    m_renderable->renderSequence(0)->extraParams().setParam("panel_xscale",
-        (size().x() / Scale().xtotal()) / scale().x());
-    m_renderable->renderSequence(0)->extraParams().setParam("panel_yscale",
-        (size().y() / Scale().ytotal()) / scale().y());
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_xdpcm",
+        size().x() / Scale().xscale());
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_ydpcm",
+        size().y() / Scale().yscale());
 
     if(mouseState().posSet()) {
         m_activation = std::pow(0.3, m_activation)/2.0;
