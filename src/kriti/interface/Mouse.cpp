@@ -13,14 +13,15 @@ Mouse::Mouse() {
 
 void Mouse::mouseEvent(SDL_Event event) {
     if(event.type == SDL_MOUSEMOTION) {
-        /*double x = event.motion.x, y = event.motion.y;
-        x /= Video::instance()->width();
+        double x = event.motion.x, y = event.motion.y;
+        x /= Video::instance()->width(); x *= Video::instance()->aspectRatio();
         y /= Video::instance()->height();
-        ContextRegistry::instance()->fire("mouse_moved",
-            boost::make_tuple(x, y));*/
-        int x = event.motion.x, y = event.motion.y;
+        y = 1-y; // invert y-axis
         ContextRegistry::instance()->fire("mouse_moved",
             boost::make_tuple(x, y));
+        /*int x = event.motion.x, y = event.motion.y;
+        ContextRegistry::instance()->fire("mouse_moved",
+            boost::make_tuple(x, y));*/
     }
     else if(event.type == SDL_MOUSEBUTTONDOWN) {
         ContextRegistry::instance()->fire("mouse_down",

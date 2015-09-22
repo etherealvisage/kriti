@@ -11,7 +11,7 @@
 namespace Kriti {
 namespace GUI {
 
-void MouseInteractor::updateMouseCoordinates(int x, int y) {
+void MouseInteractor::updateMouseCoordinates(double x, double y) {
     m_mouseX = x, m_mouseY = y;
 }
 
@@ -23,12 +23,7 @@ void MouseInteractor::updateMouseButton(int which, bool value) {
 void MouseInteractor::updateMouseActivation(
     boost::shared_ptr<OutlineRegistry> registry) {
 
-    Math::Vector mpos(
-        ((double)m_mouseX / Interface::Video::instance()->width())
-            *Scale().xtotal() - Scale().xtotal()/2,
-        // invert mouse Y coordinates
-        -((double)m_mouseY / Interface::Video::instance()->height())
-            *Scale().ytotal() + Scale().ytotal()/2);
+    Math::Vector mpos(m_mouseX, m_mouseY);
     
     auto itemw = registry->topItemAt(mpos);
 

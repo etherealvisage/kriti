@@ -12,7 +12,7 @@ private:
 public:
     MouseCursor();
 
-    void updateMouseCoordinates(int x, int y);
+    void updateMouseCoordinates(double x, double y);
 
     boost::shared_ptr<Render::Renderable> renderable() const
         { return m_renderable; }

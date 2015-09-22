@@ -17,14 +17,9 @@ MouseCursor::MouseCursor() {
         base + vsize+hsize, base + hsize, "gui_cursor");
 }
 
-void MouseCursor::updateMouseCoordinates(int x, int y) {
-    Math::Vector mpos(
-        ((double)x / Interface::Video::instance()->width())
-            *Scale().xtotal() - Scale().xtotal()/2,
-        // invert mouse Y coordinates
-        -((double)y / Interface::Video::instance()->height())
-            *Scale().ytotal() + Scale().ytotal()/2);
-    m_renderable->location() = mpos + Math::Vector(0.0, 0.0, 100.0);
+void MouseCursor::updateMouseCoordinates(double x, double y) {
+    Math::Vector mpos(x, y);
+    m_renderable->location() = Math::Vector(x, y, 8.0);
 }
 
 }  // namespace GUI

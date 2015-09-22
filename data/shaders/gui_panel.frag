@@ -43,7 +43,9 @@ void main() {
     float md = min(xdist, ydist);
     if(md < border_width) {
         fragColour = mix(
-            vec4(0.0f, 0.0f, 0.0f, 0.5f),
+            mix(vec4(0.0f, 0.0f, 0.0f, 0.5f),
+                vec4(0.0f, 0.3f, 0.3f, 0.5f),
+                panel_activation),
             vec4(0.3f, 0.3f, 0.0f, 1.0f),
             pow(md/border_width, 0.3f));
     }
