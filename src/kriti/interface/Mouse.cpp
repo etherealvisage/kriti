@@ -19,17 +19,32 @@ void Mouse::mouseEvent(SDL_Event event) {
         y = 1-y; // invert y-axis
         ContextRegistry::instance()->fire("mouse_moved",
             boost::make_tuple(x, y));
-        /*int x = event.motion.x, y = event.motion.y;
-        ContextRegistry::instance()->fire("mouse_moved",
-            boost::make_tuple(x, y));*/
     }
-    else if(event.type == SDL_MOUSEBUTTONDOWN) {
-        ContextRegistry::instance()->fire("mouse_down",
-            boost::make_tuple(static_cast<int>(event.button.button)));
-    }
-    else if(event.type == SDL_MOUSEBUTTONUP) {
-        ContextRegistry::instance()->fire("mouse_up",
-            boost::make_tuple(static_cast<int>(event.button.button)));
+    else if(event.type == SDL_MOUSEBUTTONDOWN
+        || event.type == SDL_MOUSEBUTTONUP) {
+
+        int button = 0;
+        switch(event.button.button) {
+        case SDL_BUTTON_LEFT:
+            button = 0;
+            break;
+        case SDL_BUTTON_MIDDLE:
+            button = 1;
+            break;
+        case SDL_BUTTON_RIGHT:
+            button = 2;
+            break;
+        default:
+            button = 0;
+            break;
+        }
+
+        if(event.type == SDL_MOUSEBUTTONUP)
+            ContextRegistry::instance()->fire("mouse_up",
+                boost::make_tuple(button));
+        else
+            ContextRegistry::instance()->fire("mouse_down",
+                boost::make_tuple(button));
     }
 }
 
