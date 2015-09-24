@@ -40,10 +40,12 @@ void Label::fill(boost::shared_ptr<Render::RenderableContainer> container) {
 }
 
 void Label::updated(
-    boost::shared_ptr<OutlineRegistry> __attribute__((unused)) registry) {
+    boost::shared_ptr<OutlineRegistry> __attribute__((unused)) registry,
+        Math::Vector clipStart, Math::Vector clipEnd) {
 
     if(!m_renderable) {
-        m_renderable = TextRenderer().render(m_font, m_text, scale()*m_textScale);
+        m_renderable = TextRenderer().render(m_font, m_text,
+            scale()*m_textScale);
     }
     else if(!(m_lastScale == scale()) || m_regen) {
         auto temp = TextRenderer().render(m_font, m_text, scale()*m_textScale);
@@ -51,6 +53,11 @@ void Label::updated(
         m_renderable->addRenderSequence(temp->renderSequence(0));
         m_regen = false;
     }
+
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_start",
+        clipStart);
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_end",
+        clipEnd);
 
     Math::Vector ul, lr;
     TextRenderer().size(m_font, m_text, ul, lr);

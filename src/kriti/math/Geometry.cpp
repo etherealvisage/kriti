@@ -32,5 +32,16 @@ Vector Geometry::closestSegmentPoint(Vector l1, Vector l2, Vector p) {
     return l1 + t*d;
 }
 
+bool Geometry::isAARectEmpty(Vector s, Vector e) {
+    return e.x() <= s.x() || e.y() <= s.y();
+}
+
+void Geometry::intersectAARects(Vector &s, Vector &e, Vector s2, Vector e2) {
+    s.setX(std::max(s.x(), s2.x()));
+    s.setY(std::max(s.y(), s2.y()));
+    e.setX(std::min(e.x(), e2.x()));
+    e.setY(std::min(e.y(), e2.y()));
+}
+
 }  // namespace Math
 }  // namespace Kriti

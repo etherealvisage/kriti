@@ -28,7 +28,10 @@ public:
     /// stubbed by default, called on an update for various hooks.
     void update(boost::shared_ptr<OutlineRegistry> registry, Math::Vector pos,
         Math::Vector size, Math::Vector scale)
-        { m_pos = pos, m_size = size, m_scale = scale; updated(registry); }
+        { update(registry, pos, size, scale, pos, pos+size); }
+    void update(boost::shared_ptr<OutlineRegistry> registry, Math::Vector pos,
+        Math::Vector size, Math::Vector scale, Math::Vector clipStart,
+        Math::Vector clipEnd);
 
     /// fill in/register all renderables into the container
     /// should be re-implemented in derived types
@@ -42,7 +45,8 @@ public:
     MouseState mouseState() const { return m_mouseState; }
     void updateMouseState(MouseState newms) { m_mouseState = newms; }
 protected:
-    virtual void updated(boost::shared_ptr<OutlineRegistry> registry) = 0;
+    virtual void updated(boost::shared_ptr<OutlineRegistry> registry,
+        Math::Vector clipStart, Math::Vector clipEnd) = 0;
 };
 
 }  // namespace GUI

@@ -19,7 +19,9 @@ Math::Vector ItemScaler::stretch() {
     return Math::Vector();
 }
 
-void ItemScaler::updated(boost::shared_ptr<OutlineRegistry> registry) {
+void ItemScaler::updated(boost::shared_ptr<OutlineRegistry> registry,
+    Math::Vector clipStart, Math::Vector clipEnd) {
+
     if(!m_child) return;
 
     if(m_factor > 1.0) {
@@ -30,7 +32,7 @@ void ItemScaler::updated(boost::shared_ptr<OutlineRegistry> registry) {
     Math::Vector sdiff = size() * (1-m_factor);
 
     m_child->update(registry, pos()+sdiff/2.0, size() * m_factor,
-        scale()*m_factor);
+        scale()*m_factor, clipStart, clipEnd);
 }
 
 }  // namespace GUI

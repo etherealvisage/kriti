@@ -5,6 +5,8 @@
 #include "../render/RenderableFactory.h"
 #include "../render/Stage.h"
 
+#include "../math/Geometry.h"
+
 #include "../MessageSystem.h"
 
 namespace Kriti {
@@ -21,8 +23,14 @@ void Panel::fill(boost::shared_ptr<Render::RenderableContainer> container) {
     m_layout->fill(container);
 }
 
-void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
-    registry->updateOutline(shared_from_this(), pos(), size());
+void Panel::updated(boost::shared_ptr<OutlineRegistry> registry,
+        Math::Vector clipStart, Math::Vector clipEnd) {
+    Math::Vector outlineStart = pos(), outlineEnd = pos()+size();
+    Math::Geometry::intersectAARects(outlineStart, outlineEnd,
+        clipStart, clipEnd);
+    if(!Math::Geometry::isAARectEmpty(outlineStart, outlineEnd))
+        registry->updateOutline(shared_from_this(), outlineStart,
+            outlineEnd-outlineStart);
 
     if(!m_renderable) {
         m_renderable = Render::RenderableFactory().fromQuad(
@@ -49,6 +57,10 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
         size().x() / Scale().xscale());
     m_renderable->renderSequence(0)->extraParams().setParam("gui_ydpcm",
         size().y() / Scale().yscale());
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_start",
+        clipStart);
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_end",
+        clipEnd);
 
     if(mouseState().posSet()) {
         m_activation = std::pow(0.3, m_activation)/2.0;
@@ -62,7 +74,7 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry) {
 
     if(m_layout) m_layout->update(registry,
         pos() + Scale().padding()*scale() + Scale().perLayer(),
-        size() - Scale().padding()*scale()*2, scale());
+        size() - Scale().padding()*scale()*2, scale(), clipStart, clipEnd);
 }
 
 }  // namespace GUI

@@ -26,7 +26,9 @@ Math::Vector PackedLayout::minSize() {
     else return Math::Vector();
 }
 
-void PackedLayout::updated(boost::shared_ptr<OutlineRegistry> registry) {
+void PackedLayout::updated(boost::shared_ptr<OutlineRegistry> registry,
+    Math::Vector clipStart, Math::Vector clipEnd) {
+
     if(m_dir == Vertical) {
         double minY = 0.0;
         double stretchY = 0.0;
@@ -52,7 +54,7 @@ void PackedLayout::updated(boost::shared_ptr<OutlineRegistry> registry) {
 
             height += (sfactor / stretchY) * extraY;
             item->update(registry, pos() + Math::Vector(0.0, cursor),
-                Math::Vector(size().x(), height), scale());
+                Math::Vector(size().x(), height), scale(), clipStart, clipEnd);
 
             cursor += height;
             cursor += ypad;
