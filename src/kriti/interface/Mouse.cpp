@@ -2,6 +2,8 @@
 #include "ContextRegistry.h"
 #include "Video.h"
 
+#include <SDL_mouse.h>
+
 namespace Kriti {
 namespace Interface {
 
@@ -45,6 +47,11 @@ void Mouse::mouseEvent(SDL_Event event) {
         else
             ContextRegistry::instance()->fire("mouse_down",
                 boost::make_tuple(button));
+    }
+    else if(event.type == SDL_MOUSEWHEEL) {
+        int x = event.wheel.x, y = event.wheel.y;
+        ContextRegistry::instance()->fire("mouse_wheel",
+            boost::make_tuple(x, y));
     }
 }
 
