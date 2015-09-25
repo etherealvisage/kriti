@@ -26,6 +26,7 @@ public:
     virtual Math::Vector stretch() { return m_stretch; }
 
     Math::Vector &scrollOffset() { return m_scrollOffset; }
+    Math::Vector &scrollSize() { return m_scrollSize; }
 
     virtual void fill(
         boost::shared_ptr<Render::RenderableContainer> container);

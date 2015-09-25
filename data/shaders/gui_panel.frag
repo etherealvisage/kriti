@@ -17,12 +17,9 @@ uniform vec3 gui_clip_start;
 uniform vec3 gui_clip_end;
 
 void main() {
-    /*if(v_position.x > gui_clip_end.x || v_position.x < gui_clip_start.x
+    if(v_position.x > gui_clip_end.x || v_position.x < gui_clip_start.x
         || v_position.y > gui_clip_end.y || v_position.y < gui_clip_start.y) {
 
-        discard;
-    }*/
-    if(v_position.x > gui_clip_end.x || v_position.x < gui_clip_start.x) {
         discard;
     }
 
