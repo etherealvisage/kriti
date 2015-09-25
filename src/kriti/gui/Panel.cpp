@@ -13,7 +13,11 @@ namespace Kriti {
 namespace GUI {
 
 Math::Vector Panel::minSize() {
-    return m_minSize + Scale().padding()*2;
+    Math::Vector maxmin = m_minSize;
+    Math::Vector layoutSize = m_layout->minSize();
+    maxmin.setX(std::max(maxmin.x(), layoutSize.x()));
+    maxmin.setY(std::max(maxmin.y(), layoutSize.y()));
+    return maxmin + Scale().padding()*2;
 }
 
 void Panel::fill(boost::shared_ptr<Render::RenderableContainer> container) {
