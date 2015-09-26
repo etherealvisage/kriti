@@ -5,7 +5,7 @@
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
 
-#define DPCM 37.8
+#define DPI 96
 
 namespace Kriti {
 namespace GUI {
@@ -19,11 +19,11 @@ Math::Vector Scale::perLayer() {
 }
 
 double Scale::xscale() {
-    return xtotal() / (Interface::Video::instance()->width() / DPCM);
+    return xtotal() / (Interface::Video::instance()->width() / DPI);
 }
 
 double Scale::yscale() {
-    return (DPCM / Interface::Video::instance()->height());
+    return ytotal() / (Interface::Video::instance()->height() / DPI);
 }
 
 double Scale::xtotal() {

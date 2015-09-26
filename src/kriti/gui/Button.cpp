@@ -63,9 +63,9 @@ void Button::updated(boost::shared_ptr<OutlineRegistry> registry,
         m_renderable->renderSequence(0)->vao()->vbo(
             Render::VAO::Vertex)->setData3(loc);
     }
-    m_renderable->renderSequence(0)->extraParams().setParam("gui_xdpcm",
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_xdpi",
         size().x() / Scale().xscale());
-    m_renderable->renderSequence(0)->extraParams().setParam("gui_ydpcm",
+    m_renderable->renderSequence(0)->extraParams().setParam("gui_ydpi",
         size().y() / Scale().yscale());
     m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_start",
         clipStart);

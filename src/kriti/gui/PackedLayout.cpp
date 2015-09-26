@@ -1,3 +1,5 @@
+#include <boost/range/adaptor/reversed.hpp>
+
 #include "PackedLayout.h"
 
 #include "Scale.h"
@@ -48,7 +50,7 @@ void PackedLayout::updated(boost::shared_ptr<OutlineRegistry> registry,
         double extraY = std::max(0.0, size().y() - minY);
 
         double cursor = 0.0;
-        for(auto item : m_items) {
+        for(auto item : boost::adaptors::reverse(m_items)) {
             double sfactor = item->stretch().y();
             double height = item->minSize().y();
 
