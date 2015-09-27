@@ -43,5 +43,20 @@ void Geometry::intersectAARects(Vector &s, Vector &e, Vector s2, Vector e2) {
     e.setY(std::min(e.y(), e2.y()));
 }
 
+std::vector<Math::Vector> Geometry::packAARectsSquare(
+    const std::vector<Math::Vector> &sizes) {
+    std::vector<Math::Vector> pos;
+
+    // TODO: implement better packing algorithm!
+    double width = 0.0;
+    for(auto s : sizes) {
+        pos.push_back(Math::Vector(width, 0.0));
+        width += s.x();
+    }
+
+    return pos;
+}
+
+
 }  // namespace Math
 }  // namespace Kriti
