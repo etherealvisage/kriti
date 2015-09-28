@@ -54,6 +54,9 @@ include_directories(${OPENGL_INCLUDE_DIR})
 find_package(GLEW)
 include_directories(${GLEW_INCLUDE_DIR})
 
+find_package(Freetype)
+include_directories(${FREETYPE_INCLUDE_DIRS})
+
 add_library(kriti ${sources})
 
 set(kritiLibraries CACHE INTERNAL
