@@ -19,7 +19,7 @@ private:
     boost::weak_ptr<State::Context::Event> m_clickEvent;
 public:
     Button(Math::Vector minSize, Math::Vector stretch,
-        boost::shared_ptr<Font> font, std::string text);
+        boost::shared_ptr<Font::Instance> font, std::string text);
 
     void setClickEvent(boost::weak_ptr<State::Context::Event> clickEvent)
         { m_clickEvent = clickEvent; }

@@ -87,12 +87,14 @@ boost::shared_ptr<Widget> Loader::loadWidget(const pugi::xml_node &from) {
         std::string text = tnode.text().as_string("");
 
         if(type == "label") {
-            ret = boost::make_shared<Label>(minSize, stretch,
-                ResourceRegistry::get<Font>(fontName), text);
+            Message3(GUI, Fatal, "Label loading stubbed out");
+            /*ret = boost::make_shared<Label>(minSize, stretch,
+                ResourceRegistry::get<Font>(fontName), text);*/
         }
         else {
-            ret = boost::make_shared<Button>(minSize, stretch,
-                ResourceRegistry::get<Font>(fontName), text);
+            Message3(GUI, Fatal, "Button loading stubbed out");
+            /*ret = boost::make_shared<Button>(minSize, stretch,
+                ResourceRegistry::get<Font>(fontName), text);*/
         }
     }
     else {

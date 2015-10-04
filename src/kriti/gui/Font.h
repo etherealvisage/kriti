@@ -3,6 +3,14 @@
 
 #include <map>
 
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#include "../render/Texture.h"
+
 #include "../Resource.h"
 
 namespace Kriti {
@@ -11,19 +19,39 @@ namespace GUI {
 class Font : public Resource {
 public:
     struct CharSpec {
-        double x, y, w, h, xoff, yoff, xadv;
+        double x, y, w, h, xoff, yoff, xadv, yadv;
+    };
+
+    class Instance : public boost::enable_shared_from_this<Instance> {
+    private:
+        friend class Font;
+        FT_Face m_face;
+        std::vector<FT_Glyph_Metrics> &m_sizes;
+        int m_ptSize;
+
+        std::vector<FT_Glyph_Metrics> m_rawChars;
+        std::vector<CharSpec> m_chars;
+
+        boost::shared_ptr<Render::Texture> m_latestTexture;
+    private:
+        Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
+            int ptSize);
+    public:
+        boost::shared_ptr<Render::Texture> texture()
+            { return m_latestTexture; }
+        void getCharSpec(int c, CharSpec &cs);
     };
 private:
-    std::string m_materialName;
-    std::map<int, CharSpec> m_chars;
+    FT_Face m_face;
+    int m_fontHeight;
+    std::vector<FT_Glyph_Metrics> m_sizes;
+    std::map<int, boost::shared_ptr<Instance>> m_instances;
 public:
     Font() {}
 
-    std::string materialName() const { return m_materialName; }
-
     virtual bool loadFrom(std::string identifier);
 
-    bool getCharSpec(int c, CharSpec &cs) const;
+    boost::shared_ptr<Instance> getInstance(int ptSize);
 };
 
 }  // namespace GUI

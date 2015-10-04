@@ -27,6 +27,9 @@ public:
     double fromPixelsX(int count);
     /// how many vertical units for count pixels?
     double fromPixelsY(int count);
+
+    double xDPI();
+    double yDPI();
 };
 
 }  // namespace GUI

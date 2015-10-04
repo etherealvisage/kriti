@@ -1,6 +1,8 @@
 #ifndef KRITI_RENDER__TEXTURE_H
 #define KRITI_RENDER__TEXTURE_H
 
+#include <GL/gl.h>
+
 #include "../Resource.h"
 
 namespace Kriti {
@@ -10,6 +12,7 @@ class Texture : public Resource {
 public:
     enum Type {
         Colour,
+        ColourR,
         Depth,
         Invalid
     };
@@ -37,6 +40,8 @@ public:
     virtual bool loadFrom(std::string identifier);
 
     void bindToUnit(int which);
+
+    void reset(int width, int height, float *data);
 private:
     void makeTexture();
     void makeBlank();

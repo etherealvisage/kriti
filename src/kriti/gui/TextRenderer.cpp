@@ -9,8 +9,32 @@
 namespace Kriti {
 namespace GUI {
 
-boost::shared_ptr<Render::Renderable> TextRenderer::render(
-    boost::shared_ptr<Font> font, std::string s, Math::Vector scale) {
+std::vector<TextRenderer::Block> blockify(std::string text,
+    TextRenderer::BlockifyMode mode) {
+    
+    std::vector<TextRenderer::Block> blocks;
+
+    switch(mode) {
+    case TextRenderer::Simple: {
+        std::string::size_type cursor = 0, next = std::string::npos;
+        do {
+            next = text.find(" ", cursor+1);
+            blocks.push_back(TextRenderer::Block(text.substr(cursor, next),
+                0.0));
+            cursor = next;
+        } while(cursor != std::string::npos);
+        break;
+    }
+    default:
+        Message3(GUI, Fatal, "Unknown blockify mode!");
+        break;
+    }
+
+    return blocks;
+}
+
+boost::shared_ptr<Render::Renderable> TextRenderer::renderString(
+    boost::shared_ptr<Font::Instance> font, std::string s, Math::Vector scale) {
 
     std::vector<Math::Vector> vertices;
     std::vector<Math::Vector> normals;
@@ -21,7 +45,7 @@ boost::shared_ptr<Render::Renderable> TextRenderer::render(
     Math::Vector cursor;
     for(char c : s) {
         Font::CharSpec cs;
-        if(!font->getCharSpec((int)c, cs)) continue;
+        font->getCharSpec((int)c, cs);
         Math::Vector off(cs.xoff, cs.yoff);
         Math::Vector w(cs.w);
         Math::Vector h(0,cs.h);
@@ -46,19 +70,23 @@ boost::shared_ptr<Render::Renderable> TextRenderer::render(
         cursor += Math::Vector(cs.xadv);
     }
 
-    return Render::RenderableFactory().fromQuadGeometry(vertices, normals,
-        texCoords, indices, font->materialName());
+    auto ret = Render::RenderableFactory().fromQuadGeometry(vertices, normals,
+        texCoords, indices, "gui_text");
+
+    ret->renderSequence(0)->extraParams().setParam("u_tex", font->texture());
+
+    return ret;
 }
 
-void TextRenderer::size(boost::shared_ptr<Font> font, std::string s,
-    Math::Vector &ul, Math::Vector &lr) {
+void TextRenderer::sizeString(boost::shared_ptr<Font::Instance> font,
+    std::string s, Math::Vector &ul, Math::Vector &lr) {
 
     double width = 0.0;
     double minY = 0.0, maxY = 0.0;
 
     for(char c : s) {
         Font::CharSpec cs;
-        if(!font->getCharSpec((int)c, cs)) continue;
+        font->getCharSpec((int)c, cs);
 
         Math::Vector off(cs.xoff, cs.yoff);
         Math::Vector w(cs.w);

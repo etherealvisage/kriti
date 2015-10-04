@@ -65,6 +65,44 @@ void Texture::bindToUnit(int which) {
     glBindTexture(GL_TEXTURE_2D, m_id);
 }
 
+void Texture::reset(int width, int height, float *data) {
+    m_width = width;
+    m_height = height;
+    GLenum iformat;
+    GLenum format = GL_RGBA;
+    switch(m_type) {
+    case Colour:
+        iformat = GL_RGBA32F;
+        break;
+    case ColourR:
+        iformat = GL_R32F;
+        break;
+    case Depth:
+        iformat = GL_DEPTH_COMPONENT32F;
+        format = GL_DEPTH_COMPONENT;
+        break;
+    default:
+        Message3(Render, Fatal, "Unknown Texture::Type in reset()");
+        return;
+    }
+    glTexImage2D(GL_TEXTURE_2D,
+        // level 0, no mipmapping...
+        0, 
+        // internal format: RGBA, floats.
+        iformat,
+        // width and height
+        width, height,
+        // border?
+        0,
+        // input format
+        format,
+        // input
+        GL_FLOAT,
+        // input data
+        data
+    );
+}
+
 void Texture::makeTexture() {
     glGenTextures(1, &m_id);
 
@@ -86,6 +124,9 @@ void Texture::makeBlank() {
     switch(m_type) {
     case Colour:
         iformat = GL_RGBA32F;
+        break;
+    case ColourR:
+        iformat = GL_R32F;
         break;
     case Depth:
         iformat = GL_DEPTH_COMPONENT32F;

@@ -12,22 +12,18 @@ namespace Kriti {
 namespace GUI {
 
 Label::Label(Math::Vector minSize, Math::Vector stretch,
-    boost::shared_ptr<Font> font, std::string text, HorizontalAlignment halign,
-    VerticalAlignment valign) : Widget(stretch), m_minSize(minSize),
-    m_font(font), m_text(text), m_halign(halign), m_valign(valign),
-    m_regen(true) {
-
-    m_textScale = ResourceRegistry::get<XMLResource>(
-        "config")->doc().first_element_by_path(
-        "/kriti/gui/text-scale").text().as_double(0.3);
+    boost::shared_ptr<Font::Instance> font, std::string text,
+    HorizontalAlignment halign, VerticalAlignment valign)
+    : Widget(stretch), m_minSize(minSize), m_font(font), m_text(text),
+    m_halign(halign), m_valign(valign), m_regen(true) {
 }
 
 Math::Vector Label::minSize() {
     Math::Vector ul, lr;
-    TextRenderer().size(m_font, m_text, ul, lr);
+    TextRenderer().sizeString(m_font, m_text, ul, lr);
 
-    ul = ul * m_textScale;
-    lr = lr * m_textScale;
+    /*ul = ul * m_textScale;
+    lr = lr * m_textScale;*/
 
     Math::Vector textMinSize = lr-ul;
 
@@ -44,11 +40,11 @@ void Label::updated(
         Math::Vector clipStart, Math::Vector clipEnd) {
 
     if(!m_renderable) {
-        m_renderable = TextRenderer().render(m_font, m_text,
-            scale()*m_textScale);
+        m_renderable = TextRenderer().renderString(m_font, m_text,
+            scale());
     }
     else if(!(m_lastScale == scale()) || m_regen) {
-        auto temp = TextRenderer().render(m_font, m_text, scale()*m_textScale);
+        auto temp = TextRenderer().renderString(m_font, m_text, scale());
         m_renderable->clearRenderSequences();
         m_renderable->addRenderSequence(temp->renderSequence(0));
         m_regen = false;
@@ -60,9 +56,9 @@ void Label::updated(
         clipEnd);
 
     Math::Vector ul, lr;
-    TextRenderer().size(m_font, m_text, ul, lr);
-    ul = ul * m_textScale * scale();
-    lr = lr * m_textScale * scale();
+    TextRenderer().sizeString(m_font, m_text, ul, lr);
+    ul = ul * scale();
+    lr = lr * scale();
 
     double hspace = (size().x() - (lr.x() - ul.x()));
     double vspace = (size().y() - (lr.y() - ul.y()));

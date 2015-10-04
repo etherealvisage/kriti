@@ -10,10 +10,6 @@ namespace Math {
 
 class Geometry {
 public:
-    struct AARect {
-        Vector start, end;
-    };
-public:
     static Vector closestPoint(Vector l1, Vector l2, Vector p);
     static Vector closestSegmentPoint(Vector l1, Vector l2, Vector p);
     static bool isAARectEmpty(Vector s, Vector e);

@@ -42,5 +42,13 @@ double Scale::fromPixelsY(int count) {
     return (count * ytotal()) / Interface::Video::instance()->height();
 }
 
+double Scale::xDPI() {
+    return DPI;
+}
+
+double Scale::yDPI() {
+    return DPI;
+}
+
 }  // namespace GUI
 }  // namespace Kriti

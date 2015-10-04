@@ -13,8 +13,8 @@ namespace Kriti {
 namespace GUI {
 
 Button::Button(Math::Vector minSize, Math::Vector stretch,
-    boost::shared_ptr<Font> font, std::string text) : Widget(stretch),
-    m_minSize(minSize), m_activation(0.0) { 
+    boost::shared_ptr<Font::Instance> font, std::string text)
+    : Widget(stretch), m_minSize(minSize), m_activation(0.0) { 
     
     m_label = boost::make_shared<Label>(Math::Vector(), stretch, font, text);
 }

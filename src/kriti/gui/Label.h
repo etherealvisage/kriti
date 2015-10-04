@@ -4,11 +4,10 @@
 #include <string>
 
 #include "Widget.h"
+#include "Font.h"
 
 namespace Kriti {
 namespace GUI {
-
-class Font;
 
 class Label : public Widget {
 public:
@@ -24,16 +23,15 @@ public:
     };
 private:
     Math::Vector m_minSize;
-    boost::shared_ptr<Font> m_font;
+    boost::shared_ptr<Font::Instance> m_font;
     std::string m_text;
     HorizontalAlignment m_halign;
     VerticalAlignment m_valign;
-    double m_textScale;
     bool m_regen;
     Math::Vector m_lastScale;
 public:
     Label(Math::Vector minSize, Math::Vector stretch,
-        boost::shared_ptr<Font> font, std::string text,
+        boost::shared_ptr<Font::Instance> font, std::string text,
         HorizontalAlignment halign = HCentre,
         VerticalAlignment valign = VCentre);
 
