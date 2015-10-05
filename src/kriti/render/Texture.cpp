@@ -85,6 +85,8 @@ void Texture::reset(int width, int height, float *data) {
         Message3(Render, Fatal, "Unknown Texture::Type in reset()");
         return;
     }
+    Message3(Render, Debug, "GL error (before reset): " << glGetError());
+    glBindTexture(m_bindTarget, m_id);
     glTexImage2D(GL_TEXTURE_2D,
         // level 0, no mipmapping...
         0, 
@@ -101,6 +103,7 @@ void Texture::reset(int width, int height, float *data) {
         // input data
         data
     );
+    Message3(Render, Debug, "GL error (after reset): " << glGetError());
 }
 
 void Texture::makeTexture() {

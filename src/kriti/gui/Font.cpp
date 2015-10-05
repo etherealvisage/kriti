@@ -34,6 +34,8 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
         Message3(GUI, Fatal, "Couldn't set char size to " << ptSize);
     }
 
+    if(m_face->num_glyphs > 100) m_face->num_glyphs = 100;
+
     // first pass
     int texWidth = 0, texHeight = 0;
     for(int c = 0; c < m_face->num_glyphs; c ++) {
@@ -63,12 +65,15 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
         }
 
         CharSpec cs;
-        cs.x = xoff/(double)texWidth;
-        cs.y = 0.0;
-        cs.w = m_face->glyph->bitmap.width/(double)texWidth;
-        cs.h = m_face->glyph->bitmap.rows/(double)texHeight;
-        cs.xoff = m_face->glyph->bitmap_left;
-        cs.yoff = -m_face->glyph->bitmap_top;
+        cs.tx = xoff/(double)texWidth;
+        cs.ty = 0.0;
+        cs.tw = m_face->glyph->bitmap.width/(double)texWidth;
+        cs.th = m_face->glyph->bitmap.rows/(double)texHeight;
+        cs.sw = Scale().fromPixelsX(m_face->glyph->bitmap.width);
+        Message3(GUI, Debug, "Setting cs.sw: " << m_face->glyph->bitmap.width << "px into " << cs.sw);
+        cs.sh = Scale().fromPixelsY(m_face->glyph->bitmap.rows);
+        cs.xoff = Scale().fromPixelsX(m_face->glyph->bitmap_left);
+        cs.yoff = Scale().fromPixelsY(-m_face->glyph->bitmap_top);
         cs.xadv = Scale().fromPixelsX(m_face->glyph->metrics.horiAdvance/64);
         cs.yadv = Scale().fromPixelsY(m_face->glyph->metrics.vertAdvance/64);
 
@@ -77,6 +82,8 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
         xoff += m_face->glyph->bitmap.width;
         xoff ++; // spacing
     }
+
+    Message3(GUI, Debug, "GL error (before creating texture): " << glGetError());
 
     m_latestTexture =
         boost::make_shared<Render::Texture>(Render::Texture::ColourR,
@@ -103,6 +110,10 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
 void Font::Instance::getCharSpec(int c, Font::CharSpec &cs) {
     int index = FT_Get_Char_Index(m_face, c);
     cs = m_chars[index];
+    Message3(GUI, Debug, "Getting char spec for " << (char)c << ": index " << index);
+    Message3(GUI, Debug, "SS size: " << cs.sw << " " << cs.sh);
+    Message3(GUI, Debug, "T coords: " << cs.tx << " " << cs.ty);
+    Message3(GUI, Debug, "T size: " << cs.tw << " " << cs.th);
 }
 
 bool Font::loadFrom(std::string identifier) {

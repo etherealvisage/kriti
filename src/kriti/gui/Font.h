@@ -19,7 +19,8 @@ namespace GUI {
 class Font : public Resource {
 public:
     struct CharSpec {
-        double x, y, w, h, xoff, yoff, xadv, yadv;
+        double tx, ty, tw, th; // texture coordinates
+        double xoff, yoff, sw, sh, xadv, yadv; // screen coordinates
     };
 
     class Instance : public boost::enable_shared_from_this<Instance> {

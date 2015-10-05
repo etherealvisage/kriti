@@ -48,6 +48,7 @@ void Label::updated(
         m_renderable->clearRenderSequences();
         m_renderable->addRenderSequence(temp->renderSequence(0));
         m_regen = false;
+        m_lastScale = scale();
     }
 
     m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_start",
