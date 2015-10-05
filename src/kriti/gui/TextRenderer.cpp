@@ -42,53 +42,38 @@ boost::shared_ptr<Render::Renderable> TextRenderer::renderString(
 
     std::vector<unsigned int> indices;
 
-    Message3(GUI, Debug, "GL error (0): " << glGetError());
-    Message3(GUI, Debug, "Text scale: " << scale.toString());
-
     Math::Vector cursor;
     for(char c : s) {
         Font::CharSpec cs;
         font->getCharSpec((int)c, cs);
-        Math::Vector off(cs.xoff, cs.yoff);
+        Math::Vector off(cs.xoff, -cs.yoff);
         Math::Vector sw(cs.sw,0);
         Math::Vector sh(0,cs.sh);
 
         indices.push_back(vertices.size());
         vertices.push_back((cursor + off) * scale);
-        Message3(GUI, Debug, "Vertex 0: " << vertices.back().toString());
         indices.push_back(vertices.size());
         vertices.push_back((cursor + off - sh) * scale);
-        Message3(GUI, Debug, "Vertex 1: " << vertices.back().toString());
         indices.push_back(vertices.size());
         vertices.push_back((cursor + off + sw - sh) * scale);
-        Message3(GUI, Debug, "Vertex 2: " << vertices.back().toString());
         indices.push_back(vertices.size());
         vertices.push_back((cursor + off + sw) * scale);
-        Message3(GUI, Debug, "Vertex 3: " << vertices.back().toString());
 
         Math::Vector tc(cs.tx, cs.ty);
         Math::Vector tw(cs.tw, 0);
         Math::Vector th(0, cs.th);
         texCoords.push_back(tc);
-        Message3(GUI, Debug, "TVertex 0: " << texCoords.back().toString());
         texCoords.push_back(tc + th);
-        Message3(GUI, Debug, "TVertex 1: " << texCoords.back().toString());
         texCoords.push_back(tc + tw + th);
-        Message3(GUI, Debug, "TVertex 2: " << texCoords.back().toString());
         texCoords.push_back(tc + tw);
-        Message3(GUI, Debug, "TVertex 3: " << texCoords.back().toString());
 
         for(int i = 0; i < 4; i ++) normals.push_back(Math::Vector());
 
         cursor += Math::Vector(cs.xadv);
     }
 
-    Message3(GUI, Debug, "GL error (1): " << glGetError());
-
     auto ret = Render::RenderableFactory().fromQuadGeometry(vertices, normals,
         texCoords, indices, "gui_text");
-
-    Message3(GUI, Debug, "GL error (2): " << glGetError());
 
     ret->renderSequence(0)->extraParams().setParam("u_tex", font->texture());
 

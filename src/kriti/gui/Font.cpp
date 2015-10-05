@@ -46,8 +46,6 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
         texHeight = std::max(texHeight, (int)m_face->glyph->bitmap.rows);
     }
 
-    Message3(GUI, Debug, "Texture size: " << texWidth << "x" << texHeight);
-
     float *data = new float[texWidth*texHeight];
     for(int i = 0; i < texWidth*texHeight; i ++) data[i] = 0;
 
@@ -70,7 +68,6 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
         cs.tw = m_face->glyph->bitmap.width/(double)texWidth;
         cs.th = m_face->glyph->bitmap.rows/(double)texHeight;
         cs.sw = Scale().fromPixelsX(m_face->glyph->bitmap.width);
-        Message3(GUI, Debug, "Setting cs.sw: " << m_face->glyph->bitmap.width << "px into " << cs.sw);
         cs.sh = Scale().fromPixelsY(m_face->glyph->bitmap.rows);
         cs.xoff = Scale().fromPixelsX(m_face->glyph->bitmap_left);
         cs.yoff = Scale().fromPixelsY(-m_face->glyph->bitmap_top);
@@ -83,26 +80,11 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
         xoff ++; // spacing
     }
 
-    Message3(GUI, Debug, "GL error (before creating texture): " << glGetError());
-
     m_latestTexture =
         boost::make_shared<Render::Texture>(Render::Texture::ColourR,
             Render::Texture::Simple, texWidth, texHeight);
 
     m_latestTexture->reset(texWidth, texHeight, data);
-
-    {
-        std::ofstream file("output.pgm");
-        file << "P2" << std::endl;
-        file << texWidth << " " << texHeight << std::endl;
-        file << 255 << std::endl;
-        for(int i = 0; i < texHeight; i ++) {
-            for(int j = 0; j < texWidth; j ++) {
-                file << (int)(data[i*texWidth + j]*255) << " ";
-            }
-            file << std::endl;
-        }
-    }
 
     delete[] data;
 }
@@ -110,56 +92,9 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
 void Font::Instance::getCharSpec(int c, Font::CharSpec &cs) {
     int index = FT_Get_Char_Index(m_face, c);
     cs = m_chars[index];
-    Message3(GUI, Debug, "Getting char spec for " << (char)c << ": index " << index);
-    Message3(GUI, Debug, "SS size: " << cs.sw << " " << cs.sh);
-    Message3(GUI, Debug, "T coords: " << cs.tx << " " << cs.ty);
-    Message3(GUI, Debug, "T size: " << cs.tw << " " << cs.th);
 }
 
 bool Font::loadFrom(std::string identifier) {
-#if 0
-    /*
-    Message3(GUI, Debug, "Loading font \"" << identifier << "\"");
-    const pugi::xml_node &fontNode =
-        ResourceRegistry::get<XMLResource>(
-        "data")->doc().first_element_by_path(
-        "/kriti/fonts").find_child_by_attribute(
-        "font", "name", identifier.c_str());
-    */
-
-    m_materialName = fontNode.child("material").text().as_string("");
-
-    if(m_materialName == "") return false;
-
-    std::string desc_name = fontNode.child("description").text().as_string("");
-
-    auto desc = ResourceRegistry::get<FileResource>(  
-        "fonts/" + desc_name + ".txt");
-    if(!desc) return false;
-
-    std::istringstream iss(desc->fileContent());
-
-    int texture_width
-        = fontNode.child("texture").attribute("width").as_int(0);
-    int texture_height
-        = fontNode.child("texture").attribute("height").as_int(0);
-
-    int id;
-    CharSpec cs;
-    while(iss >> id >> cs.x >> cs.y >> cs.w >> cs.h >> cs.xoff >> cs.yoff
-        >> cs.xadv) {
-
-        cs.x /= texture_width;
-        cs.w /= texture_width;
-        cs.xoff /= texture_width;
-        cs.xadv /= texture_width;
-        cs.y /= texture_height;
-        cs.h /= texture_height;
-        cs.yoff /= texture_height;
-        m_chars[id] = cs;
-    }
-
-#endif
     auto fontfile = ResourceRegistry::get<FileResource>(identifier);
     if(!fontfile) return false;
 
@@ -179,8 +114,6 @@ bool Font::loadFrom(std::string identifier) {
             (int)m_face->glyph->metrics.height);
         m_sizes.push_back(m_face->glyph->metrics);
     }
-
-    Message3(GUI, Debug, "Font height: " << m_fontHeight);
 
     return true;
 }

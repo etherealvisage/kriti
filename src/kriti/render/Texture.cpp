@@ -76,6 +76,7 @@ void Texture::reset(int width, int height, float *data) {
         break;
     case ColourR:
         iformat = GL_R32F;
+        format = GL_RED;
         break;
     case Depth:
         iformat = GL_DEPTH_COMPONENT32F;
