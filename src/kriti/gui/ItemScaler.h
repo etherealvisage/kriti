@@ -15,6 +15,8 @@ public:
 
     virtual void fill(
         boost::shared_ptr<Render::RenderableContainer> container);
+    virtual void flush(
+        boost::shared_ptr<Render::RenderableContainer> container);
 
     void setChild(boost::shared_ptr<LayoutItem> child) { m_child = child; }
 

@@ -28,6 +28,8 @@ public:
 
     virtual void fill(
         boost::shared_ptr<Render::RenderableContainer> container);
+    virtual void flush(
+        boost::shared_ptr<Render::RenderableContainer> container);
 protected:
     virtual void updated(boost::shared_ptr<OutlineRegistry> registry,
         Math::Vector clipStart, Math::Vector clipEnd);

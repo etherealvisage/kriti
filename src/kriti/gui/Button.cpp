@@ -32,6 +32,11 @@ void Button::fill(boost::shared_ptr<Render::RenderableContainer> container) {
     if(m_label) m_label->fill(container);
 }
 
+void Button::flush(boost::shared_ptr<Render::RenderableContainer> container) {
+    if(m_renderable) container->remove(m_renderable);
+    if(m_label) m_label->flush(container);
+}
+
 void Button::updated(boost::shared_ptr<OutlineRegistry> registry,
     Math::Vector clipStart, Math::Vector clipEnd) {
 

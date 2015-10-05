@@ -23,6 +23,8 @@ public:
 
     virtual void fill(
         boost::shared_ptr<Render::RenderableContainer> container);
+    virtual void flush(
+        boost::shared_ptr<Render::RenderableContainer> container);
 
     void addItem(boost::shared_ptr<LayoutItem> item)
         { m_items.push_back(item); }

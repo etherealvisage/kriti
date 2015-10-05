@@ -9,5 +9,11 @@ void Layout::fill(boost::shared_ptr<Render::RenderableContainer> container) {
     }
 }
 
+void Layout::flush(boost::shared_ptr<Render::RenderableContainer> container) {
+    for(auto child : m_items) {
+        child->flush(container);
+    }
+}
+
 }  // namespace GUI
 }  // namespace Kriti

@@ -36,6 +36,10 @@ void Label::fill(boost::shared_ptr<Render::RenderableContainer> container) {
     if(m_renderable) container->addTransparent(m_renderable);
 }
 
+void Label::flush(boost::shared_ptr<Render::RenderableContainer> container) {
+    if(m_renderable) container->removeTransparent(m_renderable);
+}
+
 void Label::updated(
     boost::shared_ptr<OutlineRegistry> __attribute__((unused)) registry,
         Math::Vector clipStart, Math::Vector clipEnd) {

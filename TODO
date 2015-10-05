@@ -4,8 +4,8 @@ GUI:
     + 'texture' GUI element                                                         (short)
     + multiple GUI styles                                                           (medium)
     + stateful GUI, i.e. registry, persistence, etc.                                (medium)
-    - add possibility of removing GUI elements                                      (short)
     - support [simple] font kerning                                                 (medium)
+    - GUI styling support                                                           (long)
 Rendering:
     + skeleton-based animation support                                              (long)
     + support loading textures for models                                           (medium)

@@ -27,6 +27,13 @@ void Panel::fill(boost::shared_ptr<Render::RenderableContainer> container) {
     m_layout->fill(container);
 }
 
+void Panel::flush(boost::shared_ptr<Render::RenderableContainer> container) {
+    if(m_renderable) {
+        container->remove(m_renderable);
+    }
+    m_layout->flush(container);
+}
+
 void Panel::updated(boost::shared_ptr<OutlineRegistry> registry,
         Math::Vector clipStart, Math::Vector clipEnd) {
     Math::Vector outlineStart = pos(), outlineEnd = pos()+size();

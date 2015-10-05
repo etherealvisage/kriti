@@ -5,10 +5,16 @@
 namespace Kriti {
 namespace GUI {
 
-void ScrollArea::fill(boost::shared_ptr<Render::RenderableContainer>
-    container) {
+void ScrollArea::fill(
+    boost::shared_ptr<Render::RenderableContainer> container) {
     
     if(m_wrapped) m_wrapped->fill(container);
+}
+
+void ScrollArea::flush(
+    boost::shared_ptr<Render::RenderableContainer> container) {
+    
+    if(m_wrapped) m_wrapped->flush(container);
 }
 
 void ScrollArea::updated(boost::shared_ptr<OutlineRegistry> registry,

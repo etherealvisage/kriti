@@ -36,7 +36,11 @@ public:
     /// fill in/register all renderables into the container
     /// should be re-implemented in derived types
     virtual void fill(boost::shared_ptr<Render::RenderableContainer>
-            __attribute__((unused)) container) {}
+        __attribute__((unused)) container) {}
+    /// flush all related renderables out of the given container
+    /// should be re-implemented in derived types
+    virtual void flush(boost::shared_ptr<Render::RenderableContainer>
+        __attribute__((unused)) container) {}
     
     Math::Vector pos() const { return m_pos; }
     Math::Vector size() const { return m_size; }
