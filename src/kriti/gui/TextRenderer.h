@@ -35,6 +35,7 @@ public:
 
     boost::shared_ptr<Render::Renderable> renderString(
         boost::shared_ptr<Font::Instance> font, std::string s,
+        Math::Vector colour = Math::Vector(1.0, 1.0, 1.0),
         Math::Vector scale = Math::Vector(1.0, 1.0));
 
     void sizeString(boost::shared_ptr<Font::Instance> font, std::string s,

@@ -13,9 +13,10 @@ namespace GUI {
 
 Label::Label(Math::Vector minSize, Math::Vector stretch,
     boost::shared_ptr<Font::Instance> font, std::string text,
-    HorizontalAlignment halign, VerticalAlignment valign)
+    Math::Vector colour, HorizontalAlignment halign, VerticalAlignment valign)
     : Widget(stretch), m_minSize(minSize), m_font(font), m_text(text),
-    m_halign(halign), m_valign(valign), m_regen(true) {
+    m_colour(colour), m_halign(halign), m_valign(valign), m_regen(true) {
+
 }
 
 Math::Vector Label::minSize() {
@@ -41,7 +42,7 @@ void Label::updated(
 
     if(!m_renderable) {
         m_renderable = TextRenderer().renderString(m_font, m_text,
-            scale());
+            Math::Vector(1.0, 1.0, 1.0), scale());
     }
     else if(!(m_lastScale == scale()) || m_regen) {
         auto temp = TextRenderer().renderString(m_font, m_text, scale());

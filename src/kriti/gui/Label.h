@@ -25,6 +25,7 @@ private:
     Math::Vector m_minSize;
     boost::shared_ptr<Font::Instance> m_font;
     std::string m_text;
+    Math::Vector m_colour;
     HorizontalAlignment m_halign;
     VerticalAlignment m_valign;
     bool m_regen;
@@ -32,6 +33,7 @@ private:
 public:
     Label(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<Font::Instance> font, std::string text,
+        Math::Vector colour = Math::Vector(1.0, 1.0, 1.0),
         HorizontalAlignment halign = HCentre,
         VerticalAlignment valign = VCentre);
 

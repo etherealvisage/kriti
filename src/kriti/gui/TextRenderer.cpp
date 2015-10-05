@@ -34,7 +34,8 @@ std::vector<TextRenderer::Block> blockify(std::string text,
 }
 
 boost::shared_ptr<Render::Renderable> TextRenderer::renderString(
-    boost::shared_ptr<Font::Instance> font, std::string s, Math::Vector scale) {
+    boost::shared_ptr<Font::Instance> font, std::string s, Math::Vector colour,
+    Math::Vector scale) {
 
     std::vector<Math::Vector> vertices;
     std::vector<Math::Vector> normals;
@@ -76,6 +77,7 @@ boost::shared_ptr<Render::Renderable> TextRenderer::renderString(
         texCoords, indices, "gui_text");
 
     ret->renderSequence(0)->extraParams().setParam("u_tex", font->texture());
+    ret->renderSequence(0)->extraParams().setParam("u_textColour", colour);
 
     return ret;
 }
