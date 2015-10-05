@@ -42,10 +42,11 @@ void Label::updated(
 
     if(!m_renderable) {
         m_renderable = TextRenderer().renderString(m_font, m_text,
-            Math::Vector(1.0, 1.0, 1.0), scale());
+            m_colour, scale());
     }
     else if(!(m_lastScale == scale()) || m_regen) {
-        auto temp = TextRenderer().renderString(m_font, m_text, scale());
+        auto temp = TextRenderer().renderString(m_font, m_text, m_colour,
+            scale());
         m_renderable->clearRenderSequences();
         m_renderable->addRenderSequence(temp->renderSequence(0));
         m_regen = false;
