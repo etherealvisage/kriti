@@ -18,7 +18,7 @@ include_directories(${GLEW_INCLUDE_DIR})
 find_package(Freetype)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 
-set(kritiLibraries CACHE INTERNAL
+set(kritiLibraries
     ${Boost_LIBRARIES}
     ${BULLET_LIBRARIES}
     ${SDL2_LIBRARY}
