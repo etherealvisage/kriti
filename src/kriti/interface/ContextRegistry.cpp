@@ -1,5 +1,7 @@
 #include <SDL.h>
 
+#include "../state/DelayProxy.h"
+
 #include "ContextRegistry.h"
 
 namespace Kriti {
@@ -28,6 +30,8 @@ void ContextRegistry::run() {
             m_sdlEvent->fire(boost::make_tuple(event));
         }
         m_sdlContext->processQueued();
+
+        State::DelayProxy::instance()->processQueued();
 
         fire("new_frame", boost::make_tuple());
 

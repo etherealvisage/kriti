@@ -3,11 +3,14 @@
 
 #include <vector>
 
+#include "TextRenderer.h"
+
 namespace Kriti {
 namespace GUI {
 
 class TextWrapper {
 public:
+    using Block = TextRenderer::Block;
 private:
 
 public:

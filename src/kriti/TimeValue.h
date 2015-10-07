@@ -21,6 +21,10 @@ public:
     int64_t toUsec() const { return m_timeValue / 1000; }
     int64_t toMsec() const { return m_timeValue / 1000000; }
 
+    bool operator<(const TimeValue &other) const
+        { return m_timeValue < other.m_timeValue; }
+    bool operator>(const TimeValue &other) const
+        { return m_timeValue > other.m_timeValue; }
     bool operator<=(const TimeValue &other) const
         { return m_timeValue <= other.m_timeValue; }
     bool operator>=(const TimeValue &other) const

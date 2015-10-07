@@ -28,6 +28,7 @@ public:
 
     void addItem(boost::shared_ptr<LayoutItem> item)
         { m_items.push_back(item); }
+    void clearItems() { m_items.clear(); }
 };
 
 }  // namespace GUI
