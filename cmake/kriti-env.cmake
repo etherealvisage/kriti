@@ -1,4 +1,4 @@
-find_package(Boost COMPONENTS filesystem system signals)
+find_package(Boost COMPONENTS filesystem system)
 
 find_package(Bullet)
 include_directories(${BULLET_INCLUDE_DIRS})
