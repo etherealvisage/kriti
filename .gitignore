@@ -12,8 +12,8 @@
 core
 core.*.*
 /*assimp*
-/headers
 /libkriti.a
 /libkriti_only.a
 /libassimp.a
 /libpugixml.a
+/dist

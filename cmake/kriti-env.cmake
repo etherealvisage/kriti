@@ -25,6 +25,7 @@ set(kritiLibraries
     ${SDL2IMAGE_LIBRARY}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARY}
+    ${FREETYPE_LIBRARY}
     # for clock_gettime().
     rt
 )
