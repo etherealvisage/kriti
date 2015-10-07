@@ -1,0 +1,9 @@
+stages:
+    - build
+    - dist
+
+job1:
+    stage: build
+    script:
+        - make redep
+        - make -j $(cat /proc/cpuinfo | grep -c ^processor)
