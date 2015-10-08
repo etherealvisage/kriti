@@ -19,7 +19,8 @@ void Context::Listener::disconnect() {
 }
 
 void Context::Event::fire(boost::any param, bool immediate) {
-    m_context->fire(weak_from_this(), param, immediate);
+    m_context->fire(boost::weak_ptr<Event>(shared_from_this()), param,
+        immediate);
 }
 
 void Context::fire(boost::weak_ptr<Event> event, boost::any params,
