@@ -1,0 +1,11 @@
+#!/usr/bin/env expect
+
+eval spawn sftp -oStrictHostKeyChecking=no -oCheckHostIP=no -P 222 kriti-ci@ethv.net
+
+expect password:
+send -- "$::env(UPLOAD_PASSWORD)\r"
+expect "sftp>"
+send "put kriti-dist.tar.gz kriti-ci/\r"
+expect "sftp>"
+send "quit\r"
+wait

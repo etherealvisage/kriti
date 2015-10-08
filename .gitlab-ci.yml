@@ -14,4 +14,4 @@ dist:
         - ./make_dist_version.sh
         - mv dist kriti-dist
         - tar czf kriti-dist.tar.gz kriti-dist
-        - expect -c "eval spawn scp -oStrictHostKeyChecking=no -oCheckHostIP=no -P 222 kriti-dist.tar.gz kriti-ci@tesseract:~/ ; interact -o -nobuffer -re \":|\\\$\" return ; send \"$UPLOAD_PASSWORD\\r\" ; interact"
+        - ./upload_dist
