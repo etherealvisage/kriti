@@ -2,8 +2,16 @@ stages:
     - build
     - dist
 
-job1:
+compile:
     stage: build
     script:
         - make redep
         - make -j $(cat /proc/cpuinfo | grep -c ^processor)
+
+dist:
+    stage: dist
+    script:
+        - ./make_dist_version.sh
+        - mv dist kriti-dist
+        - tar czf kriti-dist.tar.gz kriti-dist
+        - expect -c "eval spawn scp -oStrictHostKeyChecking=no -oCheckHostIP=no -P 222 kriti-dist.tar.gz kriti-ci@tesseract:~/ ; interact -o -nobuffer -re \":|\\\$\" return ; send \"$UPLOAD_PASSWORD\\r\" ; interact"
