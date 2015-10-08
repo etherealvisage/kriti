@@ -37,6 +37,8 @@ Planned features:
 
 ### Compiling
 
+Build status: [![build status](https://gitlab.com/ci/projects/10233/status.png?ref=master)](https://gitlab.com/ci/projects/10233?ref=master)
+
 To compile, run `make redep` and then `make`. This will generate the
 `libkriti.a` static library. You can then optionally create a distribution
 version of kriti by running the `make_dist_version.sh` shell script.
