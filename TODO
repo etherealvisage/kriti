@@ -9,6 +9,7 @@ GUI:
     - font text wrapping and styling                                                (medium)
 Rendering:
     + skeleton-based animation support                                              (long)
+        - how many bones per vertex should be supported?
     + support loading textures for models                                           (medium)
     + support assimp material system                                                (long)
     - load textures from model files, if present                                    (medium)
