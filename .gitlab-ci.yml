@@ -1,17 +1,13 @@
 stages:
     - build
-    - dist
 
-compile:
+compiledist:
     stage: build
     script:
         - make redep
         - make -j $(cat /proc/cpuinfo | grep -c ^processor)
-
-dist:
-    stage: dist
-    script:
         - ./make_dist_version.sh
         - mv dist kriti-dist
+        - rm -f kriti-dist.tar.gz
         - tar czf kriti-dist.tar.gz kriti-dist
         - ./upload_dist
