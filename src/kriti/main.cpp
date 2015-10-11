@@ -1,4 +1,3 @@
-#if 1
 #include <iostream>
 #include <boost/function.hpp>
 #include <boost/bind/protect.hpp>
@@ -72,39 +71,3 @@ int main() {
 
     return 0;
 }
-#else
-
-#include <iostream>
-
-#include "state/Context.h"
-
-void test(int x) {
-    std::cout << "x: " << x << std::endl;
-}
-
-void anon(int x) {
-    std::cout << "(anon) x: " << x << std::endl;
-}
-
-int main() {
-    Kriti::State::Context con;
-
-    auto orig = con.addListener("test", boost::function<void (int)>(test));
-
-    con.fire("test", boost::make_tuple(42));
-
-    auto repeat = con.addListener("test", &con, "test");
-
-    con.processQueued();
-
-    auto anon_event = con.addEvent<int>();
-    auto anon_listener = con.addListener(anon_event,
-        boost::function<void (int)>(test));
-
-    con.fire(anon_event, boost::make_tuple(21));
-
-    con.processQueued();
-
-    return 0;
-}
-#endif
