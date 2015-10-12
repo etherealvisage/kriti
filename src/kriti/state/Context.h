@@ -63,7 +63,6 @@ private:
         TupleUtil::apply(function, boost::any_cast<boost::tuple<T...>>(param));
     }
 
-    template<typename ...T>
     static void handler(boost::weak_ptr<Event> event, boost::any param) {
         auto e = event.lock();
         if(!e) return;
