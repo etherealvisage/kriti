@@ -139,9 +139,11 @@ parameters::
     private:
         int m_private;
     public:
-        PairPrinter(int private) : m_private(private) {}
+        PairPrinter(int priv) : m_private(priv) {}
 
-        void print(int n) { Message("Pair: (" << private << "," << n << ")"); }
+        void print(int n) {
+            Message("Pair: (" << m_private << "," << n << ")");
+        }
     };
 
     void gameEntryPoint() {

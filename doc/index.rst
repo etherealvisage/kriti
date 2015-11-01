@@ -7,6 +7,8 @@ Kriti documentation
    about.rst
    architecture.rst
    basics.rst
+   math.rst
+   rendering.rst
 
 Indices and tables
 ==================
