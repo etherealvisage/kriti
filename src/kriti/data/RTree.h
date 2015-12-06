@@ -7,6 +7,7 @@
 #include <cmath>
 #include <cstdio>
 
+#include <boost/function.hpp>
 #include <boost/serialization/access.hpp>
 
 #include "Bound.h"
@@ -44,9 +45,8 @@ class RTree {
 public:
     typedef Bound<KeyType, Dimensions> BoundType;
     typedef Point<KeyType, Dimensions> PointType;
-    typedef RTreePrivate::SearchVisitor<DataType, BoundType, PointType>
-        SearchVisitorType;
-    
+    typedef boost::function<void (BoundType, DataType)> SearchCallbackType;
+
     typedef RTreePrivate::Node<DataType, BoundType, MaximumFactor> NodeType;
     typedef RTreePrivate::InternalNode<DataType, BoundType, MaximumFactor>
         InternalNodeType;
@@ -84,10 +84,10 @@ public:
         return m_root->overallBound();
     }
     
-    void search(const BoundType &bound, SearchVisitorType &visitor)
-        { searchHelper(bound, m_root, visitor); }
+    void search(const BoundType &bound, const SearchCallbackType &callback)
+        { searchHelper(bound, m_root, callback); }
     void search(const PointType &source, const PointType &direction,
-        SearchVisitorType &visitor)
+        const SearchCallbackType &visitor)
         { searchHelper(source, direction, m_root, visitor); }
     
     void insert(const BoundType &bound, const DataType &data) {
@@ -138,7 +138,7 @@ public:
     }
 private:
     void searchHelper(const BoundType &bound, NodeType *node,
-        SearchVisitorType &visitor) {
+        const SearchCallbackType &callback) {
 
         if(node == nullptr) return;
         
@@ -146,18 +146,18 @@ private:
             if(!bound.overlaps(node->branchBound(branch))) continue;
             
             if(node->isLeaf()) {
-                visitor.visit(node->branchBound(branch),
+                callback(node->branchBound(branch),
                     node->asLeafNode()->branch(branch));
             }
             else {
                 searchHelper(bound, node->asInternalNode()->branch(branch),
-                    visitor);
+                    callback);
             }
         }
     }
     
     void searchHelper(const PointType &source, const PointType &direction,
-        NodeType *node, SearchVisitorType &visitor) {
+        NodeType *node, const SearchCallbackType &callback) {
 
         if(node == nullptr) return;
         
@@ -182,12 +182,12 @@ private:
             
             if(tmax - tmin >= -1e-5) {
                 if(node->isLeaf()) {
-                    visitor.visit(node->branchBound(branch),
+                    callback(node->branchBound(branch),
                         node->asLeafNode()->branch(branch));
                 }
                 else {
                     searchHelper(source, direction,
-                        node->asInternalNode()->branch(branch), visitor);
+                        node->asInternalNode()->branch(branch), callback);
                 }
             }
         }
