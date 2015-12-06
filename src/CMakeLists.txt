@@ -6,6 +6,7 @@ aux_source_directory(assimp assimpSources)
 aux_source_directory(pugixml pugixmlSources)
 
 aux_source_directory(kriti dotSources)
+aux_source_directory(kriti/data dataSources)
 aux_source_directory(kriti/game gameSources)
 aux_source_directory(kriti/gui guiSources)
 aux_source_directory(kriti/interface interfaceSources)
@@ -23,15 +24,15 @@ set(sources
     ${pugixmlSources}
 
     ${dotSources}
-    ${mathSources}
-    ${interfaceSources}
+    ${dataSources}
     ${eventSources}
-    ${contextSources}
     ${gameSources}
     ${guiSources}
-    ${renderSources}
+    ${interfaceSources}
+    ${mathSources}
     ${physicsSources}
     ${profileSources}
+    ${renderSources}
     ${sceneSources}
     ${stateSources}
 )

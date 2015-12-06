@@ -8,6 +8,7 @@
 #define MS_Subsystems \
     MS_Subsystem(General), \
     MS_Subsystem(Math), \
+    MS_Subsystem(Data), \
     MS_Subsystem(Config), \
     MS_Subsystem(Interface), \
     MS_Subsystem(Render), \

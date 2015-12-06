@@ -12,7 +12,7 @@ Kriti is a game engine for games written in C++11. It needs:
 - bullet physics engine
 - Freetype 
 
-To install these requirements on Debian, run:
+To install these requirements on Debian or Ubuntu, run:
 
     apt-get install \
         cmake g++ libboost-dev libboost-filesystem-dev libboost-system-dev \
