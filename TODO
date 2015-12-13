@@ -1,7 +1,6 @@
 Meta:
     - Sort out licensing for src/assimp and src/pugixml                             (short)
 GUI:
-    + 'texture' GUI element                                                         (short)
     + multiple GUI styles                                                           (medium)
     + stateful GUI, i.e. registry, persistence, etc.                                (medium)
     - support [simple] font kerning                                                 (medium)
