@@ -1,5 +1,3 @@
-#include <GL/glew.h>
-
 #include "Uniforms.h"
 #include "Texture.h"
 #include "Program.h"

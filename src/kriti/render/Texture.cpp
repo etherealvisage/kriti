@@ -6,6 +6,7 @@
 #include <SDL_rwops.h>
 
 #include "Texture.h"
+#include "ErrorTracker.h"
 
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
@@ -31,7 +32,9 @@ Texture::Texture(Type type, Target target, int width, int height, int samples)
 }
 
 Texture::~Texture() {
+    ErrorTracker::trackFrom("Texture destructor (before all)");
     glDeleteTextures(1, &m_id);
+    ErrorTracker::trackFrom("Texture destructor (after delete)");
 }
 
 bool Texture::loadFrom(std::string identifier) {
@@ -61,8 +64,11 @@ bool Texture::loadFrom(std::string identifier) {
 }
 
 void Texture::bindToUnit(int which) {
+    ErrorTracker::trackFrom("Texture binding (before all)");
     glActiveTexture(GL_TEXTURE0 + which);
+    ErrorTracker::trackFrom("Texture binding (after activate)");
     glBindTexture(GL_TEXTURE_2D, m_id);
+    ErrorTracker::trackFrom("Texture binding (after bind)");
 }
 
 void Texture::reset(int width, int height, float *data) {
@@ -87,7 +93,9 @@ void Texture::reset(int width, int height, float *data) {
         return;
     }
 
+    ErrorTracker::trackFrom("Texture binding (before all)");
     glBindTexture(m_bindTarget, m_id);
+    ErrorTracker::trackFrom("Texture binding (after bind)");
 
     glTexImage2D(GL_TEXTURE_2D,
         // level 0, no mipmapping...
@@ -105,19 +113,28 @@ void Texture::reset(int width, int height, float *data) {
         // input data
         data
     );
+    ErrorTracker::trackFrom("Texture binding (after image spec)");
 }
 
 void Texture::makeTexture() {
+    ErrorTracker::trackFrom("Texture creation (before all)");
     glGenTextures(1, &m_id);
+    ErrorTracker::trackFrom("Texture creation (after gen)");
 
     glBindTexture(m_bindTarget, m_id);
+    ErrorTracker::trackFrom("Texture creation (after bind)");
 
     glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    ErrorTracker::trackFrom("Texture creation (after WRAP_S parameter)");
     glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    ErrorTracker::trackFrom("Texture creation (after WRAP_T parameter)");
     if(m_target == Cube) 
         glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    ErrorTracker::trackFrom("Texture creation (after WRAP_R parameter)");
     glTexParameteri(m_bindTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    ErrorTracker::trackFrom("Texture creation (after MIN_FILTER parameter)");
     glTexParameteri(m_bindTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    ErrorTracker::trackFrom("Texture creation (after MAG_FILTER parameter)");
 }
 
 void Texture::makeBlank() {
@@ -140,6 +157,7 @@ void Texture::makeBlank() {
         Message3(Render, Fatal, "Unknown Texture::Type in makeBlank()");
         break;
     }
+    ErrorTracker::trackFrom("Texture makeBlank (before all)");
     if(m_target == Simple) {
         glTexImage2D(GL_TEXTURE_2D,
             // level 0, no mipmapping...
@@ -157,6 +175,7 @@ void Texture::makeBlank() {
             // input data
             nullptr
         );
+        ErrorTracker::trackFrom("Texture makeBlank (after simple image)");
     }
     else if(m_target == Cube) {
         GLuint targets[6] = {
@@ -183,10 +202,12 @@ void Texture::makeBlank() {
                 // input data
                 nullptr
             );
+            ErrorTracker::trackFrom("Texture makeBlank (after cube image)");
         }
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
+    ErrorTracker::trackFrom("Texture makeBlank (after clear)");
 }
 
 void Texture::makeFromFile(std::string filename, int mipmap) {
@@ -207,7 +228,9 @@ void Texture::makeFromFile(std::string filename, int mipmap) {
     auto fmt = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
     SDL_Surface *conv = SDL_ConvertSurface(result, fmt, 0);
 
+    ErrorTracker::trackFrom("Texture makeFromFile (before all)");
     glBindTexture(GL_TEXTURE_2D, m_id);
+    ErrorTracker::trackFrom("Texture makeFromFile (after bind)");
 
     glTexImage2D(GL_TEXTURE_2D,
         // mipmap level
@@ -225,6 +248,7 @@ void Texture::makeFromFile(std::string filename, int mipmap) {
         // input data
         conv->pixels
     );
+    ErrorTracker::trackFrom("Texture makeFromFile (after image)");
 
     SDL_FreeSurface(result);
     SDL_FreeSurface(conv);

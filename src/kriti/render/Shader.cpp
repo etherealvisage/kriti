@@ -2,6 +2,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 
 #include "Shader.h"
+#include "ErrorTracker.h"
 
 #include "../ResourceRegistry.h"
 #include "../FileResource.h"
@@ -30,16 +31,20 @@ bool Shader::loadFrom(std::string identifier) {
         return false;
     }
 
+    ErrorTracker::trackFrom("Shader loading (before all)");
     if(isVertex) m_shaderID = glCreateShader(GL_VERTEX_SHADER);
     if(isFrag) m_shaderID = glCreateShader(GL_FRAGMENT_SHADER);
     if(isGeom) m_shaderID = glCreateShader(GL_GEOMETRY_SHADER);
+    ErrorTracker::trackFrom("Shader loading (after create)");
 
     std::string content = shaderFile->fileContent();
     const char *cptr = content.c_str();
 
     glShaderSource(m_shaderID, 1, &cptr, NULL);
+    ErrorTracker::trackFrom("Shader loading (after source spec)");
 
     glCompileShader(m_shaderID);
+    ErrorTracker::trackFrom("Shader loading (after compliation)");
 
     GLint status;
     glGetShaderiv(m_shaderID, GL_COMPILE_STATUS, &status);
@@ -49,6 +54,7 @@ bool Shader::loadFrom(std::string identifier) {
         char infoLog[4096];
         int used;
         glGetShaderInfoLog(m_shaderID, sizeof(infoLog), &used, infoLog);
+        ErrorTracker::trackFrom("Shader loading (after get compile log)");
         Message3(Render, Error, infoLog);
         return false;
     }

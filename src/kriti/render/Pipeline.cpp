@@ -1,5 +1,3 @@
-#include <GL/glew.h>
-
 #include <boost/make_shared.hpp>
 
 #include "Pipeline.h"

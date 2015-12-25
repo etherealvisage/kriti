@@ -1,6 +1,7 @@
 #include <GL/glew.h>
 
 #include "VBO.h"
+#include "ErrorTracker.h"
 
 #include "../MessageSystem.h"
 
@@ -13,7 +14,9 @@ VBO::VBO(BindType btype, UseType utype) : m_useType(utype), m_bindType(btype),
 
 VBO::~VBO() {
     if(m_bufferID != 0) {
+        ErrorTracker::trackFrom("VBO destructor (before all)");
         glDeleteBuffers(1, &m_bufferID);
+        ErrorTracker::trackFrom("VBO destructor (after delete)");
     }
 }
 
@@ -114,7 +117,9 @@ void VBO::bindVBO() {
         return;
     }
 
+    ErrorTracker::trackFrom("VBO element bind (before all)");
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
+    ErrorTracker::trackFrom("VBO element bind (after bind)");
 }
 
 void VBO::bindVBO(int location) {
@@ -124,15 +129,21 @@ void VBO::bindVBO(int location) {
 
         return;
     }
+    ErrorTracker::trackFrom("VBO data bind (before all)");
     glBindBuffer(GL_ARRAY_BUFFER, m_bufferID);
+    ErrorTracker::trackFrom("VBO data bind (after bind)");
     glVertexAttribPointer(location, m_dataWidth, m_dataType, GL_FALSE, 0,
         (void *)0);
+    ErrorTracker::trackFrom("VBO data bind (after attribptr)");
     glEnableVertexAttribArray(location);
+    ErrorTracker::trackFrom("VBO data bind (after enable)");
 }
 
 void VBO::makeVBO(const void *data, int byteSize) {
+    ErrorTracker::trackFrom("VBO creation (before all)");
     if(m_bufferID == 0) {
         glGenBuffers(1, &m_bufferID);
+        ErrorTracker::trackFrom("VBO creation (after buffer gen)");
     }
 
     GLenum btype, utype;
@@ -156,7 +167,9 @@ void VBO::makeVBO(const void *data, int byteSize) {
     }
 
     glBindBuffer(btype, m_bufferID);
+    ErrorTracker::trackFrom("VBO creation (after buffer bind)");
     glBufferData(btype, byteSize, data, utype);
+    ErrorTracker::trackFrom("VBO creation (after buffer data)");
 }
 
 }  // namespace Render

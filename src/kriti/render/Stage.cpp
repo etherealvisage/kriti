@@ -10,6 +10,7 @@
 #include "Stage.h"
 #include "Uniforms.h"
 #include "TextureContext.h"
+#include "ErrorTracker.h"
 
 #include "../interface/Video.h"
 
@@ -173,11 +174,9 @@ void Stage::initialize(int outputs, int width, int height) {
 void Stage::renderRenderable(Uniforms &globalParams,
     MaterialParams &materialParams, boost::shared_ptr<Renderable> renderable) {
 
-    auto error = glGetError();
-    if(error != GL_NO_ERROR) {
-        Message3(Render, Error, "GL error: " << gluErrorString(error));
-    }
+    ErrorTracker::trackFrom("Before renderable drawing");
     renderable->draw(globalParams, materialParams);
+    ErrorTracker::trackFrom("After renderable drawing");
 }
 
 }  // namespace Render

@@ -2,6 +2,7 @@
 
 #include "TextureContext.h"
 #include "Texture.h"
+#include "ErrorTracker.h"
 
 #include "../MessageSystem.h"
 
@@ -11,8 +12,11 @@ namespace Render {
 boost::shared_ptr<TextureContext> TextureContext::s_singleton;
 
 TextureContext::TextureContext() {
+    ErrorTracker::trackFrom("Texture context constructor (before all)");
     GLint count;
     glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &count);
+    ErrorTracker::trackFrom(
+        "Texture context constructor (after get unit count)");
 
     m_bindings.assign(count, std::make_pair(-1, boost::shared_ptr<Texture>()));
 
