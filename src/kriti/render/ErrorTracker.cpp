@@ -10,9 +10,10 @@ namespace Render {
 
 void ErrorTracker::trackFrom(const char *description) {
     auto error = glGetError();
-    if(error != GL_NO_ERROR) {
+    while(error != GL_NO_ERROR) {
         Message3(Render, Error, "At " << description << ", GL error: "
             << gluErrorString(error));
+        error = glGetError();
     }
 }
 

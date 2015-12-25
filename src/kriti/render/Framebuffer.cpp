@@ -9,7 +9,9 @@ namespace Kriti {
 namespace Render {
 
 Framebuffer::Framebuffer() {
+    ErrorTracker::trackFrom("Framebuffer constructor (before all)");
     glGenFramebuffers(1, &m_id);
+    ErrorTracker::trackFrom("Framebuffer constructor (after gen)");
 
     // mark all as not in use
     for(int i = 0; i < Attachments; i ++) {
@@ -18,7 +20,9 @@ Framebuffer::Framebuffer() {
 }
 
 Framebuffer::~Framebuffer() {
+    ErrorTracker::trackFrom("Framebuffer destructor (before all)");
     glDeleteFramebuffers(1, &m_id);
+    ErrorTracker::trackFrom("Framebuffer destructor (after del)");
 }
 
 void Framebuffer::attach(Attachment where,
@@ -92,23 +96,24 @@ void Framebuffer::bindWrite() {
     ErrorTracker::trackFrom("Framebuffer write bind (before all)");
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_id);
     ErrorTracker::trackFrom("Framebuffer write bind (after bind)");
+
+    // check if it's complete
+    auto result = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+    if(result != GL_FRAMEBUFFER_COMPLETE) {
+        Message3(Render, Error,
+            "Trying to use incomplete Framebuffer for writing: " << result);
+    }
+    ErrorTracker::trackFrom("Framebuffer write bind (after complete check)");
+
     // determine what we want to render into
-    bool colours = false;
-    for(int i = 0; i < 4 && !colours; i ++) {
-        if(m_textures[ColourBuffer0 + i].first
-            || m_textures[ColourBuffer0 + i].first) colours = true;
+    GLenum buffers[4];
+    for(int i = 0; i < 4; i ++) {
+        if(isAttached(Attachment(ColourBuffer0 + i)))
+            buffers[i] = GL_COLOR_ATTACHMENT0 + (i);
+        else buffers[i] = GL_NONE;
     }
-    // no double buffering, so draw into front buffer
-    if(colours) {
-        glDrawBuffer(GL_FRONT);
-        ErrorTracker::trackFrom("Framebuffer write bind (after glDrawBuffer)");
-    }
-    // no colour attachments implies only depth buffer should be constructed.
-    else {
-        glDrawBuffer(GL_NONE);
-        ErrorTracker::trackFrom(
-            "Framebuffer write bind (after glDrawBuffer, only depth buffer)");
-    }
+    glDrawBuffers(4, buffers);
+    ErrorTracker::trackFrom("Framebuffer write bind (after glDrawBuffers)");
 }
 
 GLenum Framebuffer::convert(Attachment where) {
