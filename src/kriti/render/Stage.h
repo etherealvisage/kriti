@@ -55,6 +55,9 @@ public:
 
     void addMapping(int previousIndex, Framebuffer::Attachment attachment,
         boost::shared_ptr<Render::Material> material, std::string uniformName);
+    void addMapping(boost::shared_ptr<Stage> stage,
+        Framebuffer::Attachment attachment,
+        boost::shared_ptr<Render::Material> material, std::string uniformName);
 
     boost::shared_ptr<Framebuffer> framebuffer() const
         { return m_framebuffer; }

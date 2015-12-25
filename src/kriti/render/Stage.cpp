@@ -103,6 +103,13 @@ void Stage::addMapping(int previousIndex, Framebuffer::Attachment attachment,
     boost::shared_ptr<Render::Material> material, std::string uniformName) {
 
     auto prev = m_previous[previousIndex];
+    addMapping(prev, attachment, material, uniformName);
+}
+
+void Stage::addMapping(boost::shared_ptr<Stage> prev,
+    Framebuffer::Attachment attachment,
+    boost::shared_ptr<Render::Material> material, std::string uniformName) {
+
     auto pfb = prev->framebuffer();
 
     m_attachments.push_back(std::make_tuple(prev, attachment, material,
