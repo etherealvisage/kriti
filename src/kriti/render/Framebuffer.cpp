@@ -99,10 +99,16 @@ void Framebuffer::bindWrite() {
             || m_textures[ColourBuffer0 + i].first) colours = true;
     }
     // no double buffering, so draw into front buffer
-    if(colours) glDrawBuffer(GL_FRONT);
+    if(colours) {
+        glDrawBuffer(GL_FRONT);
+        ErrorTracker::trackFrom("Framebuffer write bind (after glDrawBuffer)");
+    }
     // no colour attachments implies only depth buffer should be constructed.
-    else glDrawBuffer(GL_NONE);
-    ErrorTracker::trackFrom("Framebuffer write bind (after glDrawBuffer)");
+    else {
+        glDrawBuffer(GL_NONE);
+        ErrorTracker::trackFrom(
+            "Framebuffer write bind (after glDrawBuffer, only depth buffer)");
+    }
 }
 
 GLenum Framebuffer::convert(Attachment where) {
