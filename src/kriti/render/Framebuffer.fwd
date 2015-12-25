@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class Framebuffer;
+
+}  // namespace Render
+}  // namespace Kriti
+

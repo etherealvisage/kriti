@@ -1,7 +1,7 @@
 #ifndef KRITI_MATH__MATRIX_H
 #define KRITI_MATH__MATRIX_H
 
-#include "Vector.h"
+#include "Vector.fwd"
 
 namespace Kriti {
 namespace Math {

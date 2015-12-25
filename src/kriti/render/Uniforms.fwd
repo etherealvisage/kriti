@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class Uniforms;
+
+}  // namespace Render
+}  // namespace Kriti
+

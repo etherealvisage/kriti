@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class Shader;
+
+}  // namespace Render
+}  // namespace Kriti
+

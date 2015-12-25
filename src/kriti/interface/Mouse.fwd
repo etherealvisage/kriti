@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Interface {
+
+class Mouse;
+
+}  // namespace Interface
+}  // namespace Kriti
+

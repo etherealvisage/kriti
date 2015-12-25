@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Math {
+
+class AffineTransformation;
+
+}  // namespace Math
+}  // namespace Kriti
+

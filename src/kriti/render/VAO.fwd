@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class VAO;
+
+}  // namespace Render
+}  // namespace Kriti
+

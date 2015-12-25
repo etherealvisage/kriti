@@ -1,0 +1,6 @@
+namespace Kriti {
+
+class XMLResource;
+
+}  // namespace Kriti
+

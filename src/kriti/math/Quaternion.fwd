@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Math {
+
+class Quaternion;
+
+}  // namespace Math
+}  // namespace Kriti
+

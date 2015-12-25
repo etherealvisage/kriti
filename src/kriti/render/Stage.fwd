@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class Stage;
+
+}  // namespace Render
+}  // namespace Kriti
+

@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class Pipeline;
+
+}  // namespace Render
+}  // namespace Kriti
+

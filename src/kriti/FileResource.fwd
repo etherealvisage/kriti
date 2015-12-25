@@ -1,0 +1,6 @@
+namespace Kriti {
+
+class FileResource;
+
+}  // namespace Kriti
+

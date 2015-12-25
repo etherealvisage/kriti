@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 # Perl script by DWK to create a new .cpp/.h combination template
+# Updated by ethereal to create _fwd.h file
 
 my $project = 'Kriti';
 
@@ -24,6 +25,7 @@ sub process_class {
     print "Class prefix: \"$prefix\"\n";
     create_cpp_file($class, $prefix . ".cpp");
     create_h_file($class, $prefix . ".h");
+    create_fwd_file($class, $prefix . ".fwd");
 }
 
 sub create_cpp_file {
@@ -71,6 +73,32 @@ sub create_h_file {
     print FILE close_namespaces(@namespaces);
     print FILE "\n";
     print FILE "#endif\n";
+    
+    close FILE;
+}
+
+sub create_fwd_file {
+    my $class = shift;
+    my $file = shift;
+    open(FILE, ">$file") or die;
+    
+    my $guard = $class;
+    $guard =~ s/([A-Z]+)/substr($1, 0, 1) . lc(substr($1, 1))/eg;
+    while($guard =~ s/([A-Z])([^:]*)$/'_' . lc($1) . $2/eg) {}
+    $guard =~ s/([^_])::([^:]+)$/$1_$2/;    # put two underscores at last ::
+    $guard =~ s/([^_])::([^_])/$1_$2/g;
+    $guard =~ s/:://g;
+    $guard = uc($project) . "_" . uc($guard) . "_H";
+    
+    my @namespaces = generate_namespaces($class);
+    
+    print FILE open_namespaces(@namespaces);
+    print FILE "\n";
+    $class =~ /([^:]+)$/;
+    print FILE "class $1;\n";
+    print FILE "\n";
+    print FILE close_namespaces(@namespaces);
+    print FILE "\n";
     
     close FILE;
 }

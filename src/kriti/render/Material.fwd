@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class Material;
+
+}  // namespace Render
+}  // namespace Kriti
+

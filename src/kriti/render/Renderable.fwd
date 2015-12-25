@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class Renderable;
+
+}  // namespace Render
+}  // namespace Kriti
+

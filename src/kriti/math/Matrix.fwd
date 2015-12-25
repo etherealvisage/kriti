@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Math {
+
+class Matrix;
+
+}  // namespace Math
+}  // namespace Kriti
+
