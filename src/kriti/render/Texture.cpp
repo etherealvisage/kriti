@@ -6,6 +6,7 @@
 #include <SDL_rwops.h>
 
 #include "Texture.h"
+#include "TextureContext.h"
 #include "ErrorTracker.h"
 
 #include "../ResourceRegistry.h"
@@ -120,6 +121,9 @@ void Texture::makeTexture() {
     ErrorTracker::trackFrom("Texture creation (before all)");
     glGenTextures(1, &m_id);
     ErrorTracker::trackFrom("Texture creation (after gen)");
+
+    // XXX: for now, just clear all texture bindings
+    TextureContext::instance()->clearBindings();
 
     glBindTexture(m_bindTarget, m_id);
     ErrorTracker::trackFrom("Texture creation (after bind)");
