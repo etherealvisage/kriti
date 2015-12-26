@@ -10,5 +10,10 @@ Input::Input() {
     m_mouse = new Mouse();
 }
 
+Input::~Input() {
+    delete m_keyboard;
+    delete m_mouse;
+}
+
 }  // namespace Interface
 }  // namespace Kriti

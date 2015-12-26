@@ -19,7 +19,7 @@ public:
     virtual bool loadFrom(std::string filename);
 
     std::string filename() const { return m_filename; }
-    std::string fileContent();
+    const std::string &fileContent();
     std::vector<std::string> fileLines();
 private:
     void loadFile();

@@ -28,6 +28,7 @@ private:
     Mouse *m_mouse;
 public:
     Input();
+    ~Input();
 };
 
 }  // namespace Interface

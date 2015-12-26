@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Scene {
+
+class Camera;
+
+}  // namespace Scene
+}  // namespace Kriti
+

@@ -95,7 +95,7 @@ void Font::Instance::getCharSpec(int c, Font::CharSpec &cs) {
 }
 
 bool Font::loadFrom(std::string identifier) {
-    auto fontfile = ResourceRegistry::get<FileResource>(identifier);
+    auto fontfile = ResourceRegistry::get<FileResource>("fonts/" + identifier);
     if(!fontfile) return false;
 
     auto content = fontfile->fileContent();

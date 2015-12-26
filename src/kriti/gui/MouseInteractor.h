@@ -12,7 +12,7 @@ private:
     int m_buttons;
     boost::weak_ptr<LayoutItem> m_lastHover;
 public:
-    MouseInteractor() : m_buttons(0) {}
+    MouseInteractor() : m_mouseX(0), m_mouseY(0), m_buttons(0) {}
 
     void updateMouseCoordinates(double x, double y);
     void updateMouseButton(int which, bool value);

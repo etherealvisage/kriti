@@ -31,7 +31,7 @@ bool FileResource::loadFrom(std::string filename) {
     return true;
 }
 
-std::string FileResource::fileContent() {
+const std::string &FileResource::fileContent() {
     if(!m_contentLoaded) loadFile();
 
     return m_content;
@@ -45,8 +45,7 @@ std::vector<std::string> FileResource::fileLines() {
     boost::split(lines, m_content, boost::algorithm::is_any_of("\n\r"),
         boost::algorithm::token_compress_off);
 
-    for(auto line : lines) {
-        Message3(General, Debug, "line: " << line);
+    for(auto &line : lines) {
         line += "\n";
     }
 
@@ -56,9 +55,9 @@ std::vector<std::string> FileResource::fileLines() {
 void FileResource::loadFile() {
     std::ifstream f(m_filename.c_str());
 
-    f.seekg (0, f.end);
+    f.seekg(0, f.end);
     int length = f.tellg();
-    f.seekg (0, f.beg);
+    f.seekg(0, f.beg);
 
     char *buffer = new char[length];
     f.read(buffer, length);
