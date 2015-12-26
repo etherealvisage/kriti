@@ -98,7 +98,7 @@ bool Font::loadFrom(std::string identifier) {
     auto fontfile = ResourceRegistry::get<FileResource>("fonts/" + identifier);
     if(!fontfile) return false;
 
-    auto content = fontfile->fileContent();
+    auto &content = fontfile->fileContent();
     int error = FT_New_Memory_Face(getFTLibrary(),
         reinterpret_cast<const FT_Byte *>(content.data()), content.length(), 0,
         &m_face);

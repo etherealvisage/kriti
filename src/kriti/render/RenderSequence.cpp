@@ -4,6 +4,7 @@
 
 #include "RenderSequence.h"
 #include "TextureContext.h"
+#include "ErrorTracker.h"
 
 #include "../profile/Tracker.h"
 
@@ -42,12 +43,15 @@ void RenderSequence::draw(const Uniforms &params,
         Message3(Render, Fatal, "Unknown type in RenderSequence");
         break;
     }
+    ErrorTracker::trackFrom("RenderSequence draw (before all)");
     if(m_mode == Indexed) {
         glDrawElements(type, m_end-m_start+1, GL_UNSIGNED_INT,
             (void *)(sizeof(unsigned int)*m_start));
+        ErrorTracker::trackFrom("RenderSequence draw (after drawElements)");
     }
     else if(m_mode == Sequential) {
         glDrawArrays(type, m_start, m_end-m_start+1);
+        ErrorTracker::trackFrom("RenderSequence draw (after drawArrays)");
     }
 }
 

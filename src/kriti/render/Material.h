@@ -11,10 +11,13 @@ namespace Render {
 
 class Material : public Resource {
 private:
+    std::string m_name;
     boost::shared_ptr<Program> m_program;
     Uniforms m_params;
 public:
     Material() {}
+
+    const std::string &name() const { return m_name; }
     
     virtual bool loadFrom(std::string identifier);
 

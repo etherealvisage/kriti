@@ -73,6 +73,8 @@ bool Material::loadFrom(std::string identifier) {
         }
     }
 
+    m_name = identifier;
+
     return true;
 }
 
