@@ -8,6 +8,8 @@
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
 
+#include "../math/Vector.h"
+
 namespace Kriti {
 namespace Render {
 

@@ -1,5 +1,7 @@
 #include "Matrix.h"
 
+#include "Vector.h"
+
 namespace Kriti {
 namespace Math {
 

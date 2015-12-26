@@ -2,6 +2,8 @@
 #include "Texture.h"
 #include "Program.h"
 
+#include "../math/Vector.h"
+
 namespace Kriti {
 namespace Render {
 
@@ -46,5 +48,6 @@ void Uniforms::set(boost::shared_ptr<Program> program) const {
         program->setUniform(t.first, t.second);
     }
 }
+
 }  // namespace Render
 }  // namespace Kriti
