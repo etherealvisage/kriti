@@ -122,7 +122,9 @@ void Video::initializeGL() {
     //glEnable(GL_CULL_FACE);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
+        GL_SRC_ALPHA, GL_DST_ALPHA);
+    glBlendEquationSeparate(GL_FUNC_ADD, GL_MAX);
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -132,9 +134,9 @@ void Video::initializeGL() {
         << ", with shading language "
         << glGetString(GL_SHADING_LANGUAGE_VERSION) << ")");
 
-    if(!GLEW_VERSION_3_2) {
-        Message3(Interface, Error, "No OpenGL 3.2 support available.");
-        Message3(Interface, Fatal, "Kriti uses some OpenGL 3.2 features. "
+    if(!GLEW_VERSION_3_1) {
+        Message3(Interface, Error, "No OpenGL 3.1 support available.");
+        Message3(Interface, Fatal, "Kriti uses some OpenGL 3.1 features. "
             "Please upgrade your video drivers and try again.");
     }
 
