@@ -377,7 +377,7 @@ private:
         if(toSplit->parent()) {
             InternalNodeType *parent = toSplit->parent()->asInternalNode();
 
-            int branch = parent->branc(toSplit);
+            int branch = parent->branch(toSplit);
             parent->setBranchBound(branch, toSplit->overallBound());
         }
         

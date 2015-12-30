@@ -23,9 +23,11 @@ public:
     void search(Math::Vector begin, Math::Vector end,
         CallbackType callback) {
 
-        m_tree.search(bound(begin, end), TreeType::SearchCallbackType(
-            [=](typename TreeType::BoundType bounds, DataType data){
-                callback(start(bounds), end(bounds), data);
+        m_tree.search(bound(begin, end), typename TreeType::SearchCallbackType(
+            [&callback,this](typename TreeType::BoundType bounds,
+                DataType data){
+
+                callback(this->start(bounds), this->end(bounds), data);
             }));
     }
 
@@ -33,7 +35,7 @@ public:
         CallbackType callback) {
 
         m_tree.search(point(begin), point(direction),
-            TreeType::SearchCallbackType([=](
+            typename TreeType::SearchCallbackType([=](
                 typename TreeType::BoundType bounds, DataType data){
                     callback(start(bounds), end(bounds), data);
                 }));
@@ -55,8 +57,8 @@ private:
     static typename TreeType::BoundType bound(const Math::Vector &begin,
         const Math::Vector &end) {
 
-        return TreeType::BoundType(begin.x(), end.x(), begin.y(), end.y(),
-            begin.z(), end.z());
+        return typename TreeType::BoundType(begin.x(), end.x(),
+            begin.y(), end.y(), begin.z(), end.z());
     }
 
     static Math::Vector start(const typename TreeType::BoundType &bound) {

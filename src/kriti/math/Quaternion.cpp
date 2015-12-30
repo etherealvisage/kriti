@@ -48,5 +48,38 @@ Matrix Quaternion::toMatrix() const {
     return matrix;
 }
 
+double Quaternion::angleTo(const Quaternion &other) const {
+    double result = cosAngleTo(other);
+    // fix numerical errors
+    if(result > 1.0) result = 1.0;
+    if(result < -1.0) result = -1.0;
+    return std::acos(result);
+}
+
+double Quaternion::cosAngleTo(const Quaternion &other) const {
+    Math::Vector x(1,0,0);
+    return (*this * x).dot(other * x);
+}
+
+Quaternion Quaternion::slerp(const Quaternion &other, double by) const {
+    auto angle = angleTo(other);
+    if(std::fabs(angle) < Math::Constants::Epsilon) return other;
+
+    if(by > angle) by = angle;
+
+    double u = by / angle;
+
+    double a = std::sin((1 - u) * angle) / std::sin(angle);
+    double b = std::sin(u * angle) / std::sin(angle);
+    Quaternion result(m_s * a + other.m_s * b,
+        m_v * a + other.m_v * b);
+
+    double length = std::sqrt(result.m_s*result.m_s + result.m_v.length2());
+    result.m_s /= length;
+    result.m_v /= length;
+
+    return result;
+}
+
 }  // namespace Math
 }  // namespace Kriti

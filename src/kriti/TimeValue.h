@@ -7,11 +7,14 @@ namespace Kriti {
 
 class TimeValue {
 private:
+    bool m_set;
     int64_t m_timeValue;
 private:
-    TimeValue(int64_t value) : m_timeValue(value) {}
+    TimeValue(int64_t value) : m_set(true), m_timeValue(value) {}
 public:
-    TimeValue() : m_timeValue(0) {}
+    TimeValue() : m_set(false), m_timeValue(0) {}
+
+    bool set() const { return m_set; }
 
     static TimeValue current();
     static TimeValue fromNsec(int64_t ns) { return TimeValue(ns); }

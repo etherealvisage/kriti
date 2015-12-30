@@ -38,6 +38,10 @@ public:
     }
 
     Matrix toMatrix() const;
+
+    double angleTo(const Quaternion &other) const;
+    double cosAngleTo(const Quaternion &other) const;
+    Quaternion slerp(const Quaternion &other, double by) const;
 };
 
 inline Vector operator*(const Vector &vec, const Quaternion &quat) {
