@@ -1,7 +1,7 @@
 #include "WorldRegistry.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 boost::shared_ptr<WorldRegistry> WorldRegistry::s_singleton;
 
@@ -22,5 +22,5 @@ boost::shared_ptr<World> WorldRegistry::world(btDynamicsWorld *world) {
     return boost::shared_ptr<World>();
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

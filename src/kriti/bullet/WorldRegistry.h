@@ -1,5 +1,5 @@
-#ifndef KRITI_PHYSICS__WORLD_REGISTRY_H
-#define KRITI_PHYSICS__WORLD_REGISTRY_H
+#ifndef KRITI_BULLET__WORLD_REGISTRY_H
+#define KRITI_BULLET__WORLD_REGISTRY_H
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -7,7 +7,7 @@
 #include "World.h" 
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class WorldRegistry {
 private:
@@ -33,7 +33,7 @@ public:
     boost::shared_ptr<World> world(btDynamicsWorld *world);
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif

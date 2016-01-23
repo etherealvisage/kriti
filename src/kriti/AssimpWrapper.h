@@ -21,7 +21,7 @@ private:
         virtual ~LogStream() {}
 
         void write(const char *message) {
-            MessageSystem::message(MessageSystem::Assimp, type, message);
+            MessageSystem::message("Assimp", type, message);
         }
     };
 private:

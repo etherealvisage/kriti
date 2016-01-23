@@ -1,5 +1,5 @@
-#ifndef KRITI_PHYSICS__OBJECT_FORCE_MODIFIER_H
-#define KRITI_PHYSICS__OBJECT_FORCE_MODIFIER_H
+#ifndef KRITI_BULLET__OBJECT_FORCE_MODIFIER_H
+#define KRITI_BULLET__OBJECT_FORCE_MODIFIER_H
 
 #include <map>
 
@@ -9,7 +9,7 @@
 #include "../math/Vector.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class ObjectForceModifier : public ObjectModifier {
 private:
@@ -30,7 +30,7 @@ protected:
     virtual void modify(boost::shared_ptr<World> world, btScalar step);
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif

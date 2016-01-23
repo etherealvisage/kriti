@@ -1,5 +1,5 @@
-#ifndef KRITI_PHYSICS__OBJECT_FACTORY_H
-#define KRITI_PHYSICS__OBJECT_FACTORY_H
+#ifndef KRITI_BULLET__OBJECT_FACTORY_H
+#define KRITI_BULLET__OBJECT_FACTORY_H
 
 #include <vector>
 
@@ -12,7 +12,7 @@
 class btCollisionShape;
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class ObjectFactory {
 public:
@@ -29,7 +29,7 @@ private:
         btCollisionShape *shape);
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif

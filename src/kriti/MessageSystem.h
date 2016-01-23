@@ -5,22 +5,6 @@
 
 #include "StreamAsString.h"
 
-#define MS_Subsystems \
-    MS_Subsystem(General), \
-    MS_Subsystem(Math), \
-    MS_Subsystem(Data), \
-    MS_Subsystem(Config), \
-    MS_Subsystem(Interface), \
-    MS_Subsystem(Render), \
-    MS_Subsystem(Physics), \
-    MS_Subsystem(Game), \
-    MS_Subsystem(Track), \
-    MS_Subsystem(GUI), \
-    MS_Subsystem(Profile), \
-    MS_Subsystem(Assimp), \
-    MS_Subsystem(Scene), \
-    MS_Subsystem(State)
-
 #define MS_Types \
     MS_Type(Debug), \
     MS_Type(Log), \
@@ -38,11 +22,6 @@ public:
 #undef MS_Type
     };
 
-    enum Subsystem {
-#define MS_Subsystem(system) system
-        MS_Subsystems
-#undef MS_Subsystem
-    };
 private:
     static const char *s_typeNames[];
     static const char *s_subsystemNames[];
@@ -52,7 +31,7 @@ public:
     static void setLogFile(std::string path);
     static void closeLogFile();
 public:
-    static void message(Subsystem system, MessageType type, std::string msg);
+    static void message(const char *system, MessageType type, std::string msg);
 };
 
 }  // namespace Kriti
@@ -64,9 +43,11 @@ public:
     Message3(General, type, msg)
 
 #define Message3(sys, type, msg) \
-    Kriti::MessageSystem::message(\
-        Kriti::MessageSystem::sys,\
-        Kriti::MessageSystem::type,\
-        Kriti::StreamAsString() << msg)
+    do { \
+        Kriti::MessageSystem::message(\
+            #sys, \
+            Kriti::MessageSystem::type,\
+            Kriti::StreamAsString() << msg); \
+    } while(0)
 
 #endif

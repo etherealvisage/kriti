@@ -1,12 +1,12 @@
-#ifndef KRITI_PHYSICS__CONSTRAINT_H
-#define KRITI_PHYSICS__CONSTRAINT_H
+#ifndef KRITI_BULLET__CONSTRAINT_H
+#define KRITI_BULLET__CONSTRAINT_H
 
 #include <boost/shared_ptr.hpp>
 
 #include "PhysicalObject.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class Constraint {
 private:
@@ -19,7 +19,7 @@ public:
         { return m_objects[which]; }
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif

@@ -1,7 +1,7 @@
 #include "Constraint.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

@@ -3,7 +3,7 @@
 #include "WorldRegistry.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 void ObjectModifier::updateAction(btCollisionWorld *collisionWorld,
     btScalar step) {
@@ -13,5 +13,5 @@ void ObjectModifier::updateAction(btCollisionWorld *collisionWorld,
     if(world) modify(world, step);
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

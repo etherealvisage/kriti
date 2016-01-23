@@ -1,12 +1,12 @@
-#ifndef KRITI_PHYSICS__OBJECT_MODIFIER_H
-#define KRITI_PHYSICS__OBJECT_MODIFIER_H
+#ifndef KRITI_BULLET__OBJECT_MODIFIER_H
+#define KRITI_BULLET__OBJECT_MODIFIER_H
 
 #include <boost/shared_ptr.hpp>
 
 #include <BulletDynamics/Dynamics/btActionInterface.h>
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class World;
 
@@ -20,7 +20,7 @@ protected:
     virtual void modify(boost::shared_ptr<World> world, btScalar step) = 0;
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif

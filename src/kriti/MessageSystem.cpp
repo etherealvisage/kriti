@@ -16,12 +16,6 @@ const char *MessageSystem::s_typeNames[] = {
 #undef MS_Type
 };
 
-const char *MessageSystem::s_subsystemNames[] = {
-#define MS_Subsystem(system) #system
-    MS_Subsystems
-#undef MS_Subsystem
-};
-
 void MessageSystem::setLogFile(std::string path) {
     std::string::size_type pos;
     if((pos = path.find("%d")) != std::string::npos) {
@@ -49,7 +43,7 @@ void MessageSystem::closeLogFile() {
     }
 }
 
-void MessageSystem::message(Subsystem system, MessageType type,
+void MessageSystem::message(const char *system, MessageType type,
     std::string msg) {
 
     std::time_t t;
@@ -61,8 +55,7 @@ void MessageSystem::message(Subsystem system, MessageType type,
     std::snprintf(buffer, sizeof(buffer),
         "[%02i:%02i:%02i %-12s %-7s]         %s\n",
         lt->tm_hour, lt->tm_min, lt->tm_sec,
-        s_subsystemNames[system], s_typeNames[type],
-        msg.c_str());
+        system, s_typeNames[type], msg.c_str());
 
     printf("%s", buffer);
     if(s_logFile != NULL) {

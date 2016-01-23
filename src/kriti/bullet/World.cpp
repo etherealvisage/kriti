@@ -5,7 +5,7 @@
 #include "../MessageSystem.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 World::World(Math::Vector gravity) {
     m_bpInterface = boost::shared_ptr<btBroadphaseInterface>(
@@ -44,7 +44,7 @@ void World::addModifier(boost::shared_ptr<ObjectModifier> modifier) {
 
 void World::step(TimeValue interval) {
     // step the requisite number of times @100Hz
-    //Message3(Physics, Debug, "Physics tick length: " << interval.toUsec() / 1e6);
+    //Message3(Bullet, Debug, "Bullet tick length: " << interval.toUsec() / 1e6);
     m_world->stepSimulation(interval.toUsec() / 1e3, 2, 1 / 60.0);
 }
 
@@ -67,5 +67,5 @@ boost::shared_ptr<PhysicalObject> World::rayCast(Math::Vector from,
     else return boost::shared_ptr<PhysicalObject>();
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

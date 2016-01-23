@@ -1,5 +1,5 @@
-#ifndef KRITI_PHYSICS__WORLD_H
-#define KRITI_PHYSICS__WORLD_H
+#ifndef KRITI_BULLET__WORLD_H
+#define KRITI_BULLET__WORLD_H
 
 #include <map>
 
@@ -15,7 +15,7 @@
 #include "../TimeValue.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class World {
 private:
@@ -47,7 +47,7 @@ public:
             = boost::shared_ptr<PhysicalObject>());
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif

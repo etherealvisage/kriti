@@ -3,7 +3,7 @@
 #include "Util.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 btVector3 toBullet(const Math::Vector &vector) {
     return btVector3(vector.x(), vector.y(), vector.z());
@@ -25,5 +25,5 @@ Math::Quaternion toMath(const btQuaternion &quaternion) {
         quaternion.getAngle());
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

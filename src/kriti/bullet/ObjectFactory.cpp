@@ -8,7 +8,7 @@
 #include "../MessageSystem.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 boost::shared_ptr<PhysicalObject> ObjectFactory::makeSphere(double mass,
     double radius) {
@@ -37,7 +37,7 @@ boost::shared_ptr<PhysicalObject> ObjectFactory::makeIndexedTriMesh(
             toBullet(vertices[indices[i+1]]),
             toBullet(vertices[indices[i+2]]));
     }
-    //Message3(Physics, Debug, "triMesh size: " << triMesh->getNumTriangles());
+    //Message3(Bullet, Debug, "triMesh size: " << triMesh->getNumTriangles());
 
     btCollisionShape *shape = new btBvhTriangleMeshShape(triMesh, true);
 
@@ -62,5 +62,5 @@ boost::shared_ptr<PhysicalObject> ObjectFactory::fromShape(
     return boost::make_shared<PhysicalObject>(body);
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

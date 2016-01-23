@@ -4,7 +4,7 @@
 #include "../MessageSystem.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 void ObjectMotionState::setWorldTransform(const btTransform &transform) {
     btDefaultMotionState::setWorldTransform(transform);
@@ -16,5 +16,5 @@ void ObjectMotionState::setWorldTransform(const btTransform &transform) {
     }
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

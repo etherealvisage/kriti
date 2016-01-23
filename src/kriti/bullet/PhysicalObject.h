@@ -1,5 +1,5 @@
-#ifndef KRITI_PHYSICS__PHYSICAL_OBJECT_H
-#define KRITI_PHYSICS__PHYSICAL_OBJECT_H
+#ifndef KRITI_BULLET__PHYSICAL_OBJECT_H
+#define KRITI_BULLET__PHYSICAL_OBJECT_H
 
 #include <boost/shared_ptr.hpp>
 
@@ -9,7 +9,7 @@
 class btRigidBody;
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class ObjectFeedback;
 class ObjectMotionState;
@@ -39,7 +39,7 @@ public:
     void setAngularDamping(double damping);
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif

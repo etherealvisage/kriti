@@ -5,7 +5,7 @@
 #include "../MessageSystem.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 void ObjectForceModifier::modify(boost::shared_ptr<World> world,
     btScalar step) {
@@ -17,5 +17,5 @@ void ObjectForceModifier::modify(boost::shared_ptr<World> world,
     }
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

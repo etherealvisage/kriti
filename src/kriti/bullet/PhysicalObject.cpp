@@ -8,11 +8,11 @@
 #include "../MessageSystem.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 PhysicalObject::PhysicalObject(btRigidBody *body) : m_body(body) {
     if(body == NULL) {
-        Message3(Physics, Fatal,
+        Message3(Bullet, Fatal,
             "Constructing PhysicalObject from NULL btRigidBody!");
     }
 
@@ -74,5 +74,5 @@ void PhysicalObject::setAngularDamping(double damping) {
     m_body->setDamping(m_body->getLinearDamping(), damping);
 }
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti

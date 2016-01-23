@@ -1,5 +1,5 @@
-#ifndef KRITI_PHYSICS__OBJECT_MOTION_STATE_H
-#define KRITI_PHYSICS__OBJECT_MOTION_STATE_H
+#ifndef KRITI_BULLET__OBJECT_MOTION_STATE_H
+#define KRITI_BULLET__OBJECT_MOTION_STATE_H
 
 #include <vector>
 
@@ -10,7 +10,7 @@
 #include "ObjectFeedback.h"
 
 namespace Kriti {
-namespace Physics {
+namespace Bullet {
 
 class ObjectMotionState : public btDefaultMotionState {
 private:
@@ -24,7 +24,7 @@ public:
     virtual void setWorldTransform(const btTransform &transform);
 };
 
-}  // namespace Physics
+}  // namespace Bullet
 }  // namespace Kriti
 
 #endif
