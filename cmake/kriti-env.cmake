@@ -1,3 +1,5 @@
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/)
+
 find_package(Boost COMPONENTS filesystem system)
 
 find_package(Bullet)
