@@ -32,7 +32,8 @@ behaves differently than the ``Matrix * Vector`` operator.
 Finally, the ``Quaternion`` class is present, providing a full library for
 the use of unit quaternions for representing rotations. Useful functionality
 is present in the overloaded operators, the ``toMatrix()`` function, and the
-``slerp()`` function.
+``slerp()`` function. The constructor takes an axis vector and an angle to use
+to represent the initial rotation.
 
 TODO: add view calculation etc.
 

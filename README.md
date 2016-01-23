@@ -4,7 +4,7 @@ Kriti is a game engine for games written in C++11. It needs:
 
 - CMake
 - clang/gcc with c++11 support
-- boost (tested with 1.58)
+- boost (tested with 1.58 and 1.60)
 - SDL 2.0
 - SDL_image 2.0
 - OpenGL 3.1
@@ -45,7 +45,7 @@ version of kriti by running the `make_dist_version.sh` shell script.
 
 ### Documentation
 
-Forthcoming!
+See the [documentation at Read The Docs](http://kriti.rtfd.org/).
 
 ### Authors
 
