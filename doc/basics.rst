@@ -169,4 +169,119 @@ you to stop listening for events.
 Resource system
 ---------------
 
-TODO: elaborate
+Kriti has a resource system that is designed to hide the actual source of the
+data being loaded. The intention is to allow for files to be loaded from the
+standard filesystem, from a tarball/zip file, from the network, etc. This
+generality does make it slightly more complicated to use than a simple
+``fstream`` or ``FILE *``, but it also allows for resources to automatically be
+shared where appropriate and have parsers etc. applied to file contents.
+
+There are two main classes to consider in the resource system. First is the
+base class of all loadable resources, ``Resource``. This is essentially an
+empty base class, with its only function ``loadFrom(std::string id)``, where
+``id`` is a string to denote what to load from. This function is only relevant
+if you are implementing your own type of resource.
+
+The second class is the ``ResourceRegistry`` class. This is a singleton class
+that stores references to loaded ``Resource`` instances. It provides a simple
+template accessor method that makes this straightforwards to use.
+
+Let's show how this all works by using a simple example resource type,
+``FileResource``. This simply loads a file's content into memory and then
+allows it to be accessed through standard C++ data types::
+
+    #include "kriti/FileResource.h"
+    #include "kriti/ResourceRegistry.h"
+
+    void gameEntryPoint() {
+        auto file = Kriti::ResourceRegistry::get<Kriti::FileResource>("file.txt");
+
+        if(!file) {
+            Message3(Game, Fatal, "Couldn't open required file!");
+        }
+
+        Message3(Game, Debug, "File content: " << file->fileContent());
+    }
+
+The class ``Kriti::FileResource`` will load files from the data path specified
+in the XML configuration file, which we'll get to in a bit. If not specified,
+this is by default the path ``data/``.
+
+Once loaded once by the ResourceRegistry, the resource will be kept in memory
+until explicitly removed with the ``ResourceRegistry::clear`` function. Note
+that descriptors are kept in separate namespaces per resource type, so
+``ResourceRegistry::get<FileResource>("name")`` will return a different result
+than ``ResourceRegistry::get<Render::Texture>("name")``. To avoid confusion
+with this, you should avoid having resource types that are castable to each
+other.
+
+Let's say, for the moment, that we want to add a new resource type,
+``NPCResource``. This needs some XML configuration information, a texture, and
+maybe some lines of dialogue. We can do this by creating a new subclass of
+``Resource`` and specifying a ``loadFrom`` function, like so::
+
+    #include "kriti/FileResource.h"
+    #include "kriti/XMLResource.h"
+    #include "kriti/render/Texture.h"
+    #include "kriti/ResourceRegistry.h"
+
+    class NPCResource : public Kriti::Resource {
+    private:
+        boost::shared_ptr<Kriti::XMLResource> m_config;
+        boost::shared_ptr<Kriti::Render::Texture> m_appearance;
+        boost::shared_ptr<Kriti::FileResource> m_dialogueFile;
+        std::map<std::string, int> m_dialogueMap;
+    public:
+        // should return true if the resource was loaded successfully, false otherwise
+        virtual bool loadFrom(std::string identifier) {
+            m_config = Kriti::ResourceRegistry::get<Kriti::XMLResource>(
+                "npcs/" + identifier);
+            if(!m_config) return false;
+
+            m_dialogueFile = Kriti::ResourceRegistry::get<Kriti::FileResource>(
+                "npcs/" + identifier);
+            if(!m_dialogueFile) return false;
+
+            m_appearance = Kriti::ResourceRegistry::get<Kriti::Render::Texture>(
+                "npc_" + identifier);
+            if(!m_appearance) return false;
+
+            // construct mapping of dialogue names to lines in the dialogue file from config in XML file
+
+            return true;
+        }
+
+        std::string getDialogueLine(std::string which) {
+            return m_dialogueFile.fileLines()[m_dialogueMap[which]];
+        }
+    };
+
+As a rule of thumb, if you have any functions in a resource that involve
+expensive computation, you should probably cache the result. The intended
+design pattern is that ``Resource`` instances may be accessed from various
+locations in the codebase, including hot-paths.
+
+Configuration
+-------------
+
+.. highlight:: xml
+
+As was mentioned earlier in the resource system section, there is a
+'configuration' resource. This is an XML file, usually called ``kriti.xml``,
+placed in the same directory as the executable. This is accessed by the special
+``XMLResource`` name "config". This stores information such as the directory to
+put log files in, where to load further data files, etc. A configuration file
+with all the default values present would be as follows::
+
+    <kriti>
+        <general>
+            <data-path>data/</data-path>
+            <logfile>logs/kriti-%d.log</logfile>
+            <profile>false</profile>
+        </general>
+        <video>
+            <resolution width="800" height="600" bpp="0" fullscreen="false" />
+        </video>
+    </kriti>
+
+.. highlight:: c++

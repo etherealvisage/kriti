@@ -41,6 +41,13 @@ public:
         return boost::dynamic_pointer_cast<ResourceType>(result);
     }
 
+    template<typename ResourceType>
+    static void clear(std::string identifier) {
+        auto r = s_resources.find(typeid(ResourceType).name() + identifier);
+
+        if(r != s_resources.end()) s_resources.erase(r);
+    }
+
     static void unload() {
         s_resources.clear();
     }
