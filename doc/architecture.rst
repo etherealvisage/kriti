@@ -37,8 +37,24 @@ allow for loading from ZIP archives as well.
 Buildsystem
 -----------
 
-Kriti does take over somewhat of the buildsystem.
+Unlike some other game libraries, Kriti does not require much out of the
+buildsystem. While only CMake integration is currently tested, it should be
+straightforward to integrate with anything make-alike.
 
-TODO: finish explanation of buildsystem and project architecture.
+.. highlight:: cmake
 
-`Buildsystem`_.
+To add Kriti into a project using CMake, simply add the following line
+somewhere in your buildscripts::
+
+    include(path-to-kriti/cmake/kriti-env.cmake)
+
+Once that has been added, simply change your ``target_link_libraries`` line to
+include ``${kritiLibraries}``.
+
+.. highlight:: c++
+
+Kriti will take over the ``main()`` function, leaving you to implement a
+``gameEntryPoint()`` function somewhere in your source tree. This will be
+explained further in the `Basics <basics.html>`_ section later.
+
+TODO: finish explanation of project architecture.

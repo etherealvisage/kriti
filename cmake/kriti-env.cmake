@@ -19,6 +19,7 @@ find_package(Freetype)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 
 set(kritiLibraries
+    kriti
     ${Boost_LIBRARIES}
     ${BULLET_LIBRARIES}
     ${SDL2_LIBRARY}
@@ -29,3 +30,6 @@ set(kritiLibraries
     # for clock_gettime().
     rt
 )
+
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../headers)
+link_directories(${CMAKE_CURRENT_LIST_DIR}/..)
