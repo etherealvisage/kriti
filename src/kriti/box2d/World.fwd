@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Box2D {
+
+class World;
+
+}  // namespace Box2D
+}  // namespace Kriti
+

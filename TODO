@@ -18,3 +18,4 @@ Rendering:
         - needs occulsion queries                                                   (short)
     - transform feedback infrastructure for accelerated rendering etc.              (long)
     - uniform buffer object support                                                 (medium)
+    - implement support for multi-pass rendering on the same rendering stage        (medium)
