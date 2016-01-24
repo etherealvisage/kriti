@@ -1,5 +1,3 @@
-#include <GL/glew.h> // for GLuint in render/Timer.h
-
 #include "Tracker.h"
 
 #include "../render/Timer.h"

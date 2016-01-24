@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "../ogl.h"
 
 #include "TextureContext.h"
 #include "Texture.h"
@@ -14,7 +14,7 @@ boost::shared_ptr<TextureContext> TextureContext::s_singleton;
 TextureContext::TextureContext() {
     ErrorTracker::trackFrom("Texture context constructor (before all)");
     GLint count;
-    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &count);
+    gl::GetIntegerv(gl::MAX_COMBINED_TEXTURE_IMAGE_UNITS, &count);
     ErrorTracker::trackFrom(
         "Texture context constructor (after get unit count)");
 

@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "../ogl.h"
 
 #include "Program.h"
 #include "TextureContext.h"
@@ -36,28 +36,28 @@ Program::Program(std::string vsName, std::string fsName, std::string gsName)
     }
 
     ErrorTracker::trackFrom("Program constructor (before all)");
-    m_programID = glCreateProgram();
+    m_programID = gl::CreateProgram();
     ErrorTracker::trackFrom("Program constructor (after program creation)");
-    glAttachShader(m_programID, m_vertexShader->shaderID());
+    gl::AttachShader(m_programID, m_vertexShader->shaderID());
     ErrorTracker::trackFrom("Program constructor (after vertex attachement)");
-    glAttachShader(m_programID, m_fragShader->shaderID());
+    gl::AttachShader(m_programID, m_fragShader->shaderID());
     ErrorTracker::trackFrom("Program constructor (after frag attachement)");
     if(m_geomShader) {
-        glAttachShader(m_programID, m_geomShader->shaderID());
+        gl::AttachShader(m_programID, m_geomShader->shaderID());
     }
     ErrorTracker::trackFrom("Program constructor (after geom attachement)");
 
-    glLinkProgram(m_programID);
+    gl::LinkProgram(m_programID);
     ErrorTracker::trackFrom("Program constructor (after link)");
     GLint status;
-    glGetProgramiv(m_programID, GL_LINK_STATUS, &status);
-    if(status == GL_FALSE) {
+    gl::GetProgramiv(m_programID, gl::LINK_STATUS, &status);
+    if(status == gl::FALSE_) {
         Message3(Render, Error, "Shader linking failed for program with "
             "vertex shader " << vsName << " fragment shader " << fsName
             << " and geom shader " << gsName);
         char infoLog[4096];
         int used;
-        glGetProgramInfoLog(m_programID, sizeof(infoLog), &used, infoLog);
+        gl::GetProgramInfoLog(m_programID, sizeof(infoLog), &used, infoLog);
         ErrorTracker::trackFrom("Program constructor (after get link log)");
         Message3(Render, Fatal, infoLog);
     }
@@ -66,7 +66,7 @@ Program::Program(std::string vsName, std::string fsName, std::string gsName)
 void Program::setUniform(const std::string &name, const Math::Vector &value) {
     GLint location = getUniformLocation(name);
     if(location != -1) {
-        glUniform3f(location, value.x(), value.y(), value.z());
+        gl::Uniform3f(location, value.x(), value.y(), value.z());
         ErrorTracker::trackFrom("Program set uniform (after vector set)");
     }
 }
@@ -77,7 +77,7 @@ void Program::setUniform(const std::string &name,
 
     GLint location = getUniformLocation(name);
     if(location != -1) {
-        glUniformMatrix4fv(location, 1, false, matrix.matrixData());
+        gl::UniformMatrix4fv(location, 1, false, matrix.matrixData());
         ErrorTracker::trackFrom("Program set uniform (after matrix set)");
     }
 }
@@ -85,7 +85,7 @@ void Program::setUniform(const std::string &name,
 void Program::setUniform(const std::string &name, int value) {
     GLint location = getUniformLocation(name);
     if(location != -1) {
-        glUniform1i(location, value);
+        gl::Uniform1i(location, value);
         ErrorTracker::trackFrom("Program set uniform (after integer set)");
     }
 }
@@ -93,7 +93,7 @@ void Program::setUniform(const std::string &name, int value) {
 void Program::setUniform(const std::string &name, float value) {
     GLint location = getUniformLocation(name);
     if(location != -1) {
-        glUniform1f(location, value);
+        gl::Uniform1f(location, value);
         ErrorTracker::trackFrom("Program set uniform (after float set)");
     }
 }
@@ -104,7 +104,7 @@ void Program::setUniform(const std::string &name,
     GLint location = getUniformLocation(name);
     if(location != -1) {
         int index = TextureContext::instance()->bind(texture);
-        glUniform1i(location, index);
+        gl::Uniform1i(location, index);
         ErrorTracker::trackFrom("Program set uniform (after texture set)");
     }
 }
@@ -114,7 +114,7 @@ void Program::activate() {
         Message3(Render, Error, "Activating non-loaded Program . . .");
     }
     ErrorTracker::trackFrom("Program activate (before all)");
-    glUseProgram(m_programID);
+    gl::UseProgram(m_programID);
     ErrorTracker::trackFrom("Program activate (after activation)");
     TextureContext::instance()->nextProgram();
 }
@@ -130,7 +130,7 @@ GLint Program::getUniformLocation(const std::string &name) {
     if(fi != m_uniformLocations.end()) return fi->second;
 
     ErrorTracker::trackFrom("Program uniform location (before all)");
-    GLint location = glGetUniformLocation(m_programID, name.c_str());
+    GLint location = gl::GetUniformLocation(m_programID, name.c_str());
     ErrorTracker::trackFrom("Program uniform location (after get)");
     m_uniformLocations[name] = location;
 

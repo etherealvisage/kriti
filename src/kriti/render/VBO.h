@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "../ogl.h"
+
 #include "../math/Vector.h"
 
 namespace Kriti {

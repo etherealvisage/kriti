@@ -12,12 +12,9 @@ Rendering:
     + support loading textures for models                                           (medium)
     + support assimp material system                                                (long)
     - load textures from model files, if present                                    (medium)
-    - replace GLEW with something different                                         (short)
     - improve rendering timer support w/non-string based timers                     (short)
     - support custom shader types for models (overload specific material names?)    (short)
     - support conditional rendering                                                 (short)
         - needs occulsion queries                                                   (short)
-    - use GL_ARB_geometry_shader4 instead of GL 3.2 geometry shaders to support     (medium)
-        Intel GL on Windows for older GPUs
     - transform feedback infrastructure for accelerated rendering etc.              (long)
     - uniform buffer object support                                                 (medium)

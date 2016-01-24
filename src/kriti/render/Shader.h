@@ -1,7 +1,7 @@
 #ifndef KRITI_RENDER__SHADER_H
 #define KRITI_RENDER__SHADER_H
 
-#include <GL/gl.h>
+#include "../ogl.h"
 
 #include "../Resource.h"
 

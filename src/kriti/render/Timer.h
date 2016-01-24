@@ -1,6 +1,8 @@
 #ifndef KRITI_RENDER__TIMER_H
 #define KRITI_RENDER__TIMER_H
 
+#include "../ogl.h"
+
 #include "../TimeValue.h"
 
 namespace Kriti {

@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "../ogl.h"
 
 #include <SDL.h>
 #include <SDL_video.h>
@@ -99,64 +99,57 @@ void Video::setVideoMode() {
 }
 
 void Video::initializeGL() {
-    // Make GLEW play nicely with core contexts
-    glewExperimental = GL_TRUE;
-    GLenum status = glewInit();
-    if(status != GLEW_OK) {
-        Message3(Interface, Fatal, "Failed to initialize GLEW: "
-            << glewGetErrorString(status));
-    }
-
-    GLint err = glGetError();
-    while(err != GL_NO_ERROR) {
-        Message3(Interface, Log, "GL error after GLEW initialization: "
-            << gluErrorString(err));
-        err = glGetError();
-    }
-
-    /* Basic OpenGL setup. */
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-    glFrontFace(GL_CCW);
-    //glEnable(GL_CULL_FACE);
-
-    glEnable(GL_BLEND);
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA,
-        GL_SRC_ALPHA, GL_DST_ALPHA);
-    glBlendEquationSeparate(GL_FUNC_ADD, GL_MAX);
-
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-    Message3(Interface, Log, "Created OpenGL context (vendor:"
-        << glGetString(GL_VENDOR) << ", renderer: " << glGetString(GL_RENDERER)
-        << ", version: " << glGetString(GL_VERSION)
-        << ", with shading language "
-        << glGetString(GL_SHADING_LANGUAGE_VERSION) << ")");
-
-    if(!GLEW_VERSION_3_1) {
+    gl::exts::LoadTest loaded = gl::sys::LoadFunctions();
+    if(!loaded) {
         Message3(Interface, Error, "No OpenGL 3.1 support available.");
         Message3(Interface, Fatal, "Kriti uses some OpenGL 3.1 features. "
             "Please upgrade your video drivers and try again.");
     }
 
+    int nfailed = loaded.GetNumMissing();
+    if(nfailed != 0) {
+        Message3(Interface, Error, "Failed to load " << nfailed
+            << " GL function(s).");
+    }
+
+    /* Basic OpenGL setup. */
+    gl::Enable(gl::DEPTH_TEST);
+    gl::DepthFunc(gl::LESS);
+
+    gl::FrontFace(gl::CCW);
+    //glEnable(GL_CULL_FACE);
+
+    gl::Enable(gl::BLEND);
+    gl::BlendFuncSeparate(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA,
+        gl::SRC_ALPHA, gl::DST_ALPHA);
+    gl::BlendEquationSeparate(gl::FUNC_ADD, gl::MAX);
+
+    gl::ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    Message3(Interface, Log, "Created OpenGL context (vendor:"
+        << gl::GetString(gl::VENDOR) << ", renderer: "
+        << gl::GetString(gl::RENDERER)
+        << ", version: " << gl::GetString(gl::VERSION)
+        << ", with shading language "
+        << gl::GetString(gl::SHADING_LANGUAGE_VERSION) << ")");
+
     /* If video profiling is enabled . . . */
     if(ResourceRegistry::get<XMLResource>(
         "config")->doc().first_element_by_path(
         "/kriti/general/profile").text().as_bool(false)
-        && !GLEW_ARB_timer_query) {
+        && !gl::exts::var_ARB_timer_query) {
 
         Message3(Interface, Fatal, "Profiling enabled, but "
             "GL_ARB_timer_query extension not present.");
     }
 
     /* Need GL_ARB_explicit_attrib_location for shaders; it's in GL 3.3.*/
-    if(!GL_ARB_explicit_attrib_location) {
+    if(!gl::exts::var_ARB_explicit_attrib_location) {
         Message3(Interface, Fatal,
             "GL_ARB_explicit_attrib_location OpenGL extension required.");
     }
     /* Need GL_ARB_viewport_array for point light sources. */
-    if(!GL_ARB_explicit_attrib_location) {
+    if(!gl::exts::var_ARB_viewport_array) {
         Message3(Interface, Fatal,
             "GL_ARB_viewport_array OpenGL extension required.");
     }

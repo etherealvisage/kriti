@@ -14,9 +14,6 @@ include_directories(${SDL2IMAGE_INCLUDE_DIR})
 find_package(OpenGL)
 include_directories(${OPENGL_INCLUDE_DIR})
 
-find_package(GLEW)
-include_directories(${GLEW_INCLUDE_DIR})
-
 find_package(Freetype)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 

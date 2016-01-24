@@ -1,7 +1,7 @@
 #include <cstring>
 #include <algorithm>
 
-#include <GL/glew.h>
+#include "../ogl.h"
 
 #include <boost/weak_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -122,8 +122,8 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
 
     if(!isLast) m_framebuffer->bindWrite();
     else {
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        glDrawBuffer(GL_BACK);
+        gl::BindFramebuffer(gl::DRAW_FRAMEBUFFER, 0);
+        gl::DrawBuffer(gl::BACK);
     }
 
     for(auto &hook : m_uniformHooks) {
@@ -140,7 +140,7 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
         materialParams[material].setParam(std::get<3>(mapping), texture);
     }
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 
     m_renderables->iterate(
         boost::bind(&Stage::renderRenderable, this, globalParams,

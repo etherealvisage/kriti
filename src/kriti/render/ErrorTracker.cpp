@@ -1,4 +1,4 @@
-#include <GL/gl.h>
+#include "../ogl.h"
 #include <GL/glu.h>
 
 #include "ErrorTracker.h"
@@ -9,11 +9,11 @@ namespace Kriti {
 namespace Render {
 
 void ErrorTracker::trackFrom(const char *description) {
-    auto error = glGetError();
-    while(error != GL_NO_ERROR) {
+    auto error = gl::GetError();
+    while(error != gl::NO_ERROR_) {
         Message3(Render, Error, "At " << description << ", GL error: "
             << gluErrorString(error));
-        error = glGetError();
+        error = gl::GetError();
     }
 }
 

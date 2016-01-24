@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "../ogl.h"
 
 #include <boost/weak_ptr.hpp>
 
@@ -32,12 +32,12 @@ void RenderSequence::draw(const Uniforms &params,
     GLenum type;
     switch(m_type) {
     case Lines:
-        type = GL_LINES;
+        type = gl::LINES;
         break;
     case Triangles:
         Profile::Tracker::instance()->addToCounter("Triangles",
             (m_end-m_start+1)/3);
-        type = GL_TRIANGLES;
+        type = gl::TRIANGLES;
         break;
     default:
         Message3(Render, Fatal, "Unknown type in RenderSequence");
@@ -45,12 +45,12 @@ void RenderSequence::draw(const Uniforms &params,
     }
     ErrorTracker::trackFrom("RenderSequence draw (before all)");
     if(m_mode == Indexed) {
-        glDrawElements(type, m_end-m_start+1, GL_UNSIGNED_INT,
+        gl::DrawElements(type, m_end-m_start+1, gl::UNSIGNED_INT,
             (void *)(sizeof(unsigned int)*m_start));
         ErrorTracker::trackFrom("RenderSequence draw (after drawElements)");
     }
     else if(m_mode == Sequential) {
-        glDrawArrays(type, m_start, m_end-m_start+1);
+        gl::DrawArrays(type, m_start, m_end-m_start+1);
         ErrorTracker::trackFrom("RenderSequence draw (after drawArrays)");
     }
 }

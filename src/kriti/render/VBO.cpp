@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "../ogl.h"
 
 #include "VBO.h"
 #include "ErrorTracker.h"
@@ -15,18 +15,18 @@ VBO::VBO(BindType btype, UseType utype) : m_useType(utype), m_bindType(btype),
 VBO::~VBO() {
     if(m_bufferID != 0) {
         ErrorTracker::trackFrom("VBO destructor (before all)");
-        glDeleteBuffers(1, &m_bufferID);
+        gl::DeleteBuffers(1, &m_bufferID);
         ErrorTracker::trackFrom("VBO destructor (after delete)");
     }
 }
 
 void VBO::setData2(const std::vector<Math::Vector> &data) {
     if(!m_set) {
-        m_dataType = GL_FLOAT;
+        m_dataType = gl::FLOAT;
         m_dataWidth = 2;
         m_set = true;
     }
-    else if(m_dataType != GL_FLOAT || m_dataWidth != 2) {
+    else if(m_dataType != gl::FLOAT || m_dataWidth != 2) {
         Message3(Render, Error,
             "Attempting to update VBO with different data type");
         return;
@@ -45,16 +45,16 @@ void VBO::setData2(const std::vector<Math::Vector> &data) {
 
 void VBO::setData(const std::vector<unsigned int> &data) {
     if(!m_set) {
-        m_dataType = GL_UNSIGNED_INT;
+        m_dataType = gl::UNSIGNED_INT;
         m_dataWidth = 1;
         m_set = true;
     }
-    else if(m_dataType != GL_UNSIGNED_INT || m_dataWidth != 1) {
+    else if(m_dataType != gl::UNSIGNED_INT || m_dataWidth != 1) {
         Message3(Render, Error,
             "Attempting to update VBO with different data type");
         return;
     }
-    m_dataType = GL_UNSIGNED_INT;
+    m_dataType = gl::UNSIGNED_INT;
     m_dataWidth = 1;
 
     makeVBO(&data[0], sizeof(unsigned int)*data.size());
@@ -62,11 +62,11 @@ void VBO::setData(const std::vector<unsigned int> &data) {
 
 void VBO::setData3(const std::vector<Math::Vector> &data) {
     if(!m_set) {
-        m_dataType = GL_FLOAT;
+        m_dataType = gl::FLOAT;
         m_dataWidth = 3;
         m_set = true;
     }
-    else if(m_dataType != GL_FLOAT || m_dataWidth != 3) {
+    else if(m_dataType != gl::FLOAT || m_dataWidth != 3) {
         Message3(Render, Error,
             "Attempting to update VBO with different data type");
         return;
@@ -86,11 +86,11 @@ void VBO::setData3(const std::vector<Math::Vector> &data) {
 
 void VBO::setData4(const std::vector<Math::Vector> &data, float padding) {
     if(!m_set) {
-        m_dataType = GL_FLOAT;
+        m_dataType = gl::FLOAT;
         m_dataWidth = 4;
         m_set = true;
     }
-    else if(m_dataType != GL_FLOAT || m_dataWidth != 4) {
+    else if(m_dataType != gl::FLOAT || m_dataWidth != 4) {
         Message3(Render, Error,
             "Attempting to update VBO with different data type");
         return;
@@ -118,7 +118,7 @@ void VBO::bindVBO() {
     }
 
     ErrorTracker::trackFrom("VBO element bind (before all)");
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_bufferID);
+    gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, m_bufferID);
     ErrorTracker::trackFrom("VBO element bind (after bind)");
 }
 
@@ -130,35 +130,35 @@ void VBO::bindVBO(int location) {
         return;
     }
     ErrorTracker::trackFrom("VBO data bind (before all)");
-    glBindBuffer(GL_ARRAY_BUFFER, m_bufferID);
+    gl::BindBuffer(gl::ARRAY_BUFFER, m_bufferID);
     ErrorTracker::trackFrom("VBO data bind (after bind)");
-    glVertexAttribPointer(location, m_dataWidth, m_dataType, GL_FALSE, 0,
+    gl::VertexAttribPointer(location, m_dataWidth, m_dataType, gl::FALSE_, 0,
         (void *)0);
     ErrorTracker::trackFrom("VBO data bind (after attribptr)");
-    glEnableVertexAttribArray(location);
+    gl::EnableVertexAttribArray(location);
     ErrorTracker::trackFrom("VBO data bind (after enable)");
 }
 
 void VBO::makeVBO(const void *data, int byteSize) {
     ErrorTracker::trackFrom("VBO creation (before all)");
     if(m_bufferID == 0) {
-        glGenBuffers(1, &m_bufferID);
+        gl::GenBuffers(1, &m_bufferID);
         ErrorTracker::trackFrom("VBO creation (after buffer gen)");
     }
 
     GLenum btype, utype;
     if(m_bindType == Data) {
-        btype = GL_ARRAY_BUFFER;
+        btype = gl::ARRAY_BUFFER;
     }
     else {
-        btype = GL_ELEMENT_ARRAY_BUFFER;
+        btype = gl::ELEMENT_ARRAY_BUFFER;
     }
 
     if(m_useType == Static) {
-        utype = GL_STATIC_DRAW;
+        utype = gl::STATIC_DRAW;
     }
     else if(m_useType == Streaming) {
-        utype = GL_STREAM_DRAW;
+        utype = gl::STREAM_DRAW;
     }
     else {
         Message3(Render, Fatal, "Unknown VBO use type");
@@ -166,9 +166,9 @@ void VBO::makeVBO(const void *data, int byteSize) {
         utype = 0;
     }
 
-    glBindBuffer(btype, m_bufferID);
+    gl::BindBuffer(btype, m_bufferID);
     ErrorTracker::trackFrom("VBO creation (after buffer bind)");
-    glBufferData(btype, byteSize, data, utype);
+    gl::BufferData(btype, byteSize, data, utype);
     ErrorTracker::trackFrom("VBO creation (after buffer data)");
 }
 

@@ -1,6 +1,6 @@
 #include <cstring>
 
-#include <GL/glew.h>
+#include "../ogl.h"
 
 #include <SDL_image.h>
 #include <SDL_rwops.h>
@@ -26,15 +26,15 @@ Texture::Texture(Type type, Target target, int width, int height, int samples)
     : m_type(type), m_target(target), m_width(width), m_height(height),
     m_samples(samples), m_id(0) {
 
-    if(target == Simple) m_bindTarget = GL_TEXTURE_2D;
-    else if(target == Cube) m_bindTarget = GL_TEXTURE_CUBE_MAP;
+    if(target == Simple) m_bindTarget = gl::TEXTURE_2D;
+    else if(target == Cube) m_bindTarget = gl::TEXTURE_CUBE_MAP;
 
     makeBlank();
 }
 
 Texture::~Texture() {
     ErrorTracker::trackFrom("Texture destructor (before all)");
-    glDeleteTextures(1, &m_id);
+    gl::DeleteTextures(1, &m_id);
     ErrorTracker::trackFrom("Texture destructor (after delete)");
 }
 
@@ -42,7 +42,7 @@ bool Texture::loadFrom(std::string identifier) {
     // TODO: implement support for loading cubemap textures from files.
     // TODO: implement support for loading depth textures from files.
     m_target = Simple;
-    m_bindTarget = GL_TEXTURE_2D;
+    m_bindTarget = gl::TEXTURE_2D;
     m_type = Colour;
     makeTexture();
 
@@ -66,9 +66,9 @@ bool Texture::loadFrom(std::string identifier) {
 
 void Texture::bindToUnit(int which) {
     ErrorTracker::trackFrom("Texture binding (before all)");
-    glActiveTexture(GL_TEXTURE0 + which);
+    gl::ActiveTexture(gl::TEXTURE0 + which);
     ErrorTracker::trackFrom("Texture binding (after activate)");
-    glBindTexture(GL_TEXTURE_2D, m_id);
+    gl::BindTexture(gl::TEXTURE_2D, m_id);
     ErrorTracker::trackFrom("Texture binding (after bind)");
 }
 
@@ -76,18 +76,18 @@ void Texture::reset(int width, int height, float *data) {
     m_width = width;
     m_height = height;
     GLenum iformat;
-    GLenum format = GL_RGBA;
+    GLenum format = gl::RGBA;
     switch(m_type) {
     case Colour:
-        iformat = GL_RGBA32F;
+        iformat = gl::RGBA32F;
         break;
     case ColourR:
-        iformat = GL_R32F;
-        format = GL_RED;
+        iformat = gl::R32F;
+        format = gl::RED;
         break;
     case Depth:
-        iformat = GL_DEPTH_COMPONENT32F;
-        format = GL_DEPTH_COMPONENT;
+        iformat = gl::DEPTH_COMPONENT32F;
+        format = gl::DEPTH_COMPONENT;
         break;
     default:
         Message3(Render, Fatal, "Unknown Texture::Type in reset()");
@@ -95,10 +95,10 @@ void Texture::reset(int width, int height, float *data) {
     }
 
     ErrorTracker::trackFrom("Texture binding (before all)");
-    glBindTexture(m_bindTarget, m_id);
+    gl::BindTexture(m_bindTarget, m_id);
     ErrorTracker::trackFrom("Texture binding (after bind)");
 
-    glTexImage2D(GL_TEXTURE_2D,
+    gl::TexImage2D(gl::TEXTURE_2D,
         // level 0, no mipmapping...
         0, 
         // internal format: RGBA, floats.
@@ -110,7 +110,7 @@ void Texture::reset(int width, int height, float *data) {
         // input format
         format,
         // input
-        GL_FLOAT,
+        gl::FLOAT,
         // input data
         data
     );
@@ -119,25 +119,25 @@ void Texture::reset(int width, int height, float *data) {
 
 void Texture::makeTexture() {
     ErrorTracker::trackFrom("Texture creation (before all)");
-    glGenTextures(1, &m_id);
+    gl::GenTextures(1, &m_id);
     ErrorTracker::trackFrom("Texture creation (after gen)");
 
     // XXX: for now, just clear all texture bindings
     TextureContext::instance()->clearBindings();
 
-    glBindTexture(m_bindTarget, m_id);
+    gl::BindTexture(m_bindTarget, m_id);
     ErrorTracker::trackFrom("Texture creation (after bind)");
 
-    glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE);
     ErrorTracker::trackFrom("Texture creation (after WRAP_S parameter)");
-    glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE);
     ErrorTracker::trackFrom("Texture creation (after WRAP_T parameter)");
     if(m_target == Cube) 
-        glTexParameteri(m_bindTarget, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_R, gl::CLAMP_TO_EDGE);
     ErrorTracker::trackFrom("Texture creation (after WRAP_R parameter)");
-    glTexParameteri(m_bindTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    gl::TexParameteri(m_bindTarget, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
     ErrorTracker::trackFrom("Texture creation (after MIN_FILTER parameter)");
-    glTexParameteri(m_bindTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    gl::TexParameteri(m_bindTarget, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
     ErrorTracker::trackFrom("Texture creation (after MAG_FILTER parameter)");
 }
 
@@ -145,17 +145,17 @@ void Texture::makeBlank() {
     makeTexture();
 
     GLenum iformat;
-    GLenum format = GL_RGBA;
+    GLenum format = gl::RGBA;
     switch(m_type) {
     case Colour:
-        iformat = GL_RGBA32F;
+        iformat = gl::RGBA32F;
         break;
     case ColourR:
-        iformat = GL_R32F;
+        iformat = gl::R32F;
         break;
     case Depth:
-        iformat = GL_DEPTH_COMPONENT32F;
-        format = GL_DEPTH_COMPONENT;
+        iformat = gl::DEPTH_COMPONENT32F;
+        format = gl::DEPTH_COMPONENT;
         break;
     default:
         Message3(Render, Fatal, "Unknown Texture::Type in makeBlank()");
@@ -163,7 +163,7 @@ void Texture::makeBlank() {
     }
     ErrorTracker::trackFrom("Texture makeBlank (before all)");
     if(m_target == Simple) {
-        glTexImage2D(GL_TEXTURE_2D,
+        gl::TexImage2D(gl::TEXTURE_2D,
             // level 0, no mipmapping...
             0, 
             // internal format: RGBA, floats.
@@ -175,7 +175,7 @@ void Texture::makeBlank() {
             // input format
             format,
             // input
-            GL_UNSIGNED_BYTE,
+            gl::UNSIGNED_BYTE,
             // input data
             nullptr
         );
@@ -183,14 +183,14 @@ void Texture::makeBlank() {
     }
     else if(m_target == Cube) {
         GLuint targets[6] = {
-            GL_TEXTURE_CUBE_MAP_POSITIVE_X,
-            GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
-            GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
-            GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-            GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-            GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
+            gl::TEXTURE_CUBE_MAP_POSITIVE_X,
+            gl::TEXTURE_CUBE_MAP_POSITIVE_Y,
+            gl::TEXTURE_CUBE_MAP_POSITIVE_Z,
+            gl::TEXTURE_CUBE_MAP_NEGATIVE_X,
+            gl::TEXTURE_CUBE_MAP_NEGATIVE_Y,
+            gl::TEXTURE_CUBE_MAP_NEGATIVE_Z};
         for(int i = 0; i < 6; i ++) {
-            glTexImage2D(targets[i],
+            gl::TexImage2D(targets[i],
                 // level 0, no mipmapping...
                 0, 
                 // internal format: RGBA, floats.
@@ -202,7 +202,7 @@ void Texture::makeBlank() {
                 // input format
                 format,
                 // input
-                GL_UNSIGNED_BYTE,
+                gl::UNSIGNED_BYTE,
                 // input data
                 nullptr
             );
@@ -210,7 +210,7 @@ void Texture::makeBlank() {
         }
     }
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+    gl::BindTexture(gl::TEXTURE_2D, 0);
     ErrorTracker::trackFrom("Texture makeBlank (after clear)");
 }
 
@@ -233,22 +233,22 @@ void Texture::makeFromFile(std::string filename, int mipmap) {
     SDL_Surface *conv = SDL_ConvertSurface(result, fmt, 0);
 
     ErrorTracker::trackFrom("Texture makeFromFile (before all)");
-    glBindTexture(GL_TEXTURE_2D, m_id);
+    gl::BindTexture(gl::TEXTURE_2D, m_id);
     ErrorTracker::trackFrom("Texture makeFromFile (after bind)");
 
-    glTexImage2D(GL_TEXTURE_2D,
+    gl::TexImage2D(gl::TEXTURE_2D,
         // mipmap level
         mipmap, 
         // internal format: RGBA, floats.
-        GL_RGBA32F,
+        gl::RGBA32F,
         // width and height
         m_width, m_height,
         // border?
         0,
         // input format
-        GL_RGBA,
+        gl::RGBA,
         // input
-        GL_UNSIGNED_BYTE,
+        gl::UNSIGNED_BYTE,
         // input data
         conv->pixels
     );
