@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'kriti'
-copyright = '2015, ethereal'
+copyright = '2012-2016, ethereal'
 author = 'ethereal'
 
 # The version info for the project you're documenting, acts as replacement for
