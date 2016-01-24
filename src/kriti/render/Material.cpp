@@ -5,6 +5,8 @@
 #include "Material.h"
 #include "Texture.h"
 
+#include "../interface/Video.h"
+
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
 
@@ -34,6 +36,12 @@ bool Material::loadFrom(std::string identifier) {
         Message3(Render, Error, "Fragment shader not specified for material "
             << identifier);
         return false;
+    }
+
+    if(node.child("fragment-shader").attribute("msaa-sensitive").as_bool(false)
+        && Interface::Video::instance()->msaa()) {
+
+        fsName += "_msaa";
     }
 
     // missing geometry shader is not an error.

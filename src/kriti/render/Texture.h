@@ -36,6 +36,7 @@ public:
 
     int width() const { return m_width; }
     int height() const { return m_height; }
+    int samples() const { return m_samples; }
 
     virtual bool loadFrom(std::string identifier);
 

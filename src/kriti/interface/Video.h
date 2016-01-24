@@ -25,6 +25,8 @@ private:
     SDL_Window *m_window;
     SDL_GLContext m_context;
     int m_width, m_height;
+    bool m_msaa;
+    int m_aasamples;
 private:
     Video();
 public:
@@ -33,6 +35,9 @@ public:
     int width() const { return m_width; }
     int height() const { return m_height; }
     double aspectRatio() const;
+
+    bool msaa() const { return m_msaa; }
+    int aasamples() const { return m_aasamples; }
 
     void swapBuffers();
 private:

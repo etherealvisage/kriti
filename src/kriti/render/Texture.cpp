@@ -20,13 +20,18 @@ namespace Render {
 Texture::Texture() {
     m_type = Invalid;
     m_bindTarget = 0;
+
+    m_width = m_height = m_samples = 0;
 }
 
 Texture::Texture(Type type, Target target, int width, int height, int samples)
     : m_type(type), m_target(target), m_width(width), m_height(height),
     m_samples(samples), m_id(0) {
 
-    if(target == Simple) m_bindTarget = gl::TEXTURE_2D;
+    if(target == Simple) {
+        if(samples == 0) m_bindTarget = gl::TEXTURE_2D;
+        else m_bindTarget = gl::TEXTURE_2D_MULTISAMPLE;
+    }
     else if(target == Cube) m_bindTarget = gl::TEXTURE_CUBE_MAP;
 
     makeBlank();
@@ -44,6 +49,7 @@ bool Texture::loadFrom(std::string identifier) {
     m_target = Simple;
     m_bindTarget = gl::TEXTURE_2D;
     m_type = Colour;
+    m_samples = 0;
     makeTexture();
 
     auto node = ResourceRegistry::get<XMLResource>(
@@ -68,7 +74,7 @@ void Texture::bindToUnit(int which) {
     ErrorTracker::trackFrom("Texture binding (before all)");
     gl::ActiveTexture(gl::TEXTURE0 + which);
     ErrorTracker::trackFrom("Texture binding (after activate)");
-    gl::BindTexture(gl::TEXTURE_2D, m_id);
+    gl::BindTexture(m_bindTarget, m_id);
     ErrorTracker::trackFrom("Texture binding (after bind)");
 }
 
@@ -100,7 +106,7 @@ void Texture::reset(int width, int height, float *data) {
 
     gl::TexImage2D(gl::TEXTURE_2D,
         // level 0, no mipmapping...
-        0, 
+        0,
         // internal format: RGBA, floats.
         iformat,
         // width and height
@@ -123,22 +129,28 @@ void Texture::makeTexture() {
     ErrorTracker::trackFrom("Texture creation (after gen)");
 
     // XXX: for now, just clear all texture bindings
+    // In the future, clear only the current texture binding
     TextureContext::instance()->clearBindings();
 
     gl::BindTexture(m_bindTarget, m_id);
     ErrorTracker::trackFrom("Texture creation (after bind)");
 
-    gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE);
-    ErrorTracker::trackFrom("Texture creation (after WRAP_S parameter)");
-    gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE);
-    ErrorTracker::trackFrom("Texture creation (after WRAP_T parameter)");
-    if(m_target == Cube) 
-        gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_R, gl::CLAMP_TO_EDGE);
-    ErrorTracker::trackFrom("Texture creation (after WRAP_R parameter)");
-    gl::TexParameteri(m_bindTarget, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
-    ErrorTracker::trackFrom("Texture creation (after MIN_FILTER parameter)");
-    gl::TexParameteri(m_bindTarget, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
-    ErrorTracker::trackFrom("Texture creation (after MAG_FILTER parameter)");
+    if(m_samples == 0) {
+        gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_S, gl::CLAMP_TO_EDGE);
+        ErrorTracker::trackFrom("Texture creation (after WRAP_S parameter)");
+        gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_T, gl::CLAMP_TO_EDGE);
+        ErrorTracker::trackFrom("Texture creation (after WRAP_T parameter)");
+        if(m_target == Cube)
+            gl::TexParameteri(m_bindTarget, gl::TEXTURE_WRAP_R,
+                gl::CLAMP_TO_EDGE);
+        ErrorTracker::trackFrom("Texture creation (after WRAP_R parameter)");
+        gl::TexParameteri(m_bindTarget, gl::TEXTURE_MIN_FILTER, gl::LINEAR);
+        ErrorTracker::trackFrom(
+            "Texture creation (after MIN_FILTER parameter)");
+        gl::TexParameteri(m_bindTarget, gl::TEXTURE_MAG_FILTER, gl::LINEAR);
+        ErrorTracker::trackFrom(
+            "Texture creation (after MAG_FILTER parameter)");
+    }
 }
 
 void Texture::makeBlank() {
@@ -163,23 +175,33 @@ void Texture::makeBlank() {
     }
     ErrorTracker::trackFrom("Texture makeBlank (before all)");
     if(m_target == Simple) {
-        gl::TexImage2D(gl::TEXTURE_2D,
-            // level 0, no mipmapping...
-            0, 
-            // internal format: RGBA, floats.
-            iformat,
-            // width and height
-            m_width, m_height,
-            // border?
-            0,
-            // input format
-            format,
-            // input
-            gl::UNSIGNED_BYTE,
-            // input data
-            nullptr
-        );
-        ErrorTracker::trackFrom("Texture makeBlank (after simple image)");
+        if(m_samples == 0) {
+            gl::TexImage2D(gl::TEXTURE_2D,
+                // level 0, no mipmapping...
+                0,
+                // internal format: RGBA, floats.
+                iformat,
+                // width and height
+                m_width, m_height,
+                // border?
+                0,
+                // input format
+                format,
+                // input
+                gl::UNSIGNED_BYTE,
+                // input data
+                nullptr
+            );
+            ErrorTracker::trackFrom("Texture makeBlank (after simple image)");
+        }
+        else {
+            gl::TexImage2DMultisample(gl::TEXTURE_2D_MULTISAMPLE,
+                m_samples,
+                iformat,
+                // width and height
+                m_width, m_height,
+                gl::TRUE_);
+        }
     }
     else if(m_target == Cube) {
         GLuint targets[6] = {
@@ -192,7 +214,7 @@ void Texture::makeBlank() {
         for(int i = 0; i < 6; i ++) {
             gl::TexImage2D(targets[i],
                 // level 0, no mipmapping...
-                0, 
+                0,
                 // internal format: RGBA, floats.
                 iformat,
                 // width and height
@@ -210,7 +232,12 @@ void Texture::makeBlank() {
         }
     }
 
-    gl::BindTexture(gl::TEXTURE_2D, 0);
+    if(m_samples == 0) {
+        gl::BindTexture(gl::TEXTURE_2D, 0);
+    }
+    else {
+        gl::BindTexture(gl::TEXTURE_2D_MULTISAMPLE, 0);
+    }
     ErrorTracker::trackFrom("Texture makeBlank (after clear)");
 }
 

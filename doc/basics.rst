@@ -281,6 +281,7 @@ with all the default values present would be as follows::
         </general>
         <video>
             <resolution width="800" height="600" bpp="0" fullscreen="false" />
+            <msaa enabled="false" samples="4" />
         </video>
     </kriti>
 

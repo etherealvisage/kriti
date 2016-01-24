@@ -4,6 +4,8 @@
 
 #include "../math/ViewGenerator.h"
 
+#include "../interface/Video.h"
+
 #include "../MessageSystem.h"
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
@@ -31,7 +33,8 @@ bool Pipeline::loadFrom(std::string identifier) {
 
 void Pipeline::render() {
     Uniforms u;
-    u.setParam("time", static_cast<int>(TimeValue::current().toMsec()));
+    u.setParam("u_time", static_cast<int>(TimeValue::current().toMsec()));
+    u.setParam("u_msaaSamples", Interface::Video::instance()->aasamples());
 
     m_rendered.clear();
     render(u, m_lastStage);

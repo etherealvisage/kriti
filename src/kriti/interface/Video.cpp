@@ -63,6 +63,14 @@ void Video::setVideoMode() {
     bool fullscreen = videoconfig.first_element_by_path(
         "/fullscreen").text().as_bool(false);
 
+    m_msaa = false;
+    m_aasamples = 1;
+    auto aa_node = videoconfig.first_element_by_path("msaa");
+    if(aa_node) {
+        m_msaa = aa_node.attribute("enabled").as_bool(false);
+        m_aasamples = aa_node.attribute("samples").as_int(4);
+    }
+
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
     // Want a core profile instead of a compatability context.
@@ -77,11 +85,18 @@ void Video::setVideoMode() {
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-    /*if(Config::Tree::instance()->getBool("video.msaa.enabled", false)) {
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 
-            Config::Tree::instance()->getInt("video.msaa.samples", 4));
-    }*/
+    if(m_msaa) {
+        int ret = SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        if(ret != 0) {
+            Message3(Interface, Fatal,
+                "Failed to set MULTISAMPLEBUFFERS to 1");
+        }
+        ret = SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, m_aasamples);
+        if(ret != 0) {
+            Message3(Interface, Fatal,
+                "Failed to set MULTISAMPLESAMPLES to " << m_aasamples);
+        }
+    }
 
     int flags = SDL_WINDOW_OPENGL;
     if(fullscreen) flags |= SDL_WINDOW_FULLSCREEN;
@@ -141,6 +156,16 @@ void Video::initializeGL() {
 
         Message3(Interface, Fatal, "Profiling enabled, but "
             "GL_ARB_timer_query extension not present.");
+    }
+
+    if(m_msaa) {
+        if(!gl::exts::var_ARB_texture_multisample) {
+            Message3(Interface, Fatal,
+                "MSAA enabled but var_ARB_texture_multisample not present!");
+        }
+        else {
+            gl::Enable(gl::MULTISAMPLE);
+        }
     }
 
     /* Need GL_ARB_explicit_attrib_location for shaders; it's in GL 3.3.*/

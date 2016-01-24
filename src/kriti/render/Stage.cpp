@@ -157,14 +157,29 @@ void Stage::initialize(int outputs, int width, int height) {
     m_framebuffer = boost::make_shared<Framebuffer>();
 
     for(int i = 0; i < outputs; i ++) {
+        boost::shared_ptr<Texture> texture;
+        if(Interface::Video::instance()->msaa()) {
+            texture = boost::make_shared<Texture>(Texture::Colour,
+                Texture::Simple, m_width, m_height,
+                Interface::Video::instance()->aasamples());
+        }
+        else {
+            texture = boost::make_shared<Texture>(Texture::Colour,
+                Texture::Simple, m_width, m_height);
+        }
         m_framebuffer->attach(
-            Framebuffer::Attachment(Framebuffer::ColourBuffer0 + i),
-            boost::make_shared<Texture>(Texture::Colour, Texture::Simple,
-                m_width, m_height));
+            Framebuffer::Attachment(Framebuffer::ColourBuffer0 + i), texture);
     }
-    m_framebuffer->attach(Framebuffer::DepthBuffer, 
-        boost::make_shared<Renderbuffer>(Renderbuffer::Depth, m_width,
-            m_height));
+    boost::shared_ptr<Renderbuffer> renderbuffer;
+    if(Interface::Video::instance()->msaa()) {
+        renderbuffer = boost::make_shared<Renderbuffer>(Renderbuffer::Depth,
+            m_width, m_height, Interface::Video::instance()->aasamples());
+    }
+    else {
+        renderbuffer = boost::make_shared<Renderbuffer>(Renderbuffer::Depth,
+            m_width, m_height);
+    }
+    m_framebuffer->attach(Framebuffer::DepthBuffer, renderbuffer);
 
     Profile::Tracker::instance()->addGLTimer(m_name);
 

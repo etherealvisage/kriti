@@ -177,6 +177,7 @@ namespace gl
 		extern LoadTest var_ARB_timer_query;
 		extern LoadTest var_ARB_explicit_attrib_location;
 		extern LoadTest var_ARB_viewport_array;
+		extern LoadTest var_ARB_texture_multisample;
 		
 	} //namespace exts
 	enum
@@ -197,6 +198,28 @@ namespace gl
 		VIEWPORT_BOUNDS_RANGE            = 0x825D,
 		VIEWPORT_INDEX_PROVOKING_VERTEX  = 0x825F,
 		VIEWPORT_SUBPIXEL_BITS           = 0x825C,
+		
+		INT_SAMPLER_2D_MULTISAMPLE       = 0x9109,
+		INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910C,
+		MAX_COLOR_TEXTURE_SAMPLES        = 0x910E,
+		MAX_DEPTH_TEXTURE_SAMPLES        = 0x910F,
+		MAX_INTEGER_SAMPLES              = 0x9110,
+		MAX_SAMPLE_MASK_WORDS            = 0x8E59,
+		PROXY_TEXTURE_2D_MULTISAMPLE     = 0x9101,
+		PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY = 0x9103,
+		SAMPLER_2D_MULTISAMPLE           = 0x9108,
+		SAMPLER_2D_MULTISAMPLE_ARRAY     = 0x910B,
+		SAMPLE_MASK                      = 0x8E51,
+		SAMPLE_MASK_VALUE                = 0x8E52,
+		SAMPLE_POSITION                  = 0x8E50,
+		TEXTURE_2D_MULTISAMPLE           = 0x9100,
+		TEXTURE_2D_MULTISAMPLE_ARRAY     = 0x9102,
+		TEXTURE_BINDING_2D_MULTISAMPLE   = 0x9104,
+		TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY = 0x9105,
+		TEXTURE_FIXED_SAMPLE_LOCATIONS   = 0x9107,
+		TEXTURE_SAMPLES                  = 0x9106,
+		UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE = 0x910A,
+		UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE_ARRAY = 0x910D,
 		
 		_2D                              = 0x0600,
 		_2_BYTES                         = 0x1407,
@@ -1393,6 +1416,11 @@ namespace gl
 		extern void (CODEGEN_FUNCPTR *ViewportIndexedf)(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h);
 		extern void (CODEGEN_FUNCPTR *ViewportIndexedfv)(GLuint index, const GLfloat * v);
 		
+		extern void (CODEGEN_FUNCPTR *GetMultisamplefv)(GLenum pname, GLuint index, GLfloat * val);
+		extern void (CODEGEN_FUNCPTR *SampleMaski)(GLuint maskNumber, GLbitfield mask);
+		extern void (CODEGEN_FUNCPTR *TexImage2DMultisample)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations);
+		extern void (CODEGEN_FUNCPTR *TexImage3DMultisample)(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations);
+		
 		extern void (CODEGEN_FUNCPTR *Accum)(GLenum op, GLfloat value);
 		extern void (CODEGEN_FUNCPTR *AlphaFunc)(GLenum func, GLfloat ref);
 		extern void (CODEGEN_FUNCPTR *Begin)(GLenum mode);
@@ -2067,6 +2095,11 @@ namespace gl
 	inline void ViewportArrayv(GLuint first, GLsizei count, const GLfloat * v){_detail::ViewportArrayv(first, count, v);}
 	inline void ViewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h){_detail::ViewportIndexedf(index, x, y, w, h);}
 	inline void ViewportIndexedfv(GLuint index, const GLfloat * v){_detail::ViewportIndexedfv(index, v);}
+	
+	inline void GetMultisamplefv(GLenum pname, GLuint index, GLfloat * val){_detail::GetMultisamplefv(pname, index, val);}
+	inline void SampleMaski(GLuint maskNumber, GLbitfield mask){_detail::SampleMaski(maskNumber, mask);}
+	inline void TexImage2DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLboolean fixedsamplelocations){_detail::TexImage2DMultisample(target, samples, internalformat, width, height, fixedsamplelocations);}
+	inline void TexImage3DMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLboolean fixedsamplelocations){_detail::TexImage3DMultisample(target, samples, internalformat, width, height, depth, fixedsamplelocations);}
 	
 	inline void Accum(GLenum op, GLfloat value){_detail::Accum(op, value);}
 	inline void AlphaFunc(GLenum func, GLfloat ref){_detail::AlphaFunc(func, ref);}

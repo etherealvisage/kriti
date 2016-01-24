@@ -38,9 +38,12 @@ void Framebuffer::attach(Attachment where,
     gl::BindFramebuffer(gl::DRAW_FRAMEBUFFER, m_id);
     ErrorTracker::trackFrom("Framebuffer texture attach (after bind)");
     // TODO: support levels other than zero.
-    // TODO: support targets other than GL_TEXTURE_2D
+    // TODO: support targets other than GL_TEXTURE_2D{,MULTISAMPLE}
+    GLenum type = gl::TEXTURE_2D;
+    if(texture->samples() != 0) type = gl::TEXTURE_2D_MULTISAMPLE;
     gl::FramebufferTexture2D(gl::DRAW_FRAMEBUFFER, convert(where),
-        gl::TEXTURE_2D, texture->id(), 0);
+        type, texture->id(), 0);
+
     ErrorTracker::trackFrom("Framebuffer texture attach (after texture)");
     gl::BindFramebuffer(gl::DRAW_FRAMEBUFFER, 0);
     ErrorTracker::trackFrom("Framebuffer texture attach (after clear)");

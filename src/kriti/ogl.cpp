@@ -93,6 +93,7 @@ namespace gl
 		LoadTest var_ARB_timer_query;
 		LoadTest var_ARB_explicit_attrib_location;
 		LoadTest var_ARB_viewport_array;
+		LoadTest var_ARB_texture_multisample;
 		
 	} //namespace exts
 	
@@ -161,6 +162,29 @@ namespace gl
 			if(!ViewportIndexedf) ++numFailed;
 			ViewportIndexedfv = reinterpret_cast<PFNVIEWPORTINDEXEDFV>(IntGetProcAddress("glViewportIndexedfv"));
 			if(!ViewportIndexedfv) ++numFailed;
+			return numFailed;
+		}
+		
+		typedef void (CODEGEN_FUNCPTR *PFNGETMULTISAMPLEFV)(GLenum, GLuint, GLfloat *);
+		PFNGETMULTISAMPLEFV GetMultisamplefv = 0;
+		typedef void (CODEGEN_FUNCPTR *PFNSAMPLEMASKI)(GLuint, GLbitfield);
+		PFNSAMPLEMASKI SampleMaski = 0;
+		typedef void (CODEGEN_FUNCPTR *PFNTEXIMAGE2DMULTISAMPLE)(GLenum, GLsizei, GLenum, GLsizei, GLsizei, GLboolean);
+		PFNTEXIMAGE2DMULTISAMPLE TexImage2DMultisample = 0;
+		typedef void (CODEGEN_FUNCPTR *PFNTEXIMAGE3DMULTISAMPLE)(GLenum, GLsizei, GLenum, GLsizei, GLsizei, GLsizei, GLboolean);
+		PFNTEXIMAGE3DMULTISAMPLE TexImage3DMultisample = 0;
+		
+		static int Load_ARB_texture_multisample()
+		{
+			int numFailed = 0;
+			GetMultisamplefv = reinterpret_cast<PFNGETMULTISAMPLEFV>(IntGetProcAddress("glGetMultisamplefv"));
+			if(!GetMultisamplefv) ++numFailed;
+			SampleMaski = reinterpret_cast<PFNSAMPLEMASKI>(IntGetProcAddress("glSampleMaski"));
+			if(!SampleMaski) ++numFailed;
+			TexImage2DMultisample = reinterpret_cast<PFNTEXIMAGE2DMULTISAMPLE>(IntGetProcAddress("glTexImage2DMultisample"));
+			if(!TexImage2DMultisample) ++numFailed;
+			TexImage3DMultisample = reinterpret_cast<PFNTEXIMAGE3DMULTISAMPLE>(IntGetProcAddress("glTexImage3DMultisample"));
+			if(!TexImage3DMultisample) ++numFailed;
 			return numFailed;
 		}
 		
@@ -2803,10 +2827,11 @@ namespace gl
 			
 			void InitializeMappingTable(std::vector<MapEntry> &table)
 			{
-				table.reserve(3);
+				table.reserve(4);
 				table.push_back(MapEntry("GL_ARB_timer_query", &exts::var_ARB_timer_query, _detail::Load_ARB_timer_query));
 				table.push_back(MapEntry("GL_ARB_explicit_attrib_location", &exts::var_ARB_explicit_attrib_location));
 				table.push_back(MapEntry("GL_ARB_viewport_array", &exts::var_ARB_viewport_array, _detail::Load_ARB_viewport_array));
+				table.push_back(MapEntry("GL_ARB_texture_multisample", &exts::var_ARB_texture_multisample, _detail::Load_ARB_texture_multisample));
 			}
 			
 			void ClearExtensionVars()
@@ -2814,6 +2839,7 @@ namespace gl
 				exts::var_ARB_timer_query = exts::LoadTest();
 				exts::var_ARB_explicit_attrib_location = exts::LoadTest();
 				exts::var_ARB_viewport_array = exts::LoadTest();
+				exts::var_ARB_texture_multisample = exts::LoadTest();
 			}
 			
 			void LoadExtByName(std::vector<MapEntry> &table, const char *extensionName)
