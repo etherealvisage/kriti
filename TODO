@@ -1,11 +1,10 @@
-Meta:
-    - Sort out licensing for src/assimp and src/pugixml                             (short)
 GUI:
     + stateful GUI, i.e. registry, persistence, etc.                                (medium)
     - rearchitect to allow for multiple GUI items per Renderable                    (medium)
     - support [simple] font kerning                                                 (medium)
     - GUI styling support                                                           (medium)
     - font text wrapping and styling                                                (medium)
+
 Rendering:
     + skeleton-based animation support                                              (long)
         - how many bones per vertex should be supported?
@@ -19,3 +18,4 @@ Rendering:
     - transform feedback infrastructure for accelerated rendering etc.              (long)
     - uniform buffer object support                                                 (medium)
     - implement support for multi-pass rendering on the same rendering stage        (medium)
+    - deterministic rendering order in RenderableContainer                          (medium)
