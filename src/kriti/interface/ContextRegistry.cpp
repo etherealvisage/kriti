@@ -24,6 +24,7 @@ boost::shared_ptr<State::Context> ContextRegistry::peek() const {
 } 
 
 void ContextRegistry::run() {
+    Kriti::TimeValue lastFrame;
     while(!m_contextList.empty()) {
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
@@ -33,7 +34,10 @@ void ContextRegistry::run() {
 
         State::DelayProxy::instance()->processQueued();
 
-        fire("new_frame", boost::make_tuple());
+        Kriti::TimeValue thisFrame = Kriti::TimeValue::current();
+        if(!lastFrame.set()) lastFrame = thisFrame;
+        fire("new_frame", boost::make_tuple(thisFrame-lastFrame));
+        lastFrame = thisFrame;
 
         for(auto &context : m_contextList) {
             context->processQueued();
