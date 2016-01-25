@@ -19,6 +19,10 @@ void Uniforms::setParam(std::string name, const Math::Vector &vector) {
     m_vectors[name] = vector;
 }
 
+void Uniforms::setParam(std::string name, const Math::Colour &colour) {
+    m_colours[name] = colour;
+}
+
 void Uniforms::setParam(std::string name, const Math::Matrix &matrix) {
     m_matrices[name] = matrix;
 }
@@ -40,6 +44,10 @@ void Uniforms::set(boost::shared_ptr<Program> program) const {
         program->setUniform(v.first, v.second);
     }
 
+    for(auto &c : m_colours) {
+        program->setUniform(c.first, c.second);
+    }
+
     for(auto &m : m_matrices) {
         program->setUniform(m.first, m.second);
     }
@@ -47,6 +55,19 @@ void Uniforms::set(boost::shared_ptr<Program> program) const {
     for(auto &t : m_textures) {
         program->setUniform(t.first, t.second);
     }
+}
+
+void Uniforms::add(const Uniforms &other) {
+    for(auto &it : other.m_ints) m_ints[it.first] = it.second;
+    for(auto &it : other.m_floats) m_floats[it.first] = it.second;
+    for(auto &it : other.m_vectors) m_vectors[it.first] = it.second;
+    for(auto &it : other.m_colours) m_colours[it.first] = it.second;
+    for(auto &it : other.m_matrices) m_matrices[it.first] = it.second;
+    for(auto &it : other.m_textures) m_textures[it.first] = it.second;
+}
+
+void Uniforms::add(const boost::shared_ptr<Uniforms> &other) {
+    add(*other);
 }
 
 }  // namespace Render

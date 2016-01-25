@@ -5,6 +5,7 @@
 
 #include "OutlineRegistry.h"
 #include "MouseState.h"
+#include "Style.fwd"
 
 #include "../math/Vector.h"
 #include "../math/AffineTransformation.h"
@@ -19,7 +20,9 @@ private:
     /// stores the calculated size of the layout item.
     Math::Vector m_pos, m_size, m_scale;
     MouseState m_mouseState;
+    boost::shared_ptr<Style> m_style;
 public:
+    LayoutItem();
     virtual ~LayoutItem() {}
 
     virtual Math::Vector minSize() = 0;
@@ -41,13 +44,16 @@ public:
     /// should be re-implemented in derived types
     virtual void flush(boost::shared_ptr<Render::RenderableContainer>
         __attribute__((unused)) container) {}
-    
+
     Math::Vector pos() const { return m_pos; }
     Math::Vector size() const { return m_size; }
     Math::Vector scale() const { return m_scale; }
 
     MouseState mouseState() const { return m_mouseState; }
     void updateMouseState(MouseState newms) { m_mouseState = newms; }
+
+    boost::shared_ptr<Style> style() const { return m_style; }
+    void changeStyle(boost::shared_ptr<Style> style) { m_style = style; }
 protected:
     virtual void updated(boost::shared_ptr<OutlineRegistry> registry,
         Math::Vector clipStart, Math::Vector clipEnd) = 0;

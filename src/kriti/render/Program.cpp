@@ -63,6 +63,14 @@ Program::Program(std::string vsName, std::string fsName, std::string gsName)
     }
 }
 
+void Program::setUniform(const std::string &name, const Math::Colour &value) {
+    GLint location = getUniformLocation(name);
+    if(location != -1) {
+        gl::Uniform4f(location, value.r(), value.g(), value.b(), value.a());
+        ErrorTracker::trackFrom("Program set uniform (after colour set)");
+    }
+}
+
 void Program::setUniform(const std::string &name, const Math::Vector &value) {
     GLint location = getUniformLocation(name);
     if(location != -1) {

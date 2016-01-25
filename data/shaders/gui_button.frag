@@ -16,6 +16,13 @@ uniform float button_activation, button_click;
 uniform vec3 gui_clip_start;
 uniform vec3 gui_clip_end;
 
+uniform float gui_style_button_border_width;
+uniform vec4 gui_style_button_panel_activated;
+uniform vec4 gui_style_button_panel_deactivated;
+uniform vec4 gui_style_button_panel_clicked;
+uniform vec4 gui_style_button_border_activated;
+uniform vec4 gui_style_button_border_deactivated;
+
 void main() {
     if(v_position.x > gui_clip_end.x || v_position.x < gui_clip_start.x
         || v_position.y > gui_clip_end.y || v_position.y < gui_clip_start.y) {
@@ -23,23 +30,22 @@ void main() {
         discard;
     }
 
-    const float border_width = 0.3f;
     float xd = (min(v_tex.x, 1.0f-v_tex.x) * gui_xdpi);
     float yd = (min(v_tex.y, 1.0f-v_tex.y) * gui_ydpi);
 
     float md = min(xd, yd);
-    if(md < border_width) {
-        vec4 activated = vec4(1.0f, 1.0f, 0.0f, 1.0f);
-        vec4 deactivated = vec4(0.1f, 0.1f, 0.0f, 1.0f);
-        vec4 border = mix(deactivated, activated, button_activation);
-        fragColour = mix(vec4(0.4f, 0.4f, 0.0f, 1.0f), border,
-            md/border_width);
+    if(md < gui_style_button_border_width) {
+        vec4 border = mix(gui_style_button_border_deactivated,
+            gui_style_button_border_activated, button_activation);
+        fragColour = mix(gui_style_button_panel_deactivated, border,
+            md/gui_style_button_border_width);
     }
     else {
         vec4 activated = vec4(0.1f, 0.1f, 0.0f, 1.0f);
         vec4 deactivated = vec4(0.4f, 0.4f, 0.0f, 1.0f);
-        fragColour = mix(deactivated, activated, button_activation);
-        vec4 clicked = vec4(0.4f, 0.4f, 0.4f, 1.0f);
-        fragColour = mix(fragColour, clicked, button_click/2.0f);
+        fragColour = mix(gui_style_button_panel_deactivated,
+            gui_style_button_panel_activated, button_activation);
+        fragColour = mix(fragColour,
+            gui_style_button_panel_clicked, button_click/2.0f);
     }
 }

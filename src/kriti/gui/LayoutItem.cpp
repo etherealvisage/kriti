@@ -1,9 +1,16 @@
 #include "LayoutItem.h"
 
+#include "Style.h"
+
 #include "../MessageSystem.h"
+#include "../ResourceRegistry.h"
 
 namespace Kriti {
 namespace GUI {
+
+LayoutItem::LayoutItem() {
+    m_style = ResourceRegistry::get<Style>("default");
+}
 
 void LayoutItem::update(boost::shared_ptr<OutlineRegistry> registry,
     Math::Vector pos, Math::Vector size, Math::Vector scale,

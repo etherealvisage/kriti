@@ -7,6 +7,7 @@
 
 #include "Shader.h"
 
+#include "../math/Colour.h"
 #include "../math/Matrix.h"
 
 namespace Kriti {
@@ -30,6 +31,7 @@ private:
 public:
     Program(std::string vsName, std::string fsName, std::string gsName = "");
     
+    void setUniform(const std::string &name, const Math::Colour &colour);
     void setUniform(const std::string &name, const Math::Vector &vector);
     void setUniform(const std::string &name, const Math::Matrix &matrix);
     void setUniform(const std::string &name, int value);

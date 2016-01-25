@@ -2,7 +2,7 @@
 # Perl script by DWK to create a new .cpp/.h combination template
 # Updated by ethereal to create .fwd file instead
 
-my $project = 'Pineseed';
+my $project = 'Kriti';
 
 if(scalar(@ARGV) < 1) {
     die "Usage: $0 <C++-name-of-class>\n" .
@@ -13,7 +13,7 @@ process_class($ARGV[0]);
 
 sub process_class {
     my $class = shift;
-    my $prefix = "src/";
+    my $prefix = "src/kriti/";
     
     while($class =~ /([^:]+)::/g) {
         $prefix .= lc($1) . '/';

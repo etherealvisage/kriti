@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Math {
+
+class Colour;
+
+}  // namespace Math
+}  // namespace Kriti
+

@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace GUI {
+
+class Style;
+
+}  // namespace GUI
+}  // namespace Kriti
+

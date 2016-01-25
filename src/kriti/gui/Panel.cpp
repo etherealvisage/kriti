@@ -1,6 +1,7 @@
 #include "Panel.h"
 #include "Scale.h"
 #include "Layout.h"
+#include "Style.h"
 
 #include "../render/RenderableFactory.h"
 #include "../render/Stage.h"
@@ -72,7 +73,9 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry,
         clipStart);
     m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_end",
         clipEnd);
+    m_renderable->renderSequence(0)->extraParams().add(style()->uniforms());
 
+    // TODO: make this not framerate-specific
     if(mouseState().posSet()) {
         m_activation = std::pow(0.3, m_activation)/2.0;
     }

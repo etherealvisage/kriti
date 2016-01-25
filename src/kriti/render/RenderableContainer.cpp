@@ -22,6 +22,7 @@ void RenderableContainer::iterate(IteratorType iterator,
         container->iterate(iterator, visited);
     }
 
+    // TODO: depth-sort these?
     for(auto &renderable : m_transRenderables) {
         if(visited.find(renderable) != visited.end()) continue;
         visited.insert(renderable);

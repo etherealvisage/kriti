@@ -1,10 +1,10 @@
 Meta:
     - Sort out licensing for src/assimp and src/pugixml                             (short)
 GUI:
-    + multiple GUI styles                                                           (medium)
     + stateful GUI, i.e. registry, persistence, etc.                                (medium)
+    - rearchitect to allow for multiple GUI items per Renderable                    (medium)
     - support [simple] font kerning                                                 (medium)
-    - GUI styling support                                                           (long)
+    - GUI styling support                                                           (medium)
     - font text wrapping and styling                                                (medium)
 Rendering:
     + skeleton-based animation support                                              (long)
