@@ -11,7 +11,7 @@ Keyboard::Keyboard() {
 }
 
 void Keyboard::keyEvent(SDL_Event event) {
-    if(event.type == SDL_KEYDOWN) {
+    if(event.type == SDL_KEYDOWN && event.key.repeat == 0) {
         ContextRegistry::instance()->fire("key_down",
             boost::make_tuple(event.key.keysym.sym));
     }
