@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Interface {
+
+class TextInput;
+
+}  // namespace Interface
+}  // namespace Kriti
+
