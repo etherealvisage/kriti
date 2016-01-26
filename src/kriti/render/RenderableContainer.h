@@ -6,6 +6,7 @@
 #include <boost/function.hpp>
 
 #include "Renderable.h"
+#include "UniformHook.h"
 
 namespace Kriti {
 namespace Render {
@@ -16,6 +17,8 @@ public:
 private:
     std::set<boost::shared_ptr<Renderable>> m_renderables, m_transRenderables;
     std::set<boost::shared_ptr<RenderableContainer>> m_containers;
+
+    std::vector<boost::shared_ptr<UniformHook>> m_uniformHooks;
 public:
     void add(boost::shared_ptr<Renderable> renderable)
         { m_renderables.insert(renderable); }
@@ -30,9 +33,18 @@ public:
     void remove(boost::shared_ptr<RenderableContainer> container)
         { m_containers.erase(m_containers.find(container)); }
 
+    void addUniformHook(boost::shared_ptr<UniformHook> hook)
+        { m_uniformHooks.push_back(hook); }
+
+    void draw(Uniforms &globalParams, 
+        std::map<boost::weak_ptr<Material>, Uniforms> &materialParams);
+
     void iterate(IteratorType iterator);
 private:
     void iterate(IteratorType iterator,
+        std::set<boost::shared_ptr<Renderable>> &visited);
+    void draw(Uniforms &globalParams, 
+        std::map<boost::weak_ptr<Material>, Uniforms> &materialParams,
         std::set<boost::shared_ptr<Renderable>> &visited);
 };
 

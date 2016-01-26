@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace Render {
+
+class ConstantUniformHook;
+
+}  // namespace Render
+}  // namespace Kriti
+

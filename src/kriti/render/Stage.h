@@ -8,7 +8,6 @@
 
 #include "Renderable.h"
 #include "RenderableContainer.h"
-#include "UniformHook.h"
 #include "Framebuffer.h"
 
 #include "../Resource.h"
@@ -34,8 +33,6 @@ private:
 
     int m_width, m_height;
     std::string m_name;
-
-    std::vector<boost::shared_ptr<UniformHook>> m_uniformHooks;
 public:
     Stage();
     Stage(int outputs, int width, int height, std::string name);
@@ -63,9 +60,6 @@ public:
         { return m_framebuffer; }
 
     std::string name() const { return m_name; }
-
-    void addUniformHook(boost::shared_ptr<UniformHook> hook)
-        { m_uniformHooks.push_back(hook); }
 
     void render(Uniforms &globalParams, bool isLast = false);
 private:

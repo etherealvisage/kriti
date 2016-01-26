@@ -126,10 +126,6 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
         gl::DrawBuffer(gl::BACK);
     }
 
-    for(auto &hook : m_uniformHooks) {
-        hook->hook(globalParams);
-    }
-
     MaterialParams materialParams;
 
     for(auto &mapping : m_attachments) {
@@ -142,9 +138,7 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
 
     gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 
-    m_renderables->iterate(
-        boost::bind(&Stage::renderRenderable, this, globalParams,
-            materialParams, _1));
+    m_renderables->draw(globalParams, materialParams);
 
     Profile::Tracker::instance()->endGLTimer(m_name);
 }

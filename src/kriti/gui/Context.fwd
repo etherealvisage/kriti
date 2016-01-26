@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace GUI {
+
+class Context;
+
+}  // namespace GUI
+}  // namespace Kriti
+
