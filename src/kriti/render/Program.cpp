@@ -111,7 +111,7 @@ void Program::setUniform(const std::string &name,
 
     GLint location = getUniformLocation(name);
     if(location != -1) {
-        int index = TextureContext::instance()->bind(texture);
+        int index = Global<TextureContext>()->bind(texture);
         gl::Uniform1i(location, index);
         ErrorTracker::trackFrom("Program set uniform (after texture set)");
     }
@@ -124,7 +124,7 @@ void Program::activate() {
     ErrorTracker::trackFrom("Program activate (before all)");
     gl::UseProgram(m_programID);
     ErrorTracker::trackFrom("Program activate (after activation)");
-    TextureContext::instance()->nextProgram();
+    Global<TextureContext>()->nextProgram();
 }
 
 GLint Program::getUniformLocation(const std::string &name) {

@@ -10,8 +10,6 @@
 namespace Kriti {
 namespace GUI {
 
-/* NOTE: it's not good if multiple KeyboardFocuses are being used at the same
-    time. This should either be stored in a singleton or be singleton itself */
 class KeyboardFocus {
 private:
     boost::shared_ptr<KeyboardFocusTarget> m_target;

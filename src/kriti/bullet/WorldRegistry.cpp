@@ -3,8 +3,6 @@
 namespace Kriti {
 namespace Bullet {
 
-boost::shared_ptr<WorldRegistry> WorldRegistry::s_singleton;
-
 WorldRegistry::WorldRegistry() {
 
 }

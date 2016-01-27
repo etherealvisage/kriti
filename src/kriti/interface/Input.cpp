@@ -4,19 +4,16 @@
 namespace Kriti {
 namespace Interface {
 
-boost::shared_ptr<Input> Input::s_singleton;
-
 Input::Input() {
     m_keyboard = new Keyboard();
     m_mouse = new Mouse();
-
-    TextInput::instance();
+    m_textInput = new TextInput();
 }
 
 Input::~Input() {
+    delete m_textInput;
     delete m_keyboard;
     delete m_mouse;
-    TextInput::destroy();
 }
 
 }  // namespace Interface

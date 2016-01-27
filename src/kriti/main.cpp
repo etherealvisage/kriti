@@ -9,11 +9,13 @@
 #include "gui/Loader.h"
 #include "render/TextureContext.h"
 #include "scene/Model.h"
+#include "state/DelayProxy.h"
 
 #include "ResourceRegistry.h"
 #include "XMLResource.h"
 #include "AssimpWrapper.h"
 #include "MessageSystem.h"
+#include "Globals.h"
 
 extern void gameEntryPoint();
 
@@ -36,36 +38,41 @@ int main() {
     );
 
     /* Initialize profiling infrastructure. */
-    Profile::Tracker::instance();
+    GlobalHelper<Profile::Tracker>::make();
 
-    // explicit calls to create the singleton instances.
-    Interface::Video::instance();
-    Interface::ContextRegistry::instance();
-    Interface::Input::instance();
+    // Create Interface objects
+    GlobalHelper<Interface::Video>::make();
+    GlobalHelper<Interface::ContextRegistry>::make();
+    GlobalHelper<Interface::Input>::make();
 
     // initialize rendering infrastructure
-    Render::TextureContext::instance();
+    GlobalHelper<Render::TextureContext>::make();
 
     // initialize GUI system
-    GUI::Loader::instance();
+    GlobalHelper<GUI::Loader>::make();
 
     // initialize the Open Asset Import Library wrapper
-    AssimpWrapper::instance();
+    GlobalHelper<AssimpWrapper>::make();
+
+    // initialize state system
+    GlobalHelper<State::DelayProxy>::make();
 
     // run application code
     gameEntryPoint();
 
-    GUI::Loader::destroy();
+    GlobalHelper<State::DelayProxy>::destroy();
 
-    Render::TextureContext::destroy();
+    GlobalHelper<GUI::Loader>::destroy();
 
-    Interface::Input::destroy();
-    Interface::ContextRegistry::destroy();
-    Interface::Video::destroy();
+    GlobalHelper<Render::TextureContext>::destroy();
+
+    GlobalHelper<Interface::Input>::destroy();
+    GlobalHelper<Interface::ContextRegistry>::destroy();
+    GlobalHelper<Interface::Video>::destroy();
 
     ResourceRegistry::unload();
 
-    Profile::Tracker::destroy();
+    GlobalHelper<Profile::Tracker>::destroy();
 
     MessageSystem::closeLogFile();
 

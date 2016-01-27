@@ -18,10 +18,10 @@ void KeyboardFocus::changeFocus(
         m_target->gainedFocus(*this);
 
         if(m_target->wantsText()) {
-            Interface::TextInput::instance()->begin();
+            Interface::TextInput::begin();
         }
         else {
-            Interface::TextInput::instance()->end();
+            Interface::TextInput::end();
         }
     }
 }

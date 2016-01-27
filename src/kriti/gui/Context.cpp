@@ -9,6 +9,7 @@
 #include "../math/ViewGenerator.h"
 #include "../state/Context.h"
 #include "../TimeValue.h"
+#include "../Globals.h"
 
 namespace Kriti {
 namespace GUI {
@@ -20,7 +21,7 @@ Context::Context() {
     m_mouseInteractor = boost::make_shared<MouseInteractor>();
     m_mouseCursor = boost::make_shared<MouseCursor>();
 
-    auto aratio = Interface::Video::instance()->aspectRatio();
+    auto aratio = Global<Interface::Video>()->aspectRatio();
 
     auto camhook = boost::make_shared<Render::ConstantUniformHook>();
     camhook->uniforms().setParam("u_camera",

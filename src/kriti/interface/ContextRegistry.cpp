@@ -7,8 +7,6 @@
 namespace Kriti {
 namespace Interface {
 
-boost::shared_ptr<ContextRegistry> ContextRegistry::s_singleton;
-
 ContextRegistry::ContextRegistry() {
     m_sdlContext = boost::make_shared<State::Context>();
     m_sdlEvent = m_sdlContext->addEvent<SDL_Event>().lock();
@@ -32,7 +30,7 @@ void ContextRegistry::run() {
         }
         m_sdlContext->processQueued();
 
-        State::DelayProxy::instance()->processQueued();
+        Global<State::DelayProxy>()->processQueued();
 
         Kriti::TimeValue thisFrame = Kriti::TimeValue::current();
         if(!lastFrame.set()) lastFrame = thisFrame;

@@ -3,8 +3,6 @@
 namespace Kriti {
 namespace State {
 
-boost::shared_ptr<DelayProxy> DelayProxy::s_singleton;
-
 void DelayProxy::processQueued() {
     TimeValue current = TimeValue::current();
 

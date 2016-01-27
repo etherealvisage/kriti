@@ -8,22 +8,12 @@
 
 #include "../state/Context.h"
 
+#include "../Globals.h"
+
 namespace Kriti {
 namespace Interface {
 
-class ContextRegistry {
-private:
-    static boost::shared_ptr<ContextRegistry> s_singleton;
-public:
-    static boost::shared_ptr<ContextRegistry> instance() {
-        if(!s_singleton) {
-            s_singleton = boost::make_shared<ContextRegistry>();
-        }
-        return s_singleton;
-    }
-    static void destroy() {
-        s_singleton.reset();
-    }
+class ContextRegistry { KRITI_GLOBAL(ContextRegistry)
 private:
     std::vector<boost::shared_ptr<State::Context>> m_contextList;
     boost::shared_ptr<State::Context> m_sdlContext;

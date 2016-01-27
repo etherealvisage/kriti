@@ -6,26 +6,18 @@
 
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "TextInput.h"
+
+#include "../Globals.h"
 
 namespace Kriti {
 namespace Interface {
 
-class Input {
-private:
-    static boost::shared_ptr<Input> s_singleton;
-public:
-    static boost::shared_ptr<Input> instance() {
-        if(!s_singleton) {
-            s_singleton = boost::make_shared<Input>();
-        }
-        return s_singleton;
-    }
-    static void destroy() {
-        s_singleton.reset();
-    }
+class Input { KRITI_GLOBAL(Input)
 private:
     Keyboard *m_keyboard;
     Mouse *m_mouse;
+    TextInput *m_textInput;
 public:
     Input();
     ~Input();

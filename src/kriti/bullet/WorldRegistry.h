@@ -6,27 +6,15 @@
 
 #include "World.h" 
 
+#include "../Globals.h"
+
 namespace Kriti {
 namespace Bullet {
 
-class WorldRegistry {
-private:
-    static boost::shared_ptr<WorldRegistry> s_singleton;
-public:
-    static boost::shared_ptr<WorldRegistry> instance() {
-        if(!s_singleton) {
-            s_singleton = boost::shared_ptr<WorldRegistry>(
-                new WorldRegistry());
-        }
-        return s_singleton;
-    }
-
-    static void destroy() {
-        s_singleton.reset();
-    }
+class WorldRegistry { KRITI_GLOBAL(WorldRegistry)
 private:
     std::vector<boost::shared_ptr<World>> m_worlds;
-private:
+public:
     WorldRegistry();
 public:
     boost::shared_ptr<World> makeWorld();

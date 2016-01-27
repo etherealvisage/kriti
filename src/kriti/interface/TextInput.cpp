@@ -4,13 +4,13 @@
 
 #include "ContextRegistry.h"
 
+#include "../Globals.h"
+
 namespace Kriti {
 namespace Interface {
 
-boost::shared_ptr<TextInput> TextInput::s_singleton;
-
 TextInput::TextInput() {
-    State::Context::addListener(ContextRegistry::instance()->sdlEvent(),
+    State::Context::addListener(Global<ContextRegistry>()->sdlEvent(),
         boost::function<void (SDL_Event)>(
             boost::bind(&TextInput::textEvent, this, _1)));
 }
@@ -25,7 +25,7 @@ void TextInput::end() {
 
 void TextInput::textEvent(SDL_Event event) {
     if(event.type == SDL_TEXTINPUT) {
-        ContextRegistry::instance()->fire("text_input",
+        Global<ContextRegistry>()->fire("text_input",
             boost::make_tuple(std::string(event.text.text)));
     }
 }

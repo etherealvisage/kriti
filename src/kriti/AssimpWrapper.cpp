@@ -5,8 +5,6 @@
 
 namespace Kriti {
 
-boost::shared_ptr<AssimpWrapper> AssimpWrapper::s_singleton;
-
 AssimpWrapper::AssimpWrapper() {
     Assimp::Importer importer;
 

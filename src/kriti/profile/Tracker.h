@@ -7,6 +7,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
+#include "../Globals.h"
 #include "../TimeValue.h"
 
 namespace Kriti {
@@ -17,21 +18,11 @@ class Timer;
 
 namespace Profile {
 
-class Tracker {
+class Tracker { KRITI_GLOBAL(Tracker)
 private:
-    static boost::shared_ptr<Tracker> s_singleton;
     static bool s_enabled;
 public:
-    static boost::shared_ptr<Tracker> instance() {
-        if(!s_singleton) {
-            s_singleton = boost::make_shared<Tracker>();
-        }
-        return s_singleton;
-    }
-    static void destroy() {
-        s_singleton.reset();
-    }
-    static bool enabled() { return s_enabled && s_singleton; }
+    static bool enabled() { return s_enabled; }
 private:
     std::map<std::string,
         std::pair<bool, std::pair<TimeValue, TimeValue>>> m_timers[2];

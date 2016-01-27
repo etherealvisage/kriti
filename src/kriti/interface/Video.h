@@ -5,22 +5,12 @@
 
 #include <SDL.h>
 
+#include "../Globals.h"
+
 namespace Kriti {
 namespace Interface {
 
-class Video {
-private:
-    static boost::shared_ptr<Video> s_singleton;
-public:
-    static boost::shared_ptr<Video> instance() {
-        if(!s_singleton) {
-            s_singleton = boost::shared_ptr<Video>(new Video());
-        }
-        return s_singleton;
-    }
-    static void destroy() {
-        s_singleton.reset();
-    }
+class Video { KRITI_GLOBAL(Video)
 private:
     SDL_Window *m_window;
     SDL_GLContext m_context;

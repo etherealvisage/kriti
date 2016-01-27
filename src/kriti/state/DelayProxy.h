@@ -8,24 +8,13 @@
 
 #include "Context.h"
 
+#include "../Globals.h"
 #include "../TimeValue.h"
 
 namespace Kriti {
 namespace State {
 
-class DelayProxy {
-private:
-    static boost::shared_ptr<DelayProxy> s_singleton;
-public:
-    static boost::shared_ptr<DelayProxy> instance() {
-        if(!s_singleton) {
-            s_singleton = boost::shared_ptr<DelayProxy>(new DelayProxy());
-        }
-        return s_singleton;
-    }
-    static void destroy() {
-        s_singleton.reset();
-    }
+class DelayProxy { KRITI_GLOBAL(DelayProxy)
 private:
     struct Event {
         TimeValue time;

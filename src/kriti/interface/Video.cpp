@@ -14,8 +14,6 @@
 namespace Kriti {
 namespace Interface {
 
-boost::shared_ptr<Video> Video::s_singleton;
-
 Video::Video() {
     initializeSDL();
     setVideoMode();

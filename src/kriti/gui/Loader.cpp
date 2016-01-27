@@ -15,8 +15,6 @@
 namespace Kriti {
 namespace GUI {
 
-boost::shared_ptr<Loader> Loader::s_singleton;
-
 void Loader::load() {
     auto node = ResourceRegistry::get<XMLResource>(
             "data"

@@ -9,11 +9,12 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
+#include "Globals.h"
 #include "MessageSystem.h"
 
 namespace Kriti {
 
-class AssimpWrapper {
+class AssimpWrapper { KRITI_GLOBAL(AssimpWrapper)
 private:
     template<MessageSystem::MessageType type>
     class LogStream : public Assimp::LogStream {
@@ -24,22 +25,7 @@ private:
             MessageSystem::message("Assimp", type, message);
         }
     };
-private:
-    static boost::shared_ptr<AssimpWrapper> s_singleton;
 public:
-    static boost::shared_ptr<AssimpWrapper> instance() {
-        if(!s_singleton) {
-            s_singleton =
-                boost::shared_ptr<AssimpWrapper>(new AssimpWrapper());
-        }
-
-        return s_singleton;
-    }
-
-    static void destroy() {
-        s_singleton.reset();
-    }
-private:
     AssimpWrapper();
 public:
     ~AssimpWrapper();

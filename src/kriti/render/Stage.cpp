@@ -21,6 +21,7 @@
 #include "../MessageSystem.h"
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
+#include "../Globals.h"
 
 namespace Kriti {
 namespace Render {
@@ -118,7 +119,7 @@ void Stage::addMapping(boost::shared_ptr<Stage> prev,
 }
 
 void Stage::render(Uniforms &globalParams, bool isLast) {
-    Profile::Tracker::instance()->beginGLTimer(m_name);
+    Global<Profile::Tracker>()->beginGLTimer(m_name);
 
     if(!isLast) m_framebuffer->bindWrite();
     else {
@@ -140,22 +141,22 @@ void Stage::render(Uniforms &globalParams, bool isLast) {
 
     m_renderables->draw(globalParams, materialParams);
 
-    Profile::Tracker::instance()->endGLTimer(m_name);
+    Global<Profile::Tracker>()->endGLTimer(m_name);
 }
 
 void Stage::initialize(int outputs, int width, int height) {
-    if(width == -1) width = Interface::Video::instance()->width();
-    if(height == -1) height = Interface::Video::instance()->height();
+    if(width == -1) width = Global<Interface::Video>()->width();
+    if(height == -1) height = Global<Interface::Video>()->height();
     m_width = width, m_height = height;
 
     m_framebuffer = boost::make_shared<Framebuffer>();
 
     for(int i = 0; i < outputs; i ++) {
         boost::shared_ptr<Texture> texture;
-        if(Interface::Video::instance()->msaa()) {
+        if(Global<Interface::Video>()->msaa()) {
             texture = boost::make_shared<Texture>(Texture::Colour,
                 Texture::Simple, m_width, m_height,
-                Interface::Video::instance()->aasamples());
+                Global<Interface::Video>()->aasamples());
         }
         else {
             texture = boost::make_shared<Texture>(Texture::Colour,
@@ -165,9 +166,9 @@ void Stage::initialize(int outputs, int width, int height) {
             Framebuffer::Attachment(Framebuffer::ColourBuffer0 + i), texture);
     }
     boost::shared_ptr<Renderbuffer> renderbuffer;
-    if(Interface::Video::instance()->msaa()) {
+    if(Global<Interface::Video>()->msaa()) {
         renderbuffer = boost::make_shared<Renderbuffer>(Renderbuffer::Depth,
-            m_width, m_height, Interface::Video::instance()->aasamples());
+            m_width, m_height, Global<Interface::Video>()->aasamples());
     }
     else {
         renderbuffer = boost::make_shared<Renderbuffer>(Renderbuffer::Depth,
@@ -175,7 +176,7 @@ void Stage::initialize(int outputs, int width, int height) {
     }
     m_framebuffer->attach(Framebuffer::DepthBuffer, renderbuffer);
 
-    Profile::Tracker::instance()->addGLTimer(m_name);
+    Global<Profile::Tracker>()->addGLTimer(m_name);
 
     m_renderables = boost::make_shared<RenderableContainer>();
 }

@@ -9,8 +9,6 @@
 namespace Kriti {
 namespace Render {
 
-boost::shared_ptr<TextureContext> TextureContext::s_singleton;
-
 TextureContext::TextureContext() {
     ErrorTracker::trackFrom("Texture context constructor (before all)");
     GLint count;

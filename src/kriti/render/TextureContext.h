@@ -7,25 +7,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "../Globals.h"
+
 namespace Kriti {
 namespace Render {
 
 class Texture;
 
-class TextureContext {
-private:
-    static boost::shared_ptr<TextureContext> s_singleton;
-public:
-    static boost::shared_ptr<TextureContext> instance() {
-        if(!s_singleton) {
-            s_singleton = boost::shared_ptr<TextureContext>(
-                new TextureContext());
-        }
-        return s_singleton;
-    }
-    static void destroy() {
-        s_singleton.reset();
-    }
+class TextureContext { KRITI_GLOBAL(TextureContext)
 private:
     int64_t m_round;
     std::vector<std::pair<int64_t, boost::shared_ptr<Texture>>> m_bindings;
