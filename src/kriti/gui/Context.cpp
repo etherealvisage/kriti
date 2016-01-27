@@ -30,6 +30,8 @@ Context::Context() {
 
     m_container = boost::make_shared<Render::RenderableContainer>();
     m_container->addUniformHook(camhook);
+
+    m_container->add(m_mouseCursor->renderable());
 }
 
 void Context::hookOnto(boost::shared_ptr<State::Context> context) {
@@ -48,6 +50,21 @@ void Context::hookOnto(boost::shared_ptr<State::Context> context) {
         boost::function<void (int)>([this](int b){
             if(!m_enabled) return;
             m_mouseInteractor->updateMouseButton(b, false);
+        }));
+    context->addListener("key_down",
+        boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
+            if(!m_enabled) return;
+            m_focus.keyPressed(key);
+        }));
+    context->addListener("key_up",
+        boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
+            if(!m_enabled) return;
+            m_focus.keyReleased(key);
+        }));
+    context->addListener("text_input",
+        boost::function<void (std::string)>([this](std::string text){
+            if(!m_enabled) return;
+            m_focus.textEntered(text);
         }));
     context->addListener("new_frame",
         boost::function<void (TimeValue)>([this](TimeValue){

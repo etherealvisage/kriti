@@ -10,6 +10,7 @@
 #include "MouseCursor.h"
 #include "MouseInteractor.h"
 #include "OutlineRegistry.h"
+#include "KeyboardFocus.h"
 
 #include "../render/RenderableContainer.fwd"
 
@@ -27,6 +28,7 @@ private:
 
     bool m_enabled;
     boost::shared_ptr<Render::RenderableContainer> m_container;
+    KeyboardFocus m_focus;
 public:
     Context();
 
@@ -37,6 +39,9 @@ public:
 
     boost::shared_ptr<Render::RenderableContainer> container() const
         { return m_container; }
+
+    KeyboardFocus &focus() { return m_focus; }
+    const KeyboardFocus &focus() const { return m_focus; }
 
     void addRootItem(boost::shared_ptr<LayoutItem> item, Math::Vector location,
         Math::Vector size, Math::Vector scale);

@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace GUI {
+
+class LineEdit;
+
+}  // namespace GUI
+}  // namespace Kriti
+

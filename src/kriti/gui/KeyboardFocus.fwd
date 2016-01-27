@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace GUI {
+
+class KeyboardFocus;
+
+}  // namespace GUI
+}  // namespace Kriti
+
