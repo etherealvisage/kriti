@@ -3,6 +3,7 @@
 
 #include "Widget.h"
 #include "Label.h"
+#include "Panel.h"
 
 #include "../state/Context.h"
 
@@ -12,8 +13,8 @@ namespace GUI {
 class Button : public Widget {
 private:
     Math::Vector m_minSize;
+    boost::shared_ptr<Panel> m_panel;
     boost::shared_ptr<Label> m_label;
-    double m_activation;
     bool m_wasClicked;
 
     boost::weak_ptr<State::Context::Event> m_clickEvent;

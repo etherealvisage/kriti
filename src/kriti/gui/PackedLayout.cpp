@@ -41,13 +41,18 @@ void PackedLayout::updated(boost::shared_ptr<OutlineRegistry> registry,
             stretchY += item->stretch().y();
         }
 
-        if(m_items.size() > 0) {
+        if(m_items.size() > 1) {
             minY += (m_items.size()-1) * ypad;
         }
 
         if(stretchY == 0.0) stretchY = 1.0;
 
-        double extraY = std::max(0.0, size().y() - minY);
+        double extraY = size().y() - minY;
+        if(extraY < 0) {
+            Message3(GUI, Debug,
+                "Trying to pack GUI items into too small of a space!");
+            extraY = 0.0;
+        }
 
         double cursor = 0.0;
         for(auto item : boost::adaptors::reverse(m_items)) {

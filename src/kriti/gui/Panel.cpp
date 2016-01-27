@@ -40,7 +40,7 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry,
     Math::Vector outlineStart = pos(), outlineEnd = pos()+size();
     Math::Geometry::intersectAARects(outlineStart, outlineEnd,
         clipStart, clipEnd);
-    if(!Math::Geometry::isAARectEmpty(outlineStart, outlineEnd))
+    if(!Math::Geometry::isAARectEmpty(outlineStart, outlineEnd) && registry)
         registry->updateOutline(shared_from_this(), outlineStart,
             outlineEnd-outlineStart);
 
@@ -74,21 +74,19 @@ void Panel::updated(boost::shared_ptr<OutlineRegistry> registry,
     m_renderable->renderSequence(0)->extraParams().setParam("gui_clip_end",
         clipEnd);
     m_renderable->renderSequence(0)->extraParams().add(style()->uniforms());
-
-    // TODO: make this not framerate-specific
-    if(mouseState().posSet()) {
-        m_activation = std::pow(0.3, m_activation)/2.0;
-    }
-    else {
-        m_activation *= 0.5;
-    }
-
     m_renderable->renderSequence(0)->extraParams().setParam(
-        "panel_activation", m_activation);
+        "gui_border_colour",
+        Math::Colour(0.3, 0.3, 0.3, 1.0f));
+    m_renderable->renderSequence(0)->extraParams().setParam(
+        "gui_panel_colour",
+        Math::Colour(0.2, 0.2, 0.2, 1.0f));
 
-    if(m_layout) m_layout->update(registry,
-        pos() + Scale().padding()*scale() + Scale().perLayer(),
-        size() - Scale().padding()*scale()*2, scale(), clipStart, clipEnd);
+    if(m_layout) {
+        m_layout->update(registry,
+            pos() + Scale().padding()*scale() + Scale().perLayer(),
+            size() - Scale().padding()*scale()*2, scale(),
+            outlineStart, outlineEnd);
+    }
 }
 
 }  // namespace GUI

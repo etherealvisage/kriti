@@ -3,6 +3,7 @@
 
 #include "Widget.h"
 #include "Label.h"
+#include "Panel.h"
 #include "KeyboardFocusTarget.h"
 
 #include "../state/Context.h"
@@ -13,6 +14,7 @@ namespace GUI {
 class LineEdit : public Widget, public KeyboardFocusTarget {
 private:
     Math::Vector m_minSize;
+    boost::shared_ptr<Panel> m_panel;
     boost::shared_ptr<Label> m_label;
     bool m_focused;
 

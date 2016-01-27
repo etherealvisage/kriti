@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace GUI {
+
+class LayoutSpacer;
+
+}  // namespace GUI
+}  // namespace Kriti
+

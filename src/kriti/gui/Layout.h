@@ -28,6 +28,7 @@ public:
 
     void addItem(boost::shared_ptr<LayoutItem> item)
         { m_items.push_back(item); }
+    void addSpacer(Math::Vector minSize, Math::Vector stretch);
     void clearItems() { m_items.clear(); }
 };
 
