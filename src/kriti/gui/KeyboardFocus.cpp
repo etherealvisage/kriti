@@ -1,5 +1,7 @@
 #include "KeyboardFocus.h"
 
+#include "KeyboardFocusTarget.h"
+
 #include "../interface/TextInput.h"
 
 namespace Kriti {
@@ -8,14 +10,14 @@ namespace GUI {
 void KeyboardFocus::changeFocus(
     boost::shared_ptr<KeyboardFocusTarget> target) {
 
-    if(m_target) m_target->lostFocus(*this);
+    if(m_target) m_target->lostFocus();
 
     m_target = target;
 
     if(!m_target) return;
     
     if(m_target->wantsFocus()) {
-        m_target->gainedFocus(*this);
+        m_target->gainedFocus();
 
         if(m_target->wantsText()) {
             Interface::TextInput::begin();

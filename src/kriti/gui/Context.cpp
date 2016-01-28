@@ -55,17 +55,17 @@ void Context::hookOnto(boost::shared_ptr<State::Context> context) {
     context->addListener("key_down",
         boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
             if(!m_enabled) return;
-            m_focus.keyPressed(key);
+            Global<KeyboardFocus>()->keyPressed(key);
         }));
     context->addListener("key_up",
         boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
             if(!m_enabled) return;
-            m_focus.keyReleased(key);
+            Global<KeyboardFocus>()->keyReleased(key);
         }));
     context->addListener("text_input",
         boost::function<void (std::string)>([this](std::string text){
             if(!m_enabled) return;
-            m_focus.textEntered(text);
+            Global<KeyboardFocus>()->textEntered(text);
         }));
     context->addListener("new_frame",
         boost::function<void (TimeValue)>([this](TimeValue){

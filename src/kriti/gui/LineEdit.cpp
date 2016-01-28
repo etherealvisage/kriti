@@ -5,9 +5,12 @@
 #include "Scale.h"
 #include "Style.h"
 #include "PackedLayout.h"
+#include "KeyboardFocus.h"
 
 #include "../math/Geometry.h"
 #include "../render/RenderableFactory.h"
+
+#include "../Globals.h"
 
 namespace Kriti {
 namespace GUI {
@@ -32,11 +35,11 @@ Math::Vector LineEdit::minSize() {
     return m_panel->minSize();
 }
 
-void LineEdit::lostFocus(KeyboardFocus &focus) {
+void LineEdit::lostFocus() {
     m_focused = false;
 }
 
-void LineEdit::gainedFocus(KeyboardFocus &focus) {
+void LineEdit::gainedFocus() {
     m_focused = true;
 }
 
@@ -47,6 +50,9 @@ void LineEdit::keyPressed(SDL_Keycode key) {
             text.pop_back();
             m_label->setText(text);
         }
+    }
+    else if(key == SDLK_RETURN) {
+        Global<KeyboardFocus>()->clearFocus();
     }
 }
 

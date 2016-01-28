@@ -7,6 +7,7 @@
 #include "interface/Video.h"
 #include "profile/Tracker.h"
 #include "gui/Loader.h"
+#include "gui/KeyboardFocus.h"
 #include "render/TextureContext.h"
 #include "scene/Model.h"
 #include "state/DelayProxy.h"
@@ -50,6 +51,7 @@ int main() {
 
     // initialize GUI system
     GlobalHelper<GUI::Loader>::make();
+    GlobalHelper<GUI::KeyboardFocus>::make();
 
     // initialize the Open Asset Import Library wrapper
     GlobalHelper<AssimpWrapper>::make();
@@ -62,6 +64,7 @@ int main() {
 
     GlobalHelper<State::DelayProxy>::destroy();
 
+    GlobalHelper<GUI::KeyboardFocus>::destroy();
     GlobalHelper<GUI::Loader>::destroy();
 
     GlobalHelper<Render::TextureContext>::destroy();

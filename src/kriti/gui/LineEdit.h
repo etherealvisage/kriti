@@ -27,8 +27,8 @@ public:
 
     virtual bool wantsFocus() { return true; }
     virtual bool wantsText() { return true; }
-    virtual void lostFocus(KeyboardFocus &focus);
-    virtual void gainedFocus(KeyboardFocus &focus);
+    virtual void lostFocus();
+    virtual void gainedFocus();
 
     virtual void keyPressed(SDL_Keycode key);
     virtual void keyReleased(SDL_Keycode key);

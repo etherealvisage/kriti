@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "KeyboardFocus.fwd"
-
 #include "../interface/Keyboard.h" // for SDL things
 
 namespace Kriti {
@@ -16,8 +14,8 @@ public:
 
     virtual bool wantsFocus() = 0;
     virtual bool wantsText() = 0;
-    virtual void lostFocus(KeyboardFocus &focus) = 0;
-    virtual void gainedFocus(KeyboardFocus &focus) = 0;
+    virtual void lostFocus() = 0;
+    virtual void gainedFocus() = 0;
 
     virtual void keyPressed(SDL_Keycode key) = 0;
     virtual void keyReleased(SDL_Keycode key) = 0;

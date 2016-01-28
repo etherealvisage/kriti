@@ -3,14 +3,16 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "kriti/state/Context.fwd"
-
 #include "KeyboardFocusTarget.h"
+
+#include "../state/Context.fwd"
+
+#include "../Globals.h"
 
 namespace Kriti {
 namespace GUI {
 
-class KeyboardFocus {
+class KeyboardFocus { KRITI_GLOBAL(KeyboardFocus)
 private:
     boost::shared_ptr<KeyboardFocusTarget> m_target;
 public:
