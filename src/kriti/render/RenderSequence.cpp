@@ -35,7 +35,7 @@ void RenderSequence::draw(const Uniforms &params,
         type = gl::LINES;
         break;
     case Triangles:
-        Global<Profile::Tracker>()->addToCounter("Triangles",
+        Profile::Tracker::get()->addToCounter("Triangles",
             (m_end-m_start+1)/3);
         type = gl::TRIANGLES;
         break;

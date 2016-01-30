@@ -9,12 +9,13 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 
-#include "Globals.h"
+#include "Singleton.h"
 #include "MessageSystem.h"
 
 namespace Kriti {
 
-class AssimpWrapper { KRITI_GLOBAL(AssimpWrapper)
+class AssimpWrapper : public Singleton<AssimpWrapper> {
+    friend class Singleton<AssimpWrapper>;
 private:
     template<MessageSystem::MessageType type>
     class LogStream : public Assimp::LogStream {
@@ -27,8 +28,8 @@ private:
     };
 public:
     AssimpWrapper();
-public:
     ~AssimpWrapper();
+public:
 
     static Math::Vector convertVector(const aiVector3D &vector);
     static Math::Vector convertColour(const aiColor3D &colour);

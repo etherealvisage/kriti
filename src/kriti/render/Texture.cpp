@@ -130,7 +130,7 @@ void Texture::makeTexture() {
 
     // XXX: for now, just clear all texture bindings
     // In the future, clear only the current texture binding
-    Global<TextureContext>()->clearBindings();
+    TextureContext::get()->clearBindings();
 
     gl::BindTexture(m_bindTarget, m_id);
     ErrorTracker::trackFrom("Texture creation (after bind)");

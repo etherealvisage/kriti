@@ -34,7 +34,7 @@ bool Pipeline::loadFrom(std::string identifier) {
 void Pipeline::render() {
     Uniforms u;
     u.setParam("u_time", static_cast<int>(TimeValue::current().toMsec()));
-    u.setParam("u_msaaSamples", Global<Interface::Video>()->aasamples());
+    u.setParam("u_msaaSamples", Interface::Video::get()->aasamples());
 
     m_rendered.clear();
     render(u, m_lastStage);

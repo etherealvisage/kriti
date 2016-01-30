@@ -9,7 +9,6 @@
 #include "../math/ViewGenerator.h"
 #include "../state/Context.h"
 #include "../TimeValue.h"
-#include "../Globals.h"
 
 namespace Kriti {
 namespace GUI {
@@ -21,7 +20,7 @@ Context::Context() {
     m_mouseInteractor = boost::make_shared<MouseInteractor>();
     m_mouseCursor = boost::make_shared<MouseCursor>();
 
-    auto aratio = Global<Interface::Video>()->aspectRatio();
+    auto aratio = Interface::Video::get()->aspectRatio();
 
     auto camhook = boost::make_shared<Render::ConstantUniformHook>();
     camhook->uniforms().setParam("u_camera",
@@ -55,17 +54,17 @@ void Context::hookOnto(boost::shared_ptr<State::Context> context) {
     context->addListener("key_down",
         boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
             if(!m_enabled) return;
-            Global<KeyboardFocus>()->keyPressed(key);
+            KeyboardFocus::get()->keyPressed(key);
         }));
     context->addListener("key_up",
         boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
             if(!m_enabled) return;
-            Global<KeyboardFocus>()->keyReleased(key);
+            KeyboardFocus::get()->keyReleased(key);
         }));
     context->addListener("text_input",
         boost::function<void (std::string)>([this](std::string text){
             if(!m_enabled) return;
-            Global<KeyboardFocus>()->textEntered(text);
+            KeyboardFocus::get()->textEntered(text);
         }));
     context->addListener("new_frame",
         boost::function<void (TimeValue)>([this](TimeValue){

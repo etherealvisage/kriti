@@ -7,18 +7,20 @@
 #include "Widget.h"
 #include "Layout.h"
 
-#include "../Globals.h"
+#include "../Singleton.h"
 #include "../XMLResource.h"
 
 namespace Kriti {
 namespace GUI {
 
-class Loader { KRITI_GLOBAL(Loader)
+class Loader : public Singleton<Loader> {
+    friend class Singleton<Loader>;
 private:
     std::map<std::string, boost::shared_ptr<Widget>> m_guis;
     std::map<std::string, boost::shared_ptr<Widget>> m_namedWidgets;
-public:
+private:
     Loader() { load(); }
+    ~Loader() {}
 public:
     template<typename T>
     boost::shared_ptr<T> guiByName(std::string name) {

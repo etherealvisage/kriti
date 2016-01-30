@@ -8,13 +8,14 @@
 
 #include "Context.h"
 
-#include "../Globals.h"
+#include "../Singleton.h"
 #include "../TimeValue.h"
 
 namespace Kriti {
 namespace State {
 
-class DelayProxy { KRITI_GLOBAL(DelayProxy)
+class DelayProxy : public Singleton<DelayProxy> {
+    friend class Singleton<DelayProxy>;
 private:
     struct Event {
         TimeValue time;
@@ -28,6 +29,7 @@ private:
         std::greater<Event>> m_events;
 private:
     DelayProxy() {}
+    ~DelayProxy() {}
 public:
     void fire(TimeValue rel, boost::weak_ptr<Context::Event> event,
         boost::any params) {

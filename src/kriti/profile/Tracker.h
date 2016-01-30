@@ -7,7 +7,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 
-#include "../Globals.h"
+#include "../Singleton.h"
 #include "../TimeValue.h"
 
 namespace Kriti {
@@ -18,7 +18,8 @@ class Timer;
 
 namespace Profile {
 
-class Tracker { KRITI_GLOBAL(Tracker)
+class Tracker : public Singleton<Tracker> {
+    friend class Singleton<Tracker>;
 private:
     static bool s_enabled;
 public:
@@ -31,8 +32,10 @@ private:
     std::map<std::string, int> m_counters[2];
 
     int m_currentFrame, m_frameCount;
-public:
+private:
     Tracker();
+    ~Tracker();
+public:
 
     void nextFrame();
 

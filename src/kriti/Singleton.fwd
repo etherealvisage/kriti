@@ -1,5 +1,6 @@
-#include "Globals.h"
-
 namespace Kriti {
 
+class Singleton;
+
 }  // namespace Kriti
+

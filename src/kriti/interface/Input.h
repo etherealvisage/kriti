@@ -8,17 +8,18 @@
 #include "Mouse.h"
 #include "TextInput.h"
 
-#include "../Globals.h"
+#include "../Singleton.h"
 
 namespace Kriti {
 namespace Interface {
 
-class Input { KRITI_GLOBAL(Input)
+class Input : public Singleton<Input> {
+    friend class Singleton<Input>;
 private:
     Keyboard *m_keyboard;
     Mouse *m_mouse;
     TextInput *m_textInput;
-public:
+private:
     Input();
     ~Input();
 };

@@ -7,20 +7,22 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "../Globals.h"
+#include "../Singleton.h"
 
 namespace Kriti {
 namespace Render {
 
 class Texture;
 
-class TextureContext { KRITI_GLOBAL(TextureContext)
+class TextureContext : public Singleton<TextureContext> {
+    friend class Singleton<TextureContext>;
 private:
     int64_t m_round;
     std::vector<std::pair<int64_t, boost::shared_ptr<Texture>>> m_bindings;
     int m_lastUnit;
 private:
     TextureContext();
+    ~TextureContext() {}
 public:
     void nextProgram() { m_round ++; }
     void clearBindings();

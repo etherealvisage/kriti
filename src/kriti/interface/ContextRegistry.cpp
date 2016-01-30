@@ -30,7 +30,7 @@ void ContextRegistry::run() {
         }
         m_sdlContext->processQueued();
 
-        Global<State::DelayProxy>()->processQueued();
+        State::DelayProxy::get()->processQueued();
 
         Kriti::TimeValue thisFrame = Kriti::TimeValue::current();
         if(!lastFrame.set()) lastFrame = thisFrame;

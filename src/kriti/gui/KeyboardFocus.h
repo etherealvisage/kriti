@@ -7,14 +7,18 @@
 
 #include "../state/Context.fwd"
 
-#include "../Globals.h"
+#include "../Singleton.h"
 
 namespace Kriti {
 namespace GUI {
 
-class KeyboardFocus { KRITI_GLOBAL(KeyboardFocus)
+class KeyboardFocus : public Singleton<KeyboardFocus> {
+    friend class Singleton<KeyboardFocus>;
 private:
     boost::shared_ptr<KeyboardFocusTarget> m_target;
+private:
+    KeyboardFocus() {}
+    ~KeyboardFocus() {}
 public:
     void changeFocus(boost::shared_ptr<KeyboardFocusTarget> target);
     void clearFocus()

@@ -10,8 +10,6 @@
 #include "../math/Geometry.h"
 #include "../render/RenderableFactory.h"
 
-#include "../Globals.h"
-
 namespace Kriti {
 namespace GUI {
 
@@ -52,7 +50,7 @@ void LineEdit::keyPressed(SDL_Keycode key) {
         }
     }
     else if(key == SDLK_RETURN) {
-        Global<KeyboardFocus>()->clearFocus();
+        KeyboardFocus::get()->clearFocus();
     }
 }
 

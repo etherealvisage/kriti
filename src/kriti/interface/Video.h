@@ -5,12 +5,13 @@
 
 #include <SDL.h>
 
-#include "../Globals.h"
+#include "../Singleton.h"
 
 namespace Kriti {
 namespace Interface {
 
-class Video { KRITI_GLOBAL(Video)
+class Video : public Singleton<Video> {
+    friend class Singleton<Video>;
 private:
     SDL_Window *m_window;
     SDL_GLContext m_context;
@@ -19,8 +20,8 @@ private:
     int m_aasamples;
 private:
     Video();
-public:
     ~Video();
+public:
 
     int width() const { return m_width; }
     int height() const { return m_height; }

@@ -4,7 +4,6 @@
 
 #include "../ResourceRegistry.h"
 #include "../XMLResource.h"
-#include "../Globals.h"
 
 #define DPI 96
 
@@ -20,15 +19,15 @@ Math::Vector Scale::perLayer() {
 }
 
 double Scale::xscale() {
-    return xtotal() / (Global<Interface::Video>()->width() / DPI);
+    return xtotal() / (Interface::Video::get()->width() / DPI);
 }
 
 double Scale::yscale() {
-    return ytotal() / (Global<Interface::Video>()->height() / DPI);
+    return ytotal() / (Interface::Video::get()->height() / DPI);
 }
 
 double Scale::xtotal() {
-    return Global<Interface::Video>()->aspectRatio();
+    return Interface::Video::get()->aspectRatio();
 }
 
 double Scale::ytotal() {
@@ -36,11 +35,11 @@ double Scale::ytotal() {
 }
 
 double Scale::fromPixelsX(int count) {
-    return (count * xtotal()) / Global<Interface::Video>()->width();
+    return (count * xtotal()) / Interface::Video::get()->width();
 }
 
 double Scale::fromPixelsY(int count) {
-    return (count * ytotal()) / Global<Interface::Video>()->height();
+    return (count * ytotal()) / Interface::Video::get()->height();
 }
 
 double Scale::xDPI() {

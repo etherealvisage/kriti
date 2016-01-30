@@ -23,6 +23,10 @@ Tracker::Tracker() {
     }
 }
 
+Tracker::~Tracker() {
+
+}
+
 void Tracker::nextFrame() {
     if(!enabled()) return;
     // go through old results, and process them, unless it's the first frame,

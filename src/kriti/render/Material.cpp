@@ -39,7 +39,7 @@ bool Material::loadFrom(std::string identifier) {
     }
 
     if(node.child("fragment-shader").attribute("msaa-sensitive").as_bool(false)
-        && Global<Interface::Video>()->msaa()) {
+        && Interface::Video::get()->msaa()) {
 
         fsName += "_msaa";
     }

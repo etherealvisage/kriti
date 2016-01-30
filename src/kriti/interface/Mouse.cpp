@@ -4,13 +4,11 @@
 #include "ContextRegistry.h"
 #include "Video.h"
 
-#include "../Globals.h"
-
 namespace Kriti {
 namespace Interface {
 
 Mouse::Mouse() {
-    State::Context::addListener(Global<ContextRegistry>()->sdlEvent(),
+    State::Context::addListener(ContextRegistry::get()->sdlEvent(),
         boost::function<void (SDL_Event)>(
             boost::bind(&Mouse::mouseEvent, this, _1)));
 }
@@ -18,10 +16,10 @@ Mouse::Mouse() {
 void Mouse::mouseEvent(SDL_Event event) {
     if(event.type == SDL_MOUSEMOTION) {
         double x = event.motion.x, y = event.motion.y;
-        x /= Global<Video>()->width(); x *= Global<Video>()->aspectRatio();
-        y /= Global<Video>()->height();
+        x /= Video::get()->width(); x *= Video::get()->aspectRatio();
+        y /= Video::get()->height();
         y = 1-y; // invert y-axis
-        Global<ContextRegistry>()->fire("mouse_moved",
+        ContextRegistry::get()->fire("mouse_moved",
             boost::make_tuple(x, y));
     }
     else if(event.type == SDL_MOUSEBUTTONDOWN
@@ -44,15 +42,15 @@ void Mouse::mouseEvent(SDL_Event event) {
         }
 
         if(event.type == SDL_MOUSEBUTTONUP)
-            Global<ContextRegistry>()->fire("mouse_up",
+            ContextRegistry::get()->fire("mouse_up",
                 boost::make_tuple(button));
         else
-            Global<ContextRegistry>()->fire("mouse_down",
+            ContextRegistry::get()->fire("mouse_down",
                 boost::make_tuple(button));
     }
     else if(event.type == SDL_MOUSEWHEEL) {
         int x = event.wheel.x, y = event.wheel.y;
-        Global<ContextRegistry>()->fire("mouse_wheel",
+        ContextRegistry::get()->fire("mouse_wheel",
             boost::make_tuple(x, y));
     }
 }

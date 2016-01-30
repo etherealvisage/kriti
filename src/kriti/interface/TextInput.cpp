@@ -4,13 +4,11 @@
 
 #include "ContextRegistry.h"
 
-#include "../Globals.h"
-
 namespace Kriti {
 namespace Interface {
 
 TextInput::TextInput() {
-    State::Context::addListener(Global<ContextRegistry>()->sdlEvent(),
+    State::Context::addListener(ContextRegistry::get()->sdlEvent(),
         boost::function<void (SDL_Event)>(
             boost::bind(&TextInput::textEvent, this, _1)));
 }
@@ -25,7 +23,7 @@ void TextInput::end() {
 
 void TextInput::textEvent(SDL_Event event) {
     if(event.type == SDL_TEXTINPUT) {
-        Global<ContextRegistry>()->fire("text_input",
+        ContextRegistry::get()->fire("text_input",
             boost::make_tuple(std::string(event.text.text)));
     }
 }

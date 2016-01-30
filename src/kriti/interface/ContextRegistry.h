@@ -8,19 +8,21 @@
 
 #include "../state/Context.h"
 
-#include "../Globals.h"
+#include "../Singleton.h"
 
 namespace Kriti {
 namespace Interface {
 
-class ContextRegistry { KRITI_GLOBAL(ContextRegistry)
+class ContextRegistry : public Singleton<ContextRegistry> {
+    friend class Singleton<ContextRegistry>;
 private:
     std::vector<boost::shared_ptr<State::Context>> m_contextList;
     boost::shared_ptr<State::Context> m_sdlContext;
     boost::shared_ptr<State::Context::Event> m_sdlEvent;
-public:
+private:
     ContextRegistry();
-
+    ~ContextRegistry() {}
+public:
     void push(boost::shared_ptr<State::Context> context)
         { m_contextList.push_back(context); }
     void pop();
