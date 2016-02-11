@@ -63,6 +63,8 @@ int main() {
 
     State::DelayProxy::destroy();
 
+    AssimpWrapper::destroy();
+
     GUI::KeyboardFocus::destroy();
     GUI::Loader::destroy();
 
@@ -72,9 +74,9 @@ int main() {
     Interface::ContextRegistry::destroy();
     Interface::Video::destroy();
 
-    ResourceRegistry::unload();
-
     Profile::Tracker::destroy();
+
+    ResourceRegistry::unload();
 
     MessageSystem::closeLogFile();
 
