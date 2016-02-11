@@ -36,13 +36,11 @@ void Panel::flush(boost::shared_ptr<Render::RenderableContainer> container) {
 }
 
 void Panel::updated(boost::shared_ptr<OutlineRegistry> registry,
-        Math::Vector clipStart, Math::Vector clipEnd) {
-    Math::Vector outlineStart = pos(), outlineEnd = pos()+size();
-    Math::Geometry::intersectAARects(outlineStart, outlineEnd,
-        clipStart, clipEnd);
-    if(!Math::Geometry::isAARectEmpty(outlineStart, outlineEnd) && registry)
-        registry->updateOutline(shared_from_this(), outlineStart,
-            outlineEnd-outlineStart);
+    Math::Vector clipStart, Math::Vector clipEnd) {
+
+    Math::Vector outlineStart, outlineEnd;
+    standardOutlineUpdate(registry, clipStart, clipEnd, outlineStart,
+        outlineEnd);
 
     if(!m_renderable) {
         m_renderable = Render::RenderableFactory().fromQuad(

@@ -21,7 +21,7 @@ public:
     Panel(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<Layout> layout, bool parity = false)
         : Widget(stretch), m_minSize(minSize), m_layout(layout),
-            m_parity(parity) {}
+            m_parity(parity) { createEventContext(); }
 
     boost::shared_ptr<Layout> layout() const { return m_layout; }
 

@@ -19,6 +19,7 @@ private:
     bool m_focused;
 
     boost::weak_ptr<State::Context::Event> m_changedEvent;
+    boost::weak_ptr<State::Context::Event> m_clickedEvent;
 public:
     LineEdit(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<Font::Instance> font, std::string text = "");
@@ -34,6 +35,13 @@ public:
     virtual void keyReleased(SDL_Keycode key);
     virtual void textEntered(std::string text);
 
+    void requestFocus();
+    /* Convenience function for when this is used as a KeyboardFocusTarget */
+    boost::shared_ptr<LineEdit> targetPointer();
+
+    std::string text() const;
+    void setText(std::string text);
+
     virtual void fill(
         boost::shared_ptr<Render::RenderableContainer> container);
     virtual void flush(
@@ -41,6 +49,7 @@ public:
 protected:
     virtual void updated(boost::shared_ptr<OutlineRegistry> registry,
         Math::Vector clipStart, Math::Vector clipEnd);
+private:
 };
 
 }  // namespace GUI

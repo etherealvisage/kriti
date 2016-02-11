@@ -5,8 +5,6 @@
 #include "Label.h"
 #include "Panel.h"
 
-#include "../state/Context.h"
-
 namespace Kriti {
 namespace GUI {
 
@@ -15,15 +13,9 @@ private:
     Math::Vector m_minSize;
     boost::shared_ptr<Panel> m_panel;
     boost::shared_ptr<Label> m_label;
-    bool m_wasClicked;
-
-    boost::weak_ptr<State::Context::Event> m_clickEvent;
 public:
     Button(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<Font::Instance> font, std::string text);
-
-    void setClickEvent(boost::weak_ptr<State::Context::Event> clickEvent)
-        { m_clickEvent = clickEvent; }
 
     virtual Math::Vector minSize();
 

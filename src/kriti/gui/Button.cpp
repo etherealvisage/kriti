@@ -20,6 +20,8 @@ Button::Button(Math::Vector minSize, Math::Vector stretch,
     boost::shared_ptr<Font::Instance> font, std::string text)
     : Widget(stretch), m_minSize(minSize) {
 
+    createEventContext();
+
     m_panel = boost::make_shared<Panel>(minSize, stretch,
         boost::make_shared<PackedLayout>(Math::Vector(1,1),
             PackedLayout::Vertical));
@@ -45,23 +47,12 @@ void Button::flush(boost::shared_ptr<Render::RenderableContainer> container) {
 void Button::updated(boost::shared_ptr<OutlineRegistry> registry,
     Math::Vector clipStart, Math::Vector clipEnd) {
 
-    if(mouseState().posSet()) {
-        if(mouseState().button(0)) {
-            m_wasClicked = true;
-        }
-        else if(!mouseState().button(0) && m_wasClicked) {
-            auto event = m_clickEvent.lock();
-            if(event) event->fire(boost::make_tuple());
-
-            m_wasClicked = false;
-        }
-    }
-    else {
-        m_wasClicked = false;
-    }
+    Math::Vector outlineStart, outlineEnd;
+    standardOutlineUpdate(registry, clipStart, clipEnd, outlineStart,
+        outlineEnd);
 
     // Children shouldn't respond to mouseovers, so no registry.
-    m_panel->update(nullptr, pos(), size(), scale(), clipStart, clipEnd);
+    m_panel->update(nullptr, pos(), size(), scale(), outlineStart, outlineEnd);
 }
 
 }  // namespace GUI

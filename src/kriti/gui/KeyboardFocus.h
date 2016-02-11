@@ -23,6 +23,7 @@ public:
     void changeFocus(boost::shared_ptr<KeyboardFocusTarget> target);
     void clearFocus()
         { changeFocus(boost::shared_ptr<KeyboardFocusTarget>()); }
+    bool focused() const { return !!m_target; }
 
     void keyPressed(SDL_Keycode key);
     void keyReleased(SDL_Keycode key);

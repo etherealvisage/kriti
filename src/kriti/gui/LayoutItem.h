@@ -12,6 +12,8 @@
 
 #include "../render/RenderableContainer.h"
 
+#include "../state/Context.fwd"
+
 namespace Kriti {
 namespace GUI {
 
@@ -21,6 +23,9 @@ private:
     Math::Vector m_pos, m_size, m_scale;
     MouseState m_mouseState;
     boost::shared_ptr<Style> m_style;
+    boost::shared_ptr<State::Context> m_context;
+    bool m_wasSet;
+    bool m_wasClicked;
 public:
     LayoutItem();
     virtual ~LayoutItem() {}
@@ -54,9 +59,17 @@ public:
 
     boost::shared_ptr<Style> style() const { return m_style; }
     void changeStyle(boost::shared_ptr<Style> style) { m_style = style; }
+
+    boost::shared_ptr<State::Context> eventContext() const
+        { return m_context; }
 protected:
     virtual void updated(boost::shared_ptr<OutlineRegistry> registry,
         Math::Vector clipStart, Math::Vector clipEnd) = 0;
+    void standardOutlineUpdate(boost::shared_ptr<OutlineRegistry> registry,
+        const Math::Vector &clipStart, const Math::Vector &clipEnd,
+        Math::Vector &outlineStart, Math::Vector &outlineEnd);
+
+    void createEventContext();
 };
 
 }  // namespace GUI

@@ -9,6 +9,7 @@ Kriti documentation
    basics.rst
    math.rst
    rendering.rst
+   gui.rst
 
 Indices and tables
 ==================
