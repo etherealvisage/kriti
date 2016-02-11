@@ -23,6 +23,20 @@ void Context::Event::fire(boost::any param, bool immediate) {
         immediate);
 }
 
+void Context::handler(boost::weak_ptr<Event> event, boost::any param) {
+    auto e = event.lock();
+    if(!e) return;
+    for(int i = 0; i < (int)e->m_listeners.size(); i ++) {
+        auto &listener = e->m_listeners[i];
+        listener->m_function(param);
+        if(listener->single()) {
+            std::swap(e->m_listeners[i], e->m_listeners.back());
+            e->m_listeners.pop_back();
+            i --;
+        }
+    }
+}
+
 void Context::fire(boost::weak_ptr<Event> event, boost::any params,
     bool immediate) {
 

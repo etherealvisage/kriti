@@ -36,7 +36,11 @@ public:
         friend class Context;
         boost::weak_ptr<Event> m_event;
         boost::function<void (boost::any)> m_function;
+        bool m_single;
     public:
+        Listener() : m_single(false) {}
+        bool single() const { return m_single; }
+        void setSingle() { m_single = true; }
         void disconnect();
     };
 
@@ -63,11 +67,7 @@ private:
         TupleUtil::apply(function, boost::any_cast<boost::tuple<T...>>(param));
     }
 
-    static void handler(boost::weak_ptr<Event> event, boost::any param) {
-        auto e = event.lock();
-        if(!e) return;
-        for(auto &listener : e->m_listeners) listener->m_function(param);
-    }
+    static void handler(boost::weak_ptr<Event> event, boost::any param);
 public:
     template<typename ...T>
     boost::weak_ptr<Event> addEvent(std::string name) {
@@ -114,6 +114,18 @@ public:
     }
 
     template<typename ...T>
+    boost::weak_ptr<Listener> addSingleListener(std::string name,
+        boost::function<void (T...)> function) {
+
+        if(m_events.count(name) == 0) {
+            addEvent<T...>(name);
+        }
+
+        auto event = m_events[name];
+        return addSingleListener(event, function);
+    }
+
+    template<typename ...T>
     static boost::weak_ptr<Listener> addListener(boost::weak_ptr<Event> event, 
         boost::function<void (T...)> function) {
 
@@ -130,6 +142,16 @@ public:
         listener->m_function = boost::bind(makeWrapper<T...>, function, _1);
         e->m_listeners.push_back(listener);
         return listener;
+    }
+
+    template<typename ...T>
+    static boost::weak_ptr<Listener> addSingleListener(
+        boost::weak_ptr<Event> event, boost::function<void (T...)> function) {
+
+        auto lw = addListener(event, function);
+        lw.lock()->setSingle();
+
+        return lw;
     }
 
     boost::weak_ptr<Listener> addListener(std::string name, Context *context,

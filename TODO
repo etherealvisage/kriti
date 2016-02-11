@@ -1,6 +1,9 @@
 Meta:
     - establish naming convention for State::Context event names, and switch        (short)
 
+State:
+    + work out Context object lifetimes                                             (medium)
+
 GUI:
     + stateful GUI, i.e. registry, persistence, etc.                                (medium)
     - rearchitect to allow for multiple GUI items per Renderable                    (medium)
