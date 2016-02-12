@@ -5,6 +5,9 @@
 #include "TextDisplay.h"
 #include "TextRenderer.h"
 
+// for debugging
+#include "../render/RenderableFactory.h"
+
 #include "../MessageSystem.h"
 
 namespace Kriti {
@@ -49,7 +52,7 @@ void TextDisplay::updated(
         outlineEnd);
 
     if(!m_renderable) m_renderable = boost::make_shared<Render::Renderable>();
-    else if(m_regen || m_lastScale != scale()) {
+    if(m_regen || m_lastScale != scale()) {
         m_renderable->clearRenderSequences();
         m_regen = false;
         // XXX: text should have been flowed already by call to minSize().
@@ -57,6 +60,59 @@ void TextDisplay::updated(
             flowText(size().x());
             m_reflow = false;
         }
+
+        #if 0
+        {
+            Math::Vector offset;
+
+            Math::Vector p1 = offset;
+            Math::Vector p2 = Math::Vector(0,size().y()) + offset;
+            Math::Vector p3 = size() + offset;
+            Math::Vector p4 = Math::Vector(size().x(),0) + offset;
+            p1 += Math::Vector(0.0,0.0,0.4);
+            p2 += Math::Vector(0.0,0.0,0.4);
+            p3 += Math::Vector(0.0,0.0,0.4);
+            p4 += Math::Vector(0.0,0.0,0.4);
+            /*Math::Vector p1(0.0, 0.0);
+            Math::Vector p2(0.0, 1.0);
+            Math::Vector p3(1.0, 1.0);
+            Math::Vector p4(1.0, 0.0);*/
+            auto q = Render::RenderableFactory().fromQuad(p1,p2,p3,p4,"red");
+            m_renderable->addRenderSequence(q->renderSequence(0));
+        }
+        {
+            Math::Vector offset = -Math::Vector(0.0, size().y() - 0.02);
+
+            Math::Vector p1 = offset;
+            Math::Vector p2 = Math::Vector(0,size().y()) + offset;
+            Math::Vector p3 = size() + offset;
+            Math::Vector p4 = Math::Vector(size().x(),0) + offset;
+            p1 -= Math::Vector(0.0,0.0,0.01);
+            p2 -= Math::Vector(0.0,0.0,0.01);
+            p3 -= Math::Vector(0.0,0.0,0.01);
+            p4 -= Math::Vector(0.0,0.0,0.01);
+            auto q = Render::RenderableFactory().fromQuad(p1,p2,p3,p4,"red");
+            m_renderable->addRenderSequence(q->renderSequence(0));
+        }
+        {
+            Math::Vector offset = -Math::Vector(0.0, size().y() - 0.02);
+            offset -= pos();
+            offset += outlineStart;
+
+            Math::Vector outlineSize = outlineEnd-outlineStart;
+
+            Math::Vector p1 = offset;
+            Math::Vector p2 = Math::Vector(0,outlineSize.y()) + offset;
+            Math::Vector p3 = outlineSize + offset;
+            Math::Vector p4 = Math::Vector(outlineSize.x(),0) + offset;
+            p1 -= Math::Vector(0.0,0.0,0.01);
+            p2 -= Math::Vector(0.0,0.0,0.01);
+            p3 -= Math::Vector(0.0,0.0,0.01);
+            p4 -= Math::Vector(0.0,0.0,0.01);
+            auto q = Render::RenderableFactory().fromQuad(p1,p2,p3,p4,"blue");
+            m_renderable->addRenderSequence(q->renderSequence(0));
+        }
+        #endif
 
         Math::Vector spacing(0,-0.02);
         Math::Vector offset;
@@ -69,15 +125,18 @@ void TextDisplay::updated(
             at.translate(offset);
             seq->sequenceTransform() *= at.matrix();
 
-            rline->renderSequence(0)->extraParams().setParam("gui_clip_start",
-                clipStart);
-            rline->renderSequence(0)->extraParams().setParam("gui_clip_end",
-                clipEnd);
-
             m_renderable->addRenderSequence(rline->renderSequence(0));
 
             offset += spacing;
         }
+    }
+
+    // update clip regions
+    for(int i = 0; i < m_renderable->renderSequenceCount(); i ++) {
+        m_renderable->renderSequence(i)->extraParams().setParam(
+            "gui_clip_start", outlineStart);
+        m_renderable->renderSequence(i)->extraParams().setParam(
+            "gui_clip_end", outlineEnd);
     }
 
     m_lastScale = scale();
@@ -85,7 +144,8 @@ void TextDisplay::updated(
     Math::Vector offset;
     switch(m_valign) {
     case Top:
-        m_renderable->location() = pos() + Math::Vector(0.0, size().y());
+        m_renderable->location() = pos() + Math::Vector(0.0,
+            size().y() - 0.02);
         break;
     case VCentre:
         Message3(GUI, Debug, "VCentre TextDisplay alignment NYI");
@@ -96,7 +156,6 @@ void TextDisplay::updated(
         m_renderable->location() = pos();
         break;
     }
-
 }
 
 void TextDisplay::flowText(double overall_width) {

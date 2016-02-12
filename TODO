@@ -10,6 +10,7 @@ GUI:
     - support [simple] font kerning                                                 (medium)
     - GUI styling support                                                           (medium)
     - font text wrapping and styling                                                (medium)
+    - TextDisplay proper line spacing                                               (short)
 
 Rendering:
     + skeleton-based animation support                                              (long)
