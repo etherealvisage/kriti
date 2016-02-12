@@ -29,10 +29,15 @@ void Context::handler(boost::weak_ptr<Event> event, boost::any param) {
     for(int i = 0; i < (int)e->m_listeners.size(); i ++) {
         auto &listener = e->m_listeners[i];
         listener->m_function(param);
+
         if(listener->single()) {
+            listener->disconnect();
             std::swap(e->m_listeners[i], e->m_listeners.back());
             e->m_listeners.pop_back();
             i --;
+            if(e->m_listeners.size() == 0) {
+                break;
+            }
         }
     }
 }
