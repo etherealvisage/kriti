@@ -3,6 +3,10 @@
 namespace Kriti {
 namespace State {
 
+DelayProxy::DelayProxy() {
+    m_last = TimeValue::current();
+}
+
 void DelayProxy::processQueued(TimeValue time) {
     // if no argument is passed, use real time
     if(!time.set()) {

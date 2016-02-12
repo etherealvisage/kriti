@@ -30,16 +30,17 @@ private:
         std::greater<Event>> m_events;
     TimeValue m_last;
 public:
-    DelayProxy() {}
+    DelayProxy();
     ~DelayProxy() {}
 
     void fire(TimeValue rel, boost::weak_ptr<Context::Event> event,
-        boost::any params) {
+        boost::any params, bool immediate = false) {
 
         auto e = event.lock();
         if(!e) return;
 
-        auto f = boost::bind(&Context::Event::fire, e.get(), params, false);
+        auto f = boost::bind(&Context::Event::fire, e.get(), params,
+            immediate);
         m_events.push(Event{rel + m_last, f});
     }
 

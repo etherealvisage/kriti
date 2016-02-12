@@ -12,10 +12,19 @@ void Context::Listener::disconnect() {
     auto event = m_event.lock();
     if(!event) return;
 
+    boost::shared_ptr<Listener> self;
     auto &l = event->m_listeners;
-    l.erase(std::remove_if(l.begin(), l.end(),
-        [this](boost::shared_ptr<Listener> &x){ return x.get() == this; } ),
-        l.end());
+    for(int i = 0; i < (int)l.size() && l.size(); i ++) {
+        if(l[i].get() == this) {
+            self = l[i];
+            std::swap(l[i], l.back());
+            l.pop_back();
+            i --;
+        }
+    }
+
+    // when this scope is left, self will be destructed.
+    // if there is no shared pointer referencing this, things will crash...
 }
 
 void Context::Event::fire(boost::any param, bool immediate) {
