@@ -14,6 +14,7 @@
 namespace Kriti {
 namespace State {
 
+/* Can be used as a singleton, but individual instances are also kosher. */
 class DelayProxy : public Singleton<DelayProxy> {
     friend class Singleton<DelayProxy>;
 private:
@@ -27,10 +28,11 @@ private:
 private:
     std::priority_queue<Event, std::vector<Event>,
         std::greater<Event>> m_events;
-private:
+    TimeValue m_last;
+public:
     DelayProxy() {}
     ~DelayProxy() {}
-public:
+
     void fire(TimeValue rel, boost::weak_ptr<Context::Event> event,
         boost::any params) {
 
@@ -38,10 +40,10 @@ public:
         if(!e) return;
 
         auto f = boost::bind(&Context::Event::fire, e.get(), params, false);
-        m_events.push(Event{rel + TimeValue::current(), f});
+        m_events.push(Event{rel + m_last, f});
     }
 
-    void processQueued();
+    void processQueued(TimeValue time = TimeValue());
 };
 
 }  // namespace State
