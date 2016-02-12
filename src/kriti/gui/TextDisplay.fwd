@@ -1,0 +1,8 @@
+namespace Kriti {
+namespace GUI {
+
+class TextDisplay;
+
+}  // namespace GUI
+}  // namespace Kriti
+

@@ -23,9 +23,6 @@ Math::Vector Label::minSize() {
     Math::Vector ul, lr;
     TextRenderer().sizeString(m_font, m_text, ul, lr);
 
-    /*ul = ul * m_textScale;
-    lr = lr * m_textScale;*/
-
     Math::Vector textMinSize = lr-ul;
 
     return Math::Vector(std::max(textMinSize.x(), m_minSize.x()),
