@@ -34,6 +34,7 @@ public:
         std::vector<CharSpec> m_chars;
 
         boost::shared_ptr<Render::Texture> m_latestTexture;
+        double m_baselineOffset;
     private:
         Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
             int ptSize);
@@ -41,6 +42,8 @@ public:
         boost::shared_ptr<Render::Texture> texture()
             { return m_latestTexture; }
         void getCharSpec(int c, CharSpec &cs);
+        double lineSpacing();
+        double baselineOffset() const;
     };
 private:
     FT_Face m_face;

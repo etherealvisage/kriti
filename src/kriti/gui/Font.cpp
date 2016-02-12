@@ -76,6 +76,10 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
 
         m_chars.push_back(cs);
 
+        double baseline =
+            m_face->glyph->metrics.height - m_face->glyph->metrics.horiBearingY;
+        m_baselineOffset = std::max(baseline, m_baselineOffset);
+
         xoff += m_face->glyph->bitmap.width;
         xoff ++; // spacing
     }
@@ -86,12 +90,23 @@ Font::Instance::Instance(FT_Face face, std::vector<FT_Glyph_Metrics> &sizes,
 
     m_latestTexture->reset(texWidth, texHeight, data);
 
+    m_baselineOffset = Scale().fromPixelsY(m_baselineOffset);
+
     delete[] data;
+
 }
 
 void Font::Instance::getCharSpec(int c, Font::CharSpec &cs) {
     int index = FT_Get_Char_Index(m_face, c);
     cs = m_chars[index];
+}
+
+double Font::Instance::lineSpacing() {
+    return Scale().fromPixelsY(m_face->height) / 64;
+}
+
+double Font::Instance::baselineOffset() const {
+    return Scale().fromPixelsY(m_face->descender) / 64;
 }
 
 bool Font::loadFrom(std::string identifier) {
