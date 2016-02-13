@@ -15,15 +15,14 @@ To install these requirements on Debian or Ubuntu, run:
 
     apt-get install \
         cmake g++ libboost-dev libboost-filesystem-dev libboost-system-dev \
-        libsdl2-dev libsdl2-image-dev libglew-dev libbullet-dev \
-        libfreetype6-dev
+        libsdl2-dev libsdl2-image-dev libbullet-dev libfreetype6-dev
 
 ### Features
 
 Some existing features of kriti include:
 
 - Full multi-stage rendering pipeline with RTT and blending
-- Functional GUI library
+- GUI library
 - Open Asset Import Library integration to load almost all 3D models
 - Integration with bullet physics engine, either with render geometry or with
   simplified physics model
@@ -45,6 +44,10 @@ version of kriti by running the `make_dist_version.sh` shell script.
 ### Documentation
 
 See the [documentation at Read The Docs](http://kriti.rtfd.org/).
+
+### Contributing
+
+Bug reports, fixes, feature requests or additions, all are welcome!
 
 ### Authors
 
