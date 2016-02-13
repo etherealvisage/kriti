@@ -25,6 +25,7 @@ LineEdit::LineEdit(Math::Vector minSize, Math::Vector stretch,
     m_panel = boost::make_shared<Panel>(minSize, stretch,
         boost::make_shared<PackedLayout>(Math::Vector(1,1),
             PackedLayout::Vertical));
+    reparent(m_panel);
     m_label = boost::make_shared<Label>(Math::Vector(), Math::Vector(1,1),
         font, text);
     m_panel->layout()->addSpacer(Math::Vector(), Math::Vector(1,1));
@@ -38,6 +39,10 @@ LineEdit::LineEdit(Math::Vector minSize, Math::Vector stretch,
             if(button != 0) return;
             KeyboardFocus::get()->changeFocus(this->targetPointer());
         }));
+}
+
+LineEdit::~LineEdit() {
+    unparent(m_panel);
 }
 
 Math::Vector LineEdit::minSize() {

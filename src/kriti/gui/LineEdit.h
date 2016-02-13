@@ -17,12 +17,10 @@ private:
     boost::shared_ptr<Panel> m_panel;
     boost::shared_ptr<Label> m_label;
     bool m_focused;
-
-    boost::weak_ptr<State::Context::Event> m_changedEvent;
-    boost::weak_ptr<State::Context::Event> m_clickedEvent;
 public:
     LineEdit(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<Font::Instance> font, std::string text = "");
+    ~LineEdit();
 
     virtual Math::Vector minSize();
 

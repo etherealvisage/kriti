@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include "Widget.h"
+#include "Layout.h"
 
 #include "../render/Renderable.h"
 
@@ -21,7 +22,8 @@ public:
     Panel(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<Layout> layout, bool parity = false)
         : Widget(stretch), m_minSize(minSize), m_layout(layout),
-            m_parity(parity) { createEventContext(); }
+            m_parity(parity) { createEventContext(); reparent(m_layout); }
+    ~Panel() { unparent(m_layout); }
 
     boost::shared_ptr<Layout> layout() const { return m_layout; }
 

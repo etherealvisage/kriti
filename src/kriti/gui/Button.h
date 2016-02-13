@@ -16,6 +16,7 @@ private:
 public:
     Button(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<Font::Instance> font, std::string text);
+    ~Button();
 
     virtual Math::Vector minSize();
 

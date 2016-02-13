@@ -6,6 +6,7 @@
 #include "OutlineRegistry.h"
 #include "MouseState.h"
 #include "Style.fwd"
+#include "Context.fwd"
 
 #include "../math/Vector.h"
 #include "../math/AffineTransformation.h"
@@ -18,12 +19,15 @@ namespace Kriti {
 namespace GUI {
 
 class LayoutItem : public boost::enable_shared_from_this<LayoutItem> {
+    friend class Context;
 private:
     /// stores the calculated size of the layout item.
     Math::Vector m_pos, m_size, m_scale;
     MouseState m_mouseState;
     boost::shared_ptr<Style> m_style;
     boost::shared_ptr<State::Context> m_context;
+    LayoutItem *m_parent;
+    boost::weak_ptr<Context> m_guiContext;
     bool m_wasSet;
     bool m_wasClicked;
 public:
@@ -62,6 +66,10 @@ public:
 
     boost::shared_ptr<State::Context> eventContext() const
         { return m_context; }
+
+    LayoutItem *parent() const { return m_parent; }
+    boost::weak_ptr<Context> guiContext() const { return m_guiContext; }
+    boost::weak_ptr<Context> findGuiContext() const;
 protected:
     virtual void updated(boost::shared_ptr<OutlineRegistry> registry,
         Math::Vector clipStart, Math::Vector clipEnd) = 0;
@@ -70,6 +78,13 @@ protected:
         Math::Vector &outlineStart, Math::Vector &outlineEnd);
 
     void createEventContext();
+    void setParent(LayoutItem *parent) { m_parent = parent; }
+    void reparent(boost::shared_ptr<LayoutItem> item)
+        { if(item) item->m_parent = this; }
+    void unparent(boost::shared_ptr<LayoutItem> item)
+        { if(item) item->m_parent = nullptr; }
+    void setContext(boost::weak_ptr<Context> context)
+        { m_guiContext = context; }
 };
 
 }  // namespace GUI

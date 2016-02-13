@@ -41,5 +41,11 @@ void LayoutItem::createEventContext() {
     m_context = boost::make_shared<State::Context>();
 }
 
+boost::weak_ptr<Context> LayoutItem::findGuiContext() const {
+    if(m_guiContext.lock()) return m_guiContext;
+    if(m_parent) return m_parent->findGuiContext();
+    return boost::weak_ptr<Context>();
+}
+
 }  // namespace GUI
 }  // namespace Kriti

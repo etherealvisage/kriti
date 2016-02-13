@@ -17,7 +17,7 @@ protected:
     std::vector<boost::shared_ptr<LayoutItem>> m_items;
 public:
     Layout(Math::Vector stretch) : m_stretch(stretch) {}
-    virtual ~Layout() {}
+    virtual ~Layout();
 
     virtual Math::Vector stretch() { return m_stretch; }
 
@@ -26,10 +26,9 @@ public:
     virtual void flush(
         boost::shared_ptr<Render::RenderableContainer> container);
 
-    void addItem(boost::shared_ptr<LayoutItem> item)
-        { m_items.push_back(item); }
+    void addItem(boost::shared_ptr<LayoutItem> item);
     void addSpacer(Math::Vector minSize, Math::Vector stretch);
-    void clearItems() { m_items.clear(); }
+    void clearItems();
 };
 
 }  // namespace GUI

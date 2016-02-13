@@ -81,14 +81,15 @@ void Context::addRootItem(boost::shared_ptr<LayoutItem> item,
 
     m_rootItems.push_back(boost::make_tuple(item, location, size, scale));
 
-    item->fill(m_container);
+    item->setContext(shared_from_this());
 }
 
 void Context::update() {
     for(auto &root : m_rootItems) {
-        boost::get<0>(root)->update(m_outlineRegistry, boost::get<1>(root),
+        auto &item = boost::get<0>(root);
+        item->update(m_outlineRegistry, boost::get<1>(root),
             boost::get<2>(root), boost::get<3>(root));
-        boost::get<0>(root)->fill(m_container);
+        item->fill(m_container);
     }
 }
 

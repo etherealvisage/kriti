@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <boost/tuple/tuple.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "kriti/state/Context.fwd"
 
@@ -17,7 +18,7 @@
 namespace Kriti {
 namespace GUI {
 
-class Context {
+class Context : public boost::enable_shared_from_this<Context> {
 private:
     boost::shared_ptr<OutlineRegistry> m_outlineRegistry;
     boost::shared_ptr<MouseInteractor> m_mouseInteractor;
