@@ -31,6 +31,7 @@ private:
     boost::shared_ptr<Render::RenderableContainer> m_container;
 public:
     Context();
+    ~Context();
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled) { m_enabled = enabled; }

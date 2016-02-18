@@ -34,6 +34,14 @@ Context::Context() {
     m_container->add(m_mouseCursor->renderable());
 }
 
+Context::~Context() {
+    for(auto &root : m_rootItems) {
+        auto item = boost::get<0>(root);
+
+        item->flush(m_container);
+    }
+}
+
 void Context::hookOnto(boost::shared_ptr<State::Context> context) {
     context->addListener("mouse_moved",
         boost::function<void (double, double)>([this](double x, double y){

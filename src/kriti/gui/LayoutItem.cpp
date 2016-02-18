@@ -14,6 +14,7 @@ namespace GUI {
 
 LayoutItem::LayoutItem() {
     m_style = ResourceRegistry::get<Style>("default");
+    m_parent = nullptr;
 }
 
 void LayoutItem::update(boost::shared_ptr<OutlineRegistry> registry,

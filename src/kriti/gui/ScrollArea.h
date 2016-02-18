@@ -18,7 +18,8 @@ public:
     ScrollArea(Math::Vector minSize, Math::Vector stretch,
         boost::shared_ptr<LayoutItem> wrapped, Math::Vector scrollSize)
         : m_minSize(minSize), m_stretch(stretch), m_wrapped(wrapped),
-        m_scrollSize(scrollSize) {}
+        m_scrollSize(scrollSize) { if(m_wrapped) reparent(m_wrapped); }
+    ~ScrollArea() { unparent(m_wrapped); }
 
     boost::shared_ptr<LayoutItem> wrapped() const { return m_wrapped; }
 
