@@ -34,7 +34,7 @@ void ContextRegistry::run() {
 
         Kriti::TimeValue thisFrame = Kriti::TimeValue::current();
         if(!lastFrame.set()) lastFrame = thisFrame;
-        fire("new_frame", boost::make_tuple(thisFrame-lastFrame));
+        fire("newFrame", boost::make_tuple(thisFrame-lastFrame));
         lastFrame = thisFrame;
 
         for(auto &context : m_contextList) {

@@ -43,38 +43,38 @@ Context::~Context() {
 }
 
 void Context::hookOnto(boost::shared_ptr<State::Context> context) {
-    context->addListener("mouse_moved",
+    context->addListener("mouseMoved",
         boost::function<void (double, double)>([this](double x, double y){
             if(!m_enabled) return;
             m_mouseInteractor->updateMouseCoordinates(x, y);
             m_mouseCursor->updateMouseCoordinates(x, y);
         }));
-    context->addListener("mouse_down",
+    context->addListener("mouseDown",
         boost::function<void (int)>([this](int b){
             if(!m_enabled) return;
             m_mouseInteractor->updateMouseButton(b, true);
         }));
-    context->addListener("mouse_up",
+    context->addListener("mouseUp",
         boost::function<void (int)>([this](int b){
             if(!m_enabled) return;
             m_mouseInteractor->updateMouseButton(b, false);
         }));
-    context->addListener("key_down",
+    context->addListener("keyDown",
         boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
             if(!m_enabled) return;
             KeyboardFocus::get()->keyPressed(key);
         }));
-    context->addListener("key_up",
+    context->addListener("keyUp",
         boost::function<void (SDL_Keycode)>([this](SDL_Keycode key){
             if(!m_enabled) return;
             KeyboardFocus::get()->keyReleased(key);
         }));
-    context->addListener("text_input",
+    context->addListener("textInput",
         boost::function<void (std::string)>([this](std::string text){
             if(!m_enabled) return;
             KeyboardFocus::get()->textEntered(text);
         }));
-    context->addListener("new_frame",
+    context->addListener("newFrame",
         boost::function<void (TimeValue)>([this](TimeValue){
             if(!m_enabled) return;
 

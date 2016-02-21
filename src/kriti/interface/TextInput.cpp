@@ -23,7 +23,7 @@ void TextInput::end() {
 
 void TextInput::textEvent(SDL_Event event) {
     if(event.type == SDL_TEXTINPUT) {
-        ContextRegistry::get()->fire("text_input",
+        ContextRegistry::get()->fire("textInput",
             boost::make_tuple(std::string(event.text.text)));
     }
 }

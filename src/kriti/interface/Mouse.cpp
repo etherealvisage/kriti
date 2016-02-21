@@ -19,7 +19,7 @@ void Mouse::mouseEvent(SDL_Event event) {
         x /= Video::get()->width(); x *= Video::get()->aspectRatio();
         y /= Video::get()->height();
         y = 1-y; // invert y-axis
-        ContextRegistry::get()->fire("mouse_moved",
+        ContextRegistry::get()->fire("mouseMoved",
             boost::make_tuple(x, y));
     }
     else if(event.type == SDL_MOUSEBUTTONDOWN
@@ -42,15 +42,15 @@ void Mouse::mouseEvent(SDL_Event event) {
         }
 
         if(event.type == SDL_MOUSEBUTTONUP)
-            ContextRegistry::get()->fire("mouse_up",
+            ContextRegistry::get()->fire("mouseUp",
                 boost::make_tuple(button));
         else
-            ContextRegistry::get()->fire("mouse_down",
+            ContextRegistry::get()->fire("mouseDown",
                 boost::make_tuple(button));
     }
     else if(event.type == SDL_MOUSEWHEEL) {
         int x = event.wheel.x, y = event.wheel.y;
-        ContextRegistry::get()->fire("mouse_wheel",
+        ContextRegistry::get()->fire("mouseWheel",
             boost::make_tuple(x, y));
     }
 }
