@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "OutlineRegistry.h"
 
 #include "../MessageSystem.h"

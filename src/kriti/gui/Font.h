@@ -2,6 +2,7 @@
 #define KRITI_GUI__FONT_H
 
 #include <map>
+#include <vector>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>

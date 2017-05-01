@@ -1,6 +1,8 @@
 #ifndef KRITI_SCENE__LIGHT_REGISTRY_H
 #define KRITI_SCENE__LIGHT_REGISTRY_H
 
+#include <vector>
+
 #include <boost/shared_ptr.hpp>
 
 #include "Light.h"
