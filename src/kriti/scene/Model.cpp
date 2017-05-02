@@ -113,7 +113,6 @@ void Model::processMesh(const aiScene *scene, int index) {
     }
 
     auto vao = boost::make_shared<Render::VAO>();
-    int vao_size = mesh->mNumFaces*3; // each face is a triangle
 
     auto vertexVBO = boost::make_shared<Render::VBO>();
     auto normalVBO = boost::make_shared<Render::VBO>();
