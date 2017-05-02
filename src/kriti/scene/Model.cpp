@@ -122,8 +122,8 @@ void Model::processMesh(const aiScene *scene, int index) {
         vertv.push_back(AssimpWrapper::convertVector(mesh->mVertices[i]));
         normv.push_back(AssimpWrapper::convertVector(mesh->mNormals[i]));
     }
-    vertexVBO->setData4(vertv, 1.0f);
-    normalVBO->setData4(normv, 1.0f);
+    vertexVBO->setData3(vertv);
+    normalVBO->setData3(normv);
     vao->addVBO(vertexVBO, Render::VAO::Vertex);
     vao->addVBO(normalVBO, Render::VAO::Normal);
 
@@ -145,6 +145,9 @@ void Model::processMesh(const aiScene *scene, int index) {
             texv.push_back(
                 AssimpWrapper::convertVector(mesh->mTextureCoords[i][j]));
         }
+        auto texVBO = boost::make_shared<Render::VBO>();
+        texVBO->setData3(texv);
+        vao->addVBO(texVBO, uvloc);
         uvloc = (Render::VAO::Location)((int)uvloc + 1);
     }
 
@@ -161,7 +164,7 @@ void Model::processMesh(const aiScene *scene, int index) {
     vao->addVBO(facesVBO, Render::VAO::Element);
 
     auto seq = boost::make_shared<Render::RenderSequence>(
-        m_materials[mesh->mMaterialIndex], vao, 0, vao_size-1,
+        m_materials[mesh->mMaterialIndex], vao, 0, facev.size()-1,
             Render::RenderSequence::Triangles,
             Render::RenderSequence::Indexed);
 

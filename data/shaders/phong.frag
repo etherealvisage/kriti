@@ -2,8 +2,8 @@
 
 #extension GL_ARB_explicit_attrib_location : require
 
-in vec4 g_position;
-in vec4 g_normal;
+in vec4 v_position;
+in vec4 v_normal;
 out vec4 fragColour;
 
 struct material {
@@ -28,16 +28,27 @@ struct light {
 uniform light lights[8];
 uniform int lightCount; // number of lights in use
 
+uniform vec3 u_cameraPos;
+
 void main() {
+    vec3 normal = normalize(v_normal).xyz;
+    vec3 toCamera = normalize(u_cameraPos - v_position.xyz);
+
     vec3 ace = vec3(0.0f,0.0f,0.0f);
     vec3 dce = vec3(0.0f,0.0f,0.0f);
     vec3 sce = vec3(0.0f,0.0f,0.0f);
 
     for(int i = 0; i < lightCount; i ++) {
         ace += lights[i].colour * lights[i].ambientCoefficient*2;
-        float normal_coefficient = max(0, dot(g_normal.xyz, normalize(lights[i].position - g_position.xyz)));
+        vec3 toLight = normalize(lights[i].position - v_position.xyz);
+        float normal_coefficient = max(0.0f, dot(v_normal.xyz, toLight));
         dce += normal_coefficient * lights[i].colour * lights[i].diffuseCoefficient*2;
-        // XXX: specular
+        
+        float spec_coefficient = pow(
+            max(0.0f, dot(toCamera, normalize(reflect(-toLight, v_normal.xyz)))),
+            //max(0.0f, dot(toCamera, normal.xyz)),
+            u_material.specularPower.x);
+        sce += spec_coefficient * lights[i].colour * lights[i].specularCoefficient;
     }
 
     // clamp coefficients

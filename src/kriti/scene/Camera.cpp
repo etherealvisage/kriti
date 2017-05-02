@@ -26,6 +26,7 @@ void Camera::step(TimeValue by) {
 
 void Camera::hook(Render::Uniforms &uniforms) {
     uniforms.setParam("u_camera", matrixWithProjection());
+    uniforms.setParam("u_cameraPos", m_position);
 }
 
 void Camera::stepPosition(TimeValue by) {
