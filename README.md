@@ -7,7 +7,7 @@ Kriti is a game engine for games written in C++11. It needs:
 - boost (tested with 1.58 and 1.60)
 - SDL 2.0
 - SDL_image 2.0
-- OpenGL 3.1
+- OpenGL 3.3
 - bullet physics engine
 - Freetype 
 
