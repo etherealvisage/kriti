@@ -82,7 +82,6 @@ void Program::setUniform(const std::string &name, const Math::Vector &value) {
 void Program::setUniform(const std::string &name,
     const Math::Matrix &matrix) {
 
-
     GLint location = getUniformLocation(name);
     if(location != -1) {
         gl::UniformMatrix4fv(location, 1, false, matrix.matrixData());

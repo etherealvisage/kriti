@@ -2,6 +2,7 @@
 #define KRITI_BULLET__WORLD_H
 
 #include <map>
+#include <vector>
 
 #include <btBulletDynamicsCommon.h>
 

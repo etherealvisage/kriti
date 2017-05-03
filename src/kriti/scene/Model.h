@@ -9,6 +9,7 @@
 
 struct aiScene;
 struct aiNode;
+struct aiMaterial;
 
 namespace Kriti {
 namespace Scene {
@@ -28,6 +29,9 @@ public:
     virtual bool loadFrom(std::string identifier);
 private:
     void processMaterial(const aiScene *scene, int index);
+    void processMaterialStack(const aiMaterial *source,
+        const boost::shared_ptr<Render::Material> &dest,
+        int typeInt, std::string destName);
     void processMesh(const aiScene *scene, int index);
     void processNode(const aiNode *node, Math::Matrix transform);
 };

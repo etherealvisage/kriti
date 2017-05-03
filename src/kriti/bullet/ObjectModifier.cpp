@@ -8,7 +8,7 @@ namespace Bullet {
 void ObjectModifier::updateAction(btCollisionWorld *collisionWorld,
     btScalar step) {
     
-    auto world = WorldRegistry::instance()->world(
+    auto world = WorldRegistry::get()->world(
         dynamic_cast<btDynamicsWorld *>(collisionWorld));
     if(world) modify(world, step);
 }

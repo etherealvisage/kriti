@@ -8,6 +8,8 @@
 
 #include "Model.h"
 
+#include "../render/Texture.h"
+
 #include "../FileResource.h"
 #include "../ResourceRegistry.h"
 
@@ -73,32 +75,99 @@ void Model::processMaterial(const aiScene *scene, int index) {
     dest->loadFrom("simple_phong");
     m_materials.push_back(dest);
 
+    int model;
+    source->Get(AI_MATKEY_SHADING_MODEL, model);
+    if(model != aiShadingMode_Phong) {
+        Message3(Scene, Error, "Material requested non-Phong shading model " << model);
+    }
+
     // ambient
     aiColor3D colour;
     source->Get(AI_MATKEY_COLOR_AMBIENT, colour);
-    dest->params().setParam("u_material.ambient",
+    dest->params().setParam("u_material.ambient.base",
         AssimpWrapper::convertColour(colour));
 
     // diffuse
     source->Get(AI_MATKEY_COLOR_DIFFUSE, colour);
-    dest->params().setParam("u_material.diffuse",
+    dest->params().setParam("u_material.diffuse.base",
         AssimpWrapper::convertColour(colour));
+
+    processMaterialStack(source, dest, aiTextureType_DIFFUSE, "diffuse");
 
     // specular
     source->Get(AI_MATKEY_COLOR_SPECULAR, colour);
-    dest->params().setParam("u_material.specular",
+    dest->params().setParam("u_material.specular.base",
         AssimpWrapper::convertColour(colour));
 
     // shininess
-    source->Get(AI_MATKEY_SHININESS, colour);
-    dest->params().setParam("u_material.specularPower",
-        AssimpWrapper::convertColour(colour));
+    float specularExponent = 0.0;
+    source->Get(AI_MATKEY_SHININESS, specularExponent);
+    dest->params().setParam("u_material.specularExponent", specularExponent);
 
     // specular scaling
-    source->Get(AI_MATKEY_SHININESS_STRENGTH, colour);
-    dest->params().setParam("u_material.specularScale",
-        AssimpWrapper::convertColour(colour));
+    float specularScale = 0.0;
+    source->Get(AI_MATKEY_SHININESS_STRENGTH, specularScale);
+    dest->params().setParam("u_material.specularScale", specularScale);
 }
+
+void Model::processMaterialStack(const aiMaterial *source,
+    const boost::shared_ptr<Render::Material> &dest,
+    int typeInt, std::string destName) {
+
+    aiTextureType type = (aiTextureType)typeInt;
+
+    int texCount = source->GetTextureCount(type);
+    dest->params().setParam("u_material." + destName + ".entryCount", texCount);
+    for(int i = 0; i < texCount; i ++) {
+        // GetTexture (aiTextureType type, unsigned int index, aiString *path, aiTextureMapping *mapping=NULL, unsigned int *uvindex=NULL, float *blend=NULL, aiTextureOp *op=NULL, aiTextureMapMode *mapmode=NULL) const
+
+        const std::string prefix = "u_material." + destName;
+
+        aiString path;
+        aiTextureMapping mapping;
+        unsigned int uvindex = -1;
+        float blend = 1.0;
+        aiTextureOp op;
+        aiTextureMapMode mapMode;
+
+        int ret = source->GetTexture(type, i, &path, &mapping, &uvindex, &blend, &op, &mapMode);
+        
+        if(uvindex == -1) uvindex = i;
+
+        Message3(Scene, Debug, "GetTexture ret: " << ret);
+
+        Message3(Scene, Debug, "texture path: " << path.C_Str());
+        Message3(Scene, Debug, "uv index: " << uvindex);
+        int uv2;
+        ret = source->Get(AI_MATKEY_UVWSRC(type, i), uv2);
+        Message3(Scene, Debug, "read UV index: " << uv2);
+        Message3(Scene, Debug, "read UV index ret: " << ret);
+
+        auto tex = ResourceRegistry::get<Render::Texture>(path.C_Str());
+        //Message3(Scene, Debug, "texture: " << tex);
+        Message3(Scene, Debug, "texture size: " << tex->width() << "x" << tex->height());
+        Message3(Scene, Debug, "texture blend: " << blend);
+
+        dest->params().setParam(
+            StreamAsString() << prefix << ".tex[" << i << "]",
+            ResourceRegistry::get<Render::Texture>(path.C_Str()));
+
+        dest->params().setParam(
+            StreamAsString() << prefix << ".cindex[" << i << "]",
+            (int)uvindex);
+
+        dest->params().setParam(
+            StreamAsString() << prefix << ".blend[" << i << "]",
+            1.0f);
+
+        dest->params().setParam("u_blend", 1.0f);
+
+        dest->params().setParam(
+            StreamAsString() << prefix << ".op[" << i << "]",
+            (int)op);
+    }
+}
+
 
 void Model::processMesh(const aiScene *scene, int index) {
     const aiMesh *mesh = scene->mMeshes[index];
