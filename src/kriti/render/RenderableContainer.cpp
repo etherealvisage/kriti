@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "RenderableContainer.h"
 
 namespace Kriti {
@@ -19,9 +21,21 @@ void RenderableContainer::draw(Uniforms &globalParams,
         renderable->draw(globalParams, materialParams);
     }
 
-    // TODO: depth-sort these?
+    // TODO: don't require a depth-sort each time?
+    Math::Vector cameraPos = globalParams.getVector("u_cameraPos");
+    typedef std::pair<double, Renderable *> DR;
+    std::vector<DR> trender;
     for(auto &renderable : m_transRenderables) {
-        renderable->draw(globalParams, materialParams);
+        trender.push_back(DR(
+                (renderable->location() - cameraPos).length2(),
+                renderable.get()));
+    }
+    std::sort(trender.begin(), trender.end(), [](const DR &l, const DR &r){
+        return l.first < r.first;
+    });
+
+    for(auto &renderable : trender) {
+        renderable.second->draw(globalParams, materialParams);
     }
 
     for(auto &container : m_containers) {

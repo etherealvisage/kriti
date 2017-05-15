@@ -32,8 +32,16 @@ public:
         std::map<boost::weak_ptr<Material>, Uniforms> &materialParams);
 
     Math::Vector &location() { return m_location; }
+    const Math::Vector &location() const { return m_location; }
+    void setLocation(const Math::Vector &to) { m_location = to; }
+
     double &scale() { return m_scale; }
+    double scale() const { return m_scale; }
+    void setScale(double to) { m_scale = to; }
+
     Math::Quaternion &orientation() { return m_orientation; }
+    const Math::Quaternion &orientation() const { return m_orientation; }
+    void setOrientation(const Math::Quaternion &to) { m_orientation = to; }
 };
 
 }  // namespace Render
